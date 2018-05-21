@@ -1,0 +1,86 @@
+syntax = "proto3";
+package pb;
+import "google/protobuf/timestamp.proto";
+
+
+service Movies {
+    rpc GetMovies (Empty) returns (GetMoviesResponse) {
+    }
+    rpc GetMovieById (GetMovieByIdRequest) returns (GetMovieByIdResponse) {
+    }
+    rpc NewMovie (NewMovieRequest) returns (NewMovieResponse) {
+    }
+    rpc DeleteMovie (DeleteMovieRequest) returns (DeleteMovieResponse) {
+    }
+    rpc UpdateMovie (UpdateMovieRequest) returns (UpdateMovieResponse) {
+    }
+}
+
+/*message GetMoviesResponse {
+    string requestType = 1;
+    int32 min = 2;
+    int32 max = 3;
+}*/
+
+message GetMoviesResponse {
+    repeated Movie movies = 1;
+    string err = 2;
+}
+
+message Movie {
+    string id = 1;
+    string title = 2;
+    repeated Director director = 3;
+    string year = 4;
+    string userid = 5;
+    google.protobuf.Timestamp createdon = 6;
+    google.protobuf.Timestamp updatedon = 7;
+}
+
+message Director {
+    string director = 1;
+}
+message GetMovieByIdRequest {
+    string id = 1;
+}
+
+message GetMovieByIdResponse {
+    Movie movie = 1;
+    string err = 2;
+}
+
+message NewMovieRequest {
+    string title = 1;
+    repeated Director director = 2;
+    string year = 3;
+    string userid = 4;
+}
+
+message NewMovieResponse {
+    string id = 1;
+    string err = 2;
+}
+
+message DeleteMovieRequest {
+    string id = 1;
+}
+
+message DeleteMovieResponse {
+    string err = 1;
+}
+
+message UpdateMovieRequest {
+    string id = 1;
+    string title = 2;
+    repeated Director director = 3;
+    string year = 4;
+    string userid = 5;
+}
+
+message UpdateMovieResponse {
+    string err = 1;
+}
+
+message Empty {
+}
+
