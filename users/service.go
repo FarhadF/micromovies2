@@ -12,7 +12,12 @@ import (
 
 type Service interface{
 	NewUser(ctx context.Context, user User) (string, error)
+	//todo: get user by id
+	//todo: change password
+	//todo: login
+	//todo: edit user
 }
+
 //implementation with database and logger
 type usersService struct {
 	db     *pgx.ConnPool
@@ -27,6 +32,7 @@ func NewService(db *pgx.ConnPool, logger zerolog.Logger) Service {
 	}
 }
 
+//method implementation
 func (s usersService) NewUser (ctx context.Context, user User) (string, error) {
 	rows, err := s.db.Query("select * from users where email='" + user.Email + "'")
 	defer rows.Close()

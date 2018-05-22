@@ -11,12 +11,14 @@ type User struct {
 	Role      string    `json:"role"`
 	CreatedOn time.Time `json:"createdon"`
 	UpdatedOn time.Time `json:"updatedon"`
+	LastLogin time.Time `json:"lastlogin"`
 }
 
 type Credential struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
 
 /*
 CREATE TABLE users (
@@ -26,7 +28,8 @@ lastname STRING NULL,
 email STRING NOT NULL,
 password STRING NOT NULL,
 userrole string NOT NULL,
-createdon TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-updatedon TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+createdon TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+updatedon TIMESTAMP WITHOUT TIME ZONE,
+lastlogin TIMESTAMP WITHOUT TIME ZONE,
 CONSTRAINT "primary" PRIMARY KEY (id ASC))
 */
