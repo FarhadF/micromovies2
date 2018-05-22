@@ -1,0 +1,22 @@
+syntax = "proto3";
+package pb;
+//import "google/protobuf/timestamp.proto";
+
+
+service User {
+    rpc NewUser (NewUserRequest) returns (NewUserResponse) {
+    }
+}
+
+message NewUserRequest {
+    string Name = 1;
+    string LastName = 2;
+    string Email = 3;
+    string Password = 4;
+    string Role = 5;
+}
+
+message NewUserResponse {
+    string Id = 1;
+    string Err = 2;
+}
