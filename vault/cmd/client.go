@@ -12,6 +12,7 @@ import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"fmt"
 	"log"
+	"micromovies2/vault/client"
 )
 
 func main() {
@@ -35,12 +36,24 @@ func main() {
 	case "hash":
 		var password string
 		password, args = pop(args)
-		hash(ctx, vaultService, password)
+		h, err := client.Hash(ctx, vaultService, password)
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		fmt.Println(h)
 	case "validate":
 		var password, hash string
 		password, args = pop(args)
 		hash, args = pop(args)
-		validate(ctx, vaultService, password, hash)
+		valid, err := client.Validate(ctx, vaultService, password, hash)
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		if !valid {
+			fmt.Println("invalid")
+			os.Exit(1)
+		}
+		fmt.Println("valid")
 	default:
 		logger.Fatal().Str("unknown command", cmd).Msg("")
 	}
@@ -70,23 +83,4 @@ func pop(s []string) (string, []string) {
 		return "", s
 	}
 	return s[0], s[1:]
-}
-
-func hash(ctx context.Context, service vault.Service, password string) {
-	h, err := service.Hash(ctx, password)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	fmt.Println(h)
-}
-func validate(ctx context.Context, service vault.Service, password, hash string) {
-	valid, err := service.Validate(ctx, password, hash)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	if !valid {
-		fmt.Println("invalid")
-		os.Exit(1)
-	}
-	fmt.Println("valid")
 }
