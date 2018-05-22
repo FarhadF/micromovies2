@@ -46,3 +46,49 @@ func DecodeGRPCNewUserResponse(_ context.Context, r interface{}) (interface{}, e
 	}, nil
 }
 
+//encode GetUserByEmailRequest
+func EncodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
+	req := r.(string)
+	return &pb.GetUserByEmailRequest{
+		Email:     req,
+	}, nil
+}
+
+//decode GetUserByEmailRequest
+func DecodeGRPCGetUserByEmailRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.GetUserByEmailRequest)
+	return User{
+		Email:     req.Email,
+	}, nil
+}
+
+// Encode and Decode GetUserByEmailResponse
+func EncodeGRPCGetUserByEmailResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(getUserByEmailResponse)
+	u := &pb.User{
+		Id:        resp.User.Id,
+		Name:    resp.User.Name,
+		LastName: resp.User.LastName,
+		Email:     resp.User.Email,
+		Role: resp.User.Role,
+	}
+	return &pb.GetUserByEmailResponse{
+		User:  u,
+		Err: resp.Err,
+	}, nil
+}
+
+func DecodeGRPCGetUserByEmailResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(*pb.GetUserByEmailResponse)
+	u := User{
+		Id:        resp.User.Id,
+		Name:    resp.User.Name,
+		LastName: resp.User.LastName,
+		Email:     resp.User.Email,
+		Role: resp.User.Role,
+	}
+	return getUserByEmailResponse{
+		User:  u,
+		Err: resp.Err,
+	}, nil
+}

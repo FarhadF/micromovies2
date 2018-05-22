@@ -24,3 +24,14 @@ func (mw InstrumentingMiddleware) NewUser(ctx context.Context, user User) (outpu
 	output, err = mw.Next.NewUser(ctx, user)
 	return
 }
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) GetUserByEmail(ctx context.Context, email string) (output User, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "GetUserByEmail", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	output, err = mw.Next.GetUserByEmail(ctx, email)
+	return
+}

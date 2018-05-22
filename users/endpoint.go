@@ -9,6 +9,7 @@ import (
 //Endpoints Wrapper
 type Endpoints struct {
 	NewUserEndpoint    endpoint.Endpoint
+	GetUserByEmailEndpoint endpoint.Endpoint
 }
 
 //model request and response
@@ -41,4 +42,40 @@ func (e Endpoints) NewUser(ctx context.Context, user User) (string, error) {
 		return "", errors.New(newUserResp.Err)
 	}
 	return newUserResp.Id, nil
+}
+
+//model request and response
+type getUserByEmailRequest struct {
+	Email string `json:"Email"`
+}
+
+type getUserByEmailResponse struct {
+	User User `json:"user"`
+	Err string `json:"err"`
+}
+
+//make the actual endpoint
+func MakeGetUserByEmailEndpoint(svc Service) (endpoint.Endpoint) {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(getUserByEmailRequest)
+		user, err := svc.GetUserByEmail(ctx, r.Email)
+		if err != nil {
+			return getUserByEmailResponse{user, err.Error()}, nil
+		}
+		return getUserByEmailResponse{user, ""}, nil
+	}
+}
+
+// Wrapping Endpoints as a Service implementation.
+// Will be used in gRPC client
+func (e Endpoints) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	resp, err := e.GetUserByEmailEndpoint(ctx, email)
+	if err != nil {
+		return User{}, err
+	}
+	getUserByEmailResp := resp.(getUserByEmailResponse)
+	if getUserByEmailResp.Err != "" {
+		return User{}, errors.New(getUserByEmailResp.Err)
+	}
+	return getUserByEmailResp.User, nil
 }

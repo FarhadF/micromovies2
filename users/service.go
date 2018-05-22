@@ -12,7 +12,7 @@ import (
 
 type Service interface{
 	NewUser(ctx context.Context, user User) (string, error)
-	//todo: get user by id
+	GetUserByEmail(ctx context.Context, email string) (User, error)
 	//todo: change password
 	//todo: login
 	//todo: edit user
@@ -67,3 +67,12 @@ func (s usersService) NewUser (ctx context.Context, user User) (string, error) {
 
 }
 
+//method implementation
+func (s usersService) GetUserByEmail (ctx context.Context, email string) (User, error) {
+	var user User
+	err := s.db.QueryRow("select * from users where email='" + email + "'").Scan(&user)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}

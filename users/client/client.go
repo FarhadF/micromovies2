@@ -16,8 +16,15 @@ func New(conn *grpc.ClientConn) users.Service {
 		users.DecodeGRPCNewUserResponse,
 		pb.NewUserResponse{},
 	).Endpoint()
+	var getUserByEmailEndpoint = grpctransport.NewClient(
+		conn, "pb.Users", "GetUserByEmail",
+		users.EncodeGRPCGetUserByEmailRequest,
+		users.DecodeGRPCGetUserByEmailResponse,
+		pb.GetUserByEmailResponse{},
+	).Endpoint()
 	return users.Endpoints{
 		NewUserEndpoint:     newUserEndpoint,
+		GetUserByEmailEndpoint: getUserByEmailEndpoint,
 	}
 }
 
@@ -27,4 +34,12 @@ func NewUser(ctx context.Context, service users.Service, user users.User) (strin
 		return "", err
 	}
 	return id, nil
+}
+
+func GetUserByEmail(ctx context.Context, service users.Service, email string) (users.User, error){
+	user, err := service.GetUserByEmail(ctx, email)
+	if err != nil {
+		return users.User{}, err
+	}
+	return user, nil
 }

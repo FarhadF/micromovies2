@@ -64,7 +64,12 @@ func main() {
 		}
 		logger.Info().Msg(id)
 	}
-
-
+	if newUser == false && name == "" && lastname == "" && email != "" && password == "" {
+		user, err := client.GetUserByEmail(ctx, usersService, email)
+		if err != nil {
+			logger.Error().Err(err).Msg("")
+		}
+		logger.Info().Interface("user",user).Msg("")
+	}
 }
 

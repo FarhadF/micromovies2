@@ -3,8 +3,10 @@ package pb;
 //import "google/protobuf/timestamp.proto";
 
 
-service User {
+service Users {
     rpc NewUser (NewUserRequest) returns (NewUserResponse) {
+    }
+    rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse){
     }
 }
 
@@ -19,4 +21,21 @@ message NewUserRequest {
 message NewUserResponse {
     string Id = 1;
     string Err = 2;
+}
+
+message GetUserByEmailRequest {
+    string Email = 1;
+}
+
+message GetUserByEmailResponse {
+    User user = 1;
+    string Err = 2;
+}
+
+message User {
+    string Id = 1;
+    string Name = 2;
+    string LastName = 3;
+    string Email = 4;
+    string Role = 5;
 }

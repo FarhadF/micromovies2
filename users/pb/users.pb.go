@@ -38,7 +38,7 @@ func (m *NewUserRequest) Reset()         { *m = NewUserRequest{} }
 func (m *NewUserRequest) String() string { return proto.CompactTextString(m) }
 func (*NewUserRequest) ProtoMessage()    {}
 func (*NewUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_4e3f99c9794f712d, []int{0}
+	return fileDescriptor_users_e6d1932b48539756, []int{0}
 }
 func (m *NewUserRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NewUserRequest.Unmarshal(m, b)
@@ -105,7 +105,7 @@ func (m *NewUserResponse) Reset()         { *m = NewUserResponse{} }
 func (m *NewUserResponse) String() string { return proto.CompactTextString(m) }
 func (*NewUserResponse) ProtoMessage()    {}
 func (*NewUserResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_4e3f99c9794f712d, []int{1}
+	return fileDescriptor_users_e6d1932b48539756, []int{1}
 }
 func (m *NewUserResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NewUserResponse.Unmarshal(m, b)
@@ -139,9 +139,166 @@ func (m *NewUserResponse) GetErr() string {
 	return ""
 }
 
+type GetUserByEmailRequest struct {
+	Email                string   `protobuf:"bytes,1,opt,name=Email" json:"Email,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserByEmailRequest) Reset()         { *m = GetUserByEmailRequest{} }
+func (m *GetUserByEmailRequest) String() string { return proto.CompactTextString(m) }
+func (*GetUserByEmailRequest) ProtoMessage()    {}
+func (*GetUserByEmailRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_users_e6d1932b48539756, []int{2}
+}
+func (m *GetUserByEmailRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserByEmailRequest.Unmarshal(m, b)
+}
+func (m *GetUserByEmailRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserByEmailRequest.Marshal(b, m, deterministic)
+}
+func (dst *GetUserByEmailRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserByEmailRequest.Merge(dst, src)
+}
+func (m *GetUserByEmailRequest) XXX_Size() int {
+	return xxx_messageInfo_GetUserByEmailRequest.Size(m)
+}
+func (m *GetUserByEmailRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserByEmailRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserByEmailRequest proto.InternalMessageInfo
+
+func (m *GetUserByEmailRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+type GetUserByEmailResponse struct {
+	User                 *User    `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	Err                  string   `protobuf:"bytes,2,opt,name=Err" json:"Err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetUserByEmailResponse) Reset()         { *m = GetUserByEmailResponse{} }
+func (m *GetUserByEmailResponse) String() string { return proto.CompactTextString(m) }
+func (*GetUserByEmailResponse) ProtoMessage()    {}
+func (*GetUserByEmailResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_users_e6d1932b48539756, []int{3}
+}
+func (m *GetUserByEmailResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetUserByEmailResponse.Unmarshal(m, b)
+}
+func (m *GetUserByEmailResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetUserByEmailResponse.Marshal(b, m, deterministic)
+}
+func (dst *GetUserByEmailResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetUserByEmailResponse.Merge(dst, src)
+}
+func (m *GetUserByEmailResponse) XXX_Size() int {
+	return xxx_messageInfo_GetUserByEmailResponse.Size(m)
+}
+func (m *GetUserByEmailResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetUserByEmailResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetUserByEmailResponse proto.InternalMessageInfo
+
+func (m *GetUserByEmailResponse) GetUser() *User {
+	if m != nil {
+		return m.User
+	}
+	return nil
+}
+
+func (m *GetUserByEmailResponse) GetErr() string {
+	if m != nil {
+		return m.Err
+	}
+	return ""
+}
+
+type User struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=Id" json:"Id,omitempty"`
+	Name                 string   `protobuf:"bytes,2,opt,name=Name" json:"Name,omitempty"`
+	LastName             string   `protobuf:"bytes,3,opt,name=LastName" json:"LastName,omitempty"`
+	Email                string   `protobuf:"bytes,4,opt,name=Email" json:"Email,omitempty"`
+	Role                 string   `protobuf:"bytes,5,opt,name=Role" json:"Role,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *User) Reset()         { *m = User{} }
+func (m *User) String() string { return proto.CompactTextString(m) }
+func (*User) ProtoMessage()    {}
+func (*User) Descriptor() ([]byte, []int) {
+	return fileDescriptor_users_e6d1932b48539756, []int{4}
+}
+func (m *User) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_User.Unmarshal(m, b)
+}
+func (m *User) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_User.Marshal(b, m, deterministic)
+}
+func (dst *User) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_User.Merge(dst, src)
+}
+func (m *User) XXX_Size() int {
+	return xxx_messageInfo_User.Size(m)
+}
+func (m *User) XXX_DiscardUnknown() {
+	xxx_messageInfo_User.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_User proto.InternalMessageInfo
+
+func (m *User) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *User) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *User) GetLastName() string {
+	if m != nil {
+		return m.LastName
+	}
+	return ""
+}
+
+func (m *User) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *User) GetRole() string {
+	if m != nil {
+		return m.Role
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*NewUserRequest)(nil), "pb.NewUserRequest")
 	proto.RegisterType((*NewUserResponse)(nil), "pb.NewUserResponse")
+	proto.RegisterType((*GetUserByEmailRequest)(nil), "pb.GetUserByEmailRequest")
+	proto.RegisterType((*GetUserByEmailResponse)(nil), "pb.GetUserByEmailResponse")
+	proto.RegisterType((*User)(nil), "pb.User")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -152,85 +309,123 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// Client API for User service
+// Client API for Users service
 
-type UserClient interface {
+type UsersClient interface {
 	NewUser(ctx context.Context, in *NewUserRequest, opts ...grpc.CallOption) (*NewUserResponse, error)
+	GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*GetUserByEmailResponse, error)
 }
 
-type userClient struct {
+type usersClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewUserClient(cc *grpc.ClientConn) UserClient {
-	return &userClient{cc}
+func NewUsersClient(cc *grpc.ClientConn) UsersClient {
+	return &usersClient{cc}
 }
 
-func (c *userClient) NewUser(ctx context.Context, in *NewUserRequest, opts ...grpc.CallOption) (*NewUserResponse, error) {
+func (c *usersClient) NewUser(ctx context.Context, in *NewUserRequest, opts ...grpc.CallOption) (*NewUserResponse, error) {
 	out := new(NewUserResponse)
-	err := grpc.Invoke(ctx, "/pb.User/NewUser", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/pb.Users/NewUser", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Server API for User service
+func (c *usersClient) GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*GetUserByEmailResponse, error) {
+	out := new(GetUserByEmailResponse)
+	err := grpc.Invoke(ctx, "/pb.Users/GetUserByEmail", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
 
-type UserServer interface {
+// Server API for Users service
+
+type UsersServer interface {
 	NewUser(context.Context, *NewUserRequest) (*NewUserResponse, error)
+	GetUserByEmail(context.Context, *GetUserByEmailRequest) (*GetUserByEmailResponse, error)
 }
 
-func RegisterUserServer(s *grpc.Server, srv UserServer) {
-	s.RegisterService(&_User_serviceDesc, srv)
+func RegisterUsersServer(s *grpc.Server, srv UsersServer) {
+	s.RegisterService(&_Users_serviceDesc, srv)
 }
 
-func _User_NewUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Users_NewUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NewUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).NewUser(ctx, in)
+		return srv.(UsersServer).NewUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.User/NewUser",
+		FullMethod: "/pb.Users/NewUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).NewUser(ctx, req.(*NewUserRequest))
+		return srv.(UsersServer).NewUser(ctx, req.(*NewUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _User_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.User",
-	HandlerType: (*UserServer)(nil),
+func _Users_GetUserByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).GetUserByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Users/GetUserByEmail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).GetUserByEmail(ctx, req.(*GetUserByEmailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Users_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.Users",
+	HandlerType: (*UsersServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "NewUser",
-			Handler:    _User_NewUser_Handler,
+			Handler:    _Users_NewUser_Handler,
+		},
+		{
+			MethodName: "GetUserByEmail",
+			Handler:    _Users_GetUserByEmail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "users.proto",
 }
 
-func init() { proto.RegisterFile("users.proto", fileDescriptor_users_4e3f99c9794f712d) }
+func init() { proto.RegisterFile("users.proto", fileDescriptor_users_e6d1932b48539756) }
 
-var fileDescriptor_users_4e3f99c9794f712d = []byte{
-	// 202 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2e, 0x2d, 0x4e, 0x2d,
-	0x2a, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x6a, 0x63, 0xe4, 0xe2,
-	0xf3, 0x4b, 0x2d, 0x0f, 0x2d, 0x4e, 0x2d, 0x0a, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12,
-	0xe2, 0x62, 0xf1, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x85,
-	0xa4, 0xb8, 0x38, 0x7c, 0x12, 0x8b, 0x4b, 0xc0, 0xe2, 0x4c, 0x60, 0x71, 0x38, 0x5f, 0x48, 0x84,
-	0x8b, 0xd5, 0x35, 0x37, 0x31, 0x33, 0x47, 0x82, 0x19, 0x2c, 0x01, 0xe1, 0x80, 0x74, 0x04, 0x24,
-	0x16, 0x17, 0x97, 0xe7, 0x17, 0xa5, 0x48, 0xb0, 0x40, 0x74, 0xc0, 0xf8, 0x20, 0x1b, 0x82, 0xf2,
-	0x73, 0x52, 0x25, 0x58, 0x21, 0x36, 0x80, 0xd8, 0x4a, 0xc6, 0x5c, 0xfc, 0x70, 0x77, 0x14, 0x17,
-	0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0xf1, 0x71, 0x31, 0x79, 0xa6, 0x40, 0x9d, 0xc1, 0xe4, 0x99, 0x22,
-	0x24, 0xc0, 0xc5, 0xec, 0x5a, 0x54, 0x04, 0xb5, 0x1f, 0xc4, 0x34, 0xb2, 0xe1, 0x62, 0x01, 0xe9,
-	0x10, 0x32, 0xe1, 0x62, 0x87, 0x6a, 0x16, 0x12, 0xd2, 0x2b, 0x48, 0xd2, 0x43, 0xf5, 0x91, 0x94,
-	0x30, 0x8a, 0x18, 0xc4, 0x74, 0x25, 0x86, 0x24, 0x36, 0x70, 0x30, 0x18, 0x03, 0x02, 0x00, 0x00,
-	0xff, 0xff, 0x22, 0x2d, 0x3e, 0x55, 0x15, 0x01, 0x00, 0x00,
+var fileDescriptor_users_e6d1932b48539756 = []byte{
+	// 288 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xcd, 0x4a, 0xc3, 0x40,
+	0x10, 0xc7, 0x4d, 0xb2, 0xd1, 0x3a, 0x85, 0x28, 0xe3, 0x07, 0x31, 0x78, 0x90, 0x3d, 0x79, 0x31,
+	0x87, 0xd6, 0x27, 0x10, 0x8a, 0x06, 0xa4, 0x48, 0xc0, 0x07, 0x48, 0xc8, 0x1e, 0x84, 0xd6, 0x5d,
+	0x77, 0x52, 0x8a, 0x2f, 0x20, 0x3e, 0xb6, 0xcc, 0xe6, 0x83, 0xc6, 0xa6, 0xb7, 0xf9, 0xcc, 0xff,
+	0x3f, 0xbf, 0x2c, 0x4c, 0x37, 0xa4, 0x2c, 0xa5, 0xc6, 0xea, 0x5a, 0xa3, 0x6f, 0x4a, 0xf9, 0xe3,
+	0x41, 0xb4, 0x54, 0xdb, 0x77, 0x52, 0x36, 0x57, 0x5f, 0x1b, 0x45, 0x35, 0x22, 0x88, 0x65, 0xb1,
+	0x56, 0xb1, 0x77, 0xe7, 0xdd, 0x9f, 0xe6, 0x2e, 0xc6, 0x04, 0x26, 0xaf, 0x05, 0xd5, 0xae, 0xee,
+	0xbb, 0x7a, 0x9f, 0xe3, 0x25, 0x84, 0x8b, 0x75, 0xf1, 0xb1, 0x8a, 0x03, 0xd7, 0x68, 0x12, 0xde,
+	0x78, 0x2b, 0x88, 0xb6, 0xda, 0x56, 0xb1, 0x68, 0x36, 0xba, 0x9c, 0x15, 0x72, 0xbd, 0x52, 0x71,
+	0xd8, 0x28, 0x70, 0x2c, 0xe7, 0x70, 0xd6, 0xfb, 0x20, 0xa3, 0x3f, 0x49, 0x61, 0x04, 0x7e, 0x56,
+	0xb5, 0x36, 0xfc, 0xac, 0xc2, 0x73, 0x08, 0x16, 0xd6, 0xb6, 0xfa, 0x1c, 0xca, 0x07, 0xb8, 0x7a,
+	0x56, 0x35, 0x2f, 0x3d, 0x7d, 0x3b, 0xd9, 0xee, 0x86, 0xde, 0x93, 0xb7, 0xe3, 0x49, 0xbe, 0xc0,
+	0xf5, 0xff, 0xf1, 0x56, 0xea, 0x16, 0x04, 0x93, 0x71, 0xe3, 0xd3, 0xd9, 0x24, 0x35, 0x65, 0xea,
+	0xac, 0xb8, 0xea, 0x88, 0xb0, 0x01, 0xc1, 0xfd, 0x3d, 0x8b, 0x1d, 0x3b, 0xff, 0x00, 0xbb, 0xe0,
+	0x10, 0x3b, 0xb1, 0xcb, 0x6e, 0x84, 0xcf, 0xec, 0xd7, 0x83, 0x90, 0x25, 0x09, 0x1f, 0xe1, 0xa4,
+	0x25, 0x85, 0xc8, 0x46, 0x87, 0xbf, 0x2f, 0xb9, 0x18, 0xd4, 0x9a, 0xfb, 0xe4, 0x11, 0x66, 0x10,
+	0x0d, 0x6f, 0xc7, 0x1b, 0x1e, 0x1c, 0xc5, 0x97, 0x24, 0x63, 0xad, 0xee, 0x53, 0xe5, 0xb1, 0x7b,
+	0x3e, 0xf3, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf1, 0xd4, 0xa1, 0xd3, 0x4d, 0x02, 0x00, 0x00,
 }

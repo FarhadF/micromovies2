@@ -84,6 +84,7 @@ func main() {
 	// creating Endpoints struct
 	endpoints := users.Endpoints{
 		NewUserEndpoint: users.MakeNewUserEndpoint(svc),
+		GetUserByEmailEndpoint: users.MakeGetUserByEmailEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {
@@ -94,7 +95,7 @@ func main() {
 		}
 		handler := users.NewGRPCServer(ctx, endpoints)
 		grpcServer := grpc.NewServer()
-		pb.RegisterUserServer(grpcServer, handler)
+		pb.RegisterUsersServer(grpcServer, handler)
 		errChan <- grpcServer.Serve(listener)
 	}()
 	// HTTP transport
