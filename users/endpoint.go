@@ -22,7 +22,7 @@ type newUserResponse struct {
 func MakeNewUserEndpoint(svc Service) (endpoint.Endpoint) {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(User)
-		id, err := svc.NewUser(ctx, r )
+		id, err := svc.NewUser(ctx, r)
 		if err != nil {
 			return newUserResponse{"", err.Error()}, nil
 		}
@@ -46,7 +46,7 @@ func (e Endpoints) NewUser(ctx context.Context, user User) (string, error) {
 
 //model request and response
 type getUserByEmailRequest struct {
-	Email string `json:"Email"`
+	Email string `json:"email"`
 }
 
 type getUserByEmailResponse struct {
@@ -69,7 +69,8 @@ func MakeGetUserByEmailEndpoint(svc Service) (endpoint.Endpoint) {
 // Wrapping Endpoints as a Service implementation.
 // Will be used in gRPC client
 func (e Endpoints) GetUserByEmail(ctx context.Context, email string) (User, error) {
-	resp, err := e.GetUserByEmailEndpoint(ctx, email)
+	req := getUserByEmailRequest{Email: email}
+	resp, err := e.GetUserByEmailEndpoint(ctx, req)
 	if err != nil {
 		return User{}, err
 	}

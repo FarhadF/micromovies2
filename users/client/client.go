@@ -9,7 +9,7 @@ import (
 	"micromovies2/users"
 )
 
-func New(conn *grpc.ClientConn) users.Service {
+func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 	var newUserEndpoint = grpctransport.NewClient(
 		conn, "pb.Users", "NewUser",
 		users.EncodeGRPCNewUserRequest,

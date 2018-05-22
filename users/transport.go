@@ -48,9 +48,9 @@ func DecodeGRPCNewUserResponse(_ context.Context, r interface{}) (interface{}, e
 
 //encode GetUserByEmailRequest
 func EncodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
-	req := r.(string)
+	req := r.(getUserByEmailRequest)
 	return &pb.GetUserByEmailRequest{
-		Email:     req,
+		Email:     req.Email,
 	}, nil
 }
 

@@ -2,8 +2,6 @@ package main
 
 import (
 	"google.golang.org/grpc"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"micromovies2/users/pb"
 	flag "github.com/spf13/pflag"
 	"context"
 	"github.com/rs/zerolog"
@@ -11,20 +9,6 @@ import (
 	"micromovies2/users"
 	"micromovies2/users/client"
 )
-
-//create new client returns GetMovies Service
-func NewGRPCClient(conn *grpc.ClientConn) users.Service {
-	var newUserEndpoint = grpctransport.NewClient(
-		conn, "pb.User", "NewUser",
-		users.EncodeGRPCNewUserRequest,
-		users.DecodeGRPCNewUserResponse,
-		pb.NewUserResponse{},
-	).Endpoint()
-
-	return users.Endpoints{
-		NewUserEndpoint: newUserEndpoint,
-		}
-}
 
 func main() {
 	var (
@@ -55,7 +39,7 @@ func main() {
 		logger.Fatal().Err(err).Msg("")
 	}
 	defer conn.Close()
-	usersService := NewGRPCClient(conn)
+	usersService := client.NewGRPCClient(conn)
 	if newUser == true && name != "" && lastname != "" && email != "" && password != ""{
 		user := users.User{Name: name, LastName: lastname, Email: email, Password: password}
 		id, err := client.NewUser(ctx, usersService, user)

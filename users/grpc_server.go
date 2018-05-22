@@ -38,7 +38,7 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 			EncodeGRPCNewUserResponse,
 		),
 		getUserByEmail: grpctransport.NewServer(
-			endpoint.NewUserEndpoint,
+			endpoint.GetUserByEmailEndpoint,
 			DecodeGRPCGetUserByEmailRequest,
 			EncodeGRPCGetUserByEmailResponse,
 		),
