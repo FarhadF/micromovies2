@@ -35,3 +35,14 @@ func (mw InstrumentingMiddleware) GetUserByEmail(ctx context.Context, email stri
 	output, err = mw.Next.GetUserByEmail(ctx, email)
 	return
 }
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (output bool, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "ChangePassword", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
+	return
+}

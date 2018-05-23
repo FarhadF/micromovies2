@@ -8,6 +8,8 @@ service Users {
     }
     rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse){
     }
+    rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse){
+    }
 }
 
 message NewUserRequest {
@@ -38,4 +40,15 @@ message User {
     string LastName = 3;
     string Email = 4;
     string Role = 5;
+}
+
+message ChangePasswordRequest {
+    string Email = 1;
+    string CurrentPassword = 2;
+    string NewPassword = 3;
+}
+
+message ChangePasswordResponse {
+    bool Success = 1;
+    string Err = 2;
 }

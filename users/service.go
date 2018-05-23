@@ -13,7 +13,7 @@ import (
 type Service interface{
 	NewUser(ctx context.Context, user User) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
-	//todo: change password
+	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 	//todo: login
 	//todo: edit user
 }
@@ -75,4 +75,36 @@ func (s usersService) GetUserByEmail (ctx context.Context, email string) (User, 
 		return user, err
 	}
 	return user, nil
+}
+
+//method implementation
+func (s usersService) ChangePassword (ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
+	var currentPasswordHash string
+	err := s.db.QueryRow("select password from users where email='" + email + "'").Scan(&currentPasswordHash)
+	if err != nil {
+		return false, err
+	}
+	conn, err := grpc.Dial(":8081", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	if err != nil {
+		s.logger.Error().Err(err).Msg("grpc dial err")
+		return false, err
+	}
+	defer conn.Close()
+	vaultService := client.New(conn)
+	valid, err := client.Validate(ctx, vaultService, currentPassword, currentPasswordHash )
+	if err != nil {
+		return false, err
+	}
+	if valid != true {
+		return false, errors.New("wrong password")
+	}
+	hash, err := client.Hash(ctx, vaultService, newPassword)
+	if err != nil {
+		return false, err
+	}
+	_, err = s.db.Exec("update users set password=$1 where email=$2", hash, email)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

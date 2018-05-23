@@ -10,6 +10,7 @@ import (
 type Endpoints struct {
 	NewUserEndpoint    endpoint.Endpoint
 	GetUserByEmailEndpoint endpoint.Endpoint
+	ChangePasswordEndpoint endpoint.Endpoint
 }
 
 //model request and response
@@ -79,4 +80,43 @@ func (e Endpoints) GetUserByEmail(ctx context.Context, email string) (User, erro
 		return User{}, errors.New(getUserByEmailResp.Err)
 	}
 	return getUserByEmailResp.User, nil
+}
+
+//model request and response
+type changePasswordRequest struct {
+	Email string `json:"email"`
+	CurrentPassword string `json:"currentpassword"`
+	NewPassword	string `json:"newpassword"`
+}
+
+type changePasswordResponse struct {
+	Success bool `json:"success"`
+	Err string `json:"err"`
+}
+
+//make the actual endpoint
+func MakeChangePasswordEndpoint(svc Service) (endpoint.Endpoint) {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(changePasswordRequest)
+		success, err := svc.ChangePassword(ctx, r.Email, r.CurrentPassword, r.NewPassword)
+		if err != nil {
+			return changePasswordResponse{success, err.Error()}, nil
+		}
+		return changePasswordResponse{success, ""}, nil
+	}
+}
+
+// Wrapping Endpoints as a Service implementation.
+// Will be used in gRPC client
+func (e Endpoints) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
+	req := changePasswordRequest{Email: email, CurrentPassword: currentPassword, NewPassword: newPassword}
+	resp, err := e.ChangePasswordEndpoint(ctx, req)
+	if err != nil {
+		return false, err
+	}
+	changePasswordResp := resp.(changePasswordResponse)
+	if changePasswordResp.Err != "" {
+		return false, errors.New(changePasswordResp.Err)
+	}
+	return changePasswordResp.Success, nil
 }

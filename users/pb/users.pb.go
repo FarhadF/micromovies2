@@ -38,7 +38,7 @@ func (m *NewUserRequest) Reset()         { *m = NewUserRequest{} }
 func (m *NewUserRequest) String() string { return proto.CompactTextString(m) }
 func (*NewUserRequest) ProtoMessage()    {}
 func (*NewUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_e6d1932b48539756, []int{0}
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{0}
 }
 func (m *NewUserRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NewUserRequest.Unmarshal(m, b)
@@ -105,7 +105,7 @@ func (m *NewUserResponse) Reset()         { *m = NewUserResponse{} }
 func (m *NewUserResponse) String() string { return proto.CompactTextString(m) }
 func (*NewUserResponse) ProtoMessage()    {}
 func (*NewUserResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_e6d1932b48539756, []int{1}
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{1}
 }
 func (m *NewUserResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_NewUserResponse.Unmarshal(m, b)
@@ -150,7 +150,7 @@ func (m *GetUserByEmailRequest) Reset()         { *m = GetUserByEmailRequest{} }
 func (m *GetUserByEmailRequest) String() string { return proto.CompactTextString(m) }
 func (*GetUserByEmailRequest) ProtoMessage()    {}
 func (*GetUserByEmailRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_e6d1932b48539756, []int{2}
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{2}
 }
 func (m *GetUserByEmailRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetUserByEmailRequest.Unmarshal(m, b)
@@ -189,7 +189,7 @@ func (m *GetUserByEmailResponse) Reset()         { *m = GetUserByEmailResponse{}
 func (m *GetUserByEmailResponse) String() string { return proto.CompactTextString(m) }
 func (*GetUserByEmailResponse) ProtoMessage()    {}
 func (*GetUserByEmailResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_e6d1932b48539756, []int{3}
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{3}
 }
 func (m *GetUserByEmailResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GetUserByEmailResponse.Unmarshal(m, b)
@@ -238,7 +238,7 @@ func (m *User) Reset()         { *m = User{} }
 func (m *User) String() string { return proto.CompactTextString(m) }
 func (*User) ProtoMessage()    {}
 func (*User) Descriptor() ([]byte, []int) {
-	return fileDescriptor_users_e6d1932b48539756, []int{4}
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{4}
 }
 func (m *User) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_User.Unmarshal(m, b)
@@ -293,12 +293,114 @@ func (m *User) GetRole() string {
 	return ""
 }
 
+type ChangePasswordRequest struct {
+	Email                string   `protobuf:"bytes,1,opt,name=Email" json:"Email,omitempty"`
+	CurrentPassword      string   `protobuf:"bytes,2,opt,name=CurrentPassword" json:"CurrentPassword,omitempty"`
+	NewPassword          string   `protobuf:"bytes,3,opt,name=NewPassword" json:"NewPassword,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ChangePasswordRequest) Reset()         { *m = ChangePasswordRequest{} }
+func (m *ChangePasswordRequest) String() string { return proto.CompactTextString(m) }
+func (*ChangePasswordRequest) ProtoMessage()    {}
+func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{5}
+}
+func (m *ChangePasswordRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChangePasswordRequest.Unmarshal(m, b)
+}
+func (m *ChangePasswordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChangePasswordRequest.Marshal(b, m, deterministic)
+}
+func (dst *ChangePasswordRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChangePasswordRequest.Merge(dst, src)
+}
+func (m *ChangePasswordRequest) XXX_Size() int {
+	return xxx_messageInfo_ChangePasswordRequest.Size(m)
+}
+func (m *ChangePasswordRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChangePasswordRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ChangePasswordRequest proto.InternalMessageInfo
+
+func (m *ChangePasswordRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *ChangePasswordRequest) GetCurrentPassword() string {
+	if m != nil {
+		return m.CurrentPassword
+	}
+	return ""
+}
+
+func (m *ChangePasswordRequest) GetNewPassword() string {
+	if m != nil {
+		return m.NewPassword
+	}
+	return ""
+}
+
+type ChangePasswordResponse struct {
+	Success              bool     `protobuf:"varint,1,opt,name=Success" json:"Success,omitempty"`
+	Err                  string   `protobuf:"bytes,2,opt,name=Err" json:"Err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ChangePasswordResponse) Reset()         { *m = ChangePasswordResponse{} }
+func (m *ChangePasswordResponse) String() string { return proto.CompactTextString(m) }
+func (*ChangePasswordResponse) ProtoMessage()    {}
+func (*ChangePasswordResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_users_ba0f4c9d97f38b55, []int{6}
+}
+func (m *ChangePasswordResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChangePasswordResponse.Unmarshal(m, b)
+}
+func (m *ChangePasswordResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChangePasswordResponse.Marshal(b, m, deterministic)
+}
+func (dst *ChangePasswordResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChangePasswordResponse.Merge(dst, src)
+}
+func (m *ChangePasswordResponse) XXX_Size() int {
+	return xxx_messageInfo_ChangePasswordResponse.Size(m)
+}
+func (m *ChangePasswordResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChangePasswordResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ChangePasswordResponse proto.InternalMessageInfo
+
+func (m *ChangePasswordResponse) GetSuccess() bool {
+	if m != nil {
+		return m.Success
+	}
+	return false
+}
+
+func (m *ChangePasswordResponse) GetErr() string {
+	if m != nil {
+		return m.Err
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*NewUserRequest)(nil), "pb.NewUserRequest")
 	proto.RegisterType((*NewUserResponse)(nil), "pb.NewUserResponse")
 	proto.RegisterType((*GetUserByEmailRequest)(nil), "pb.GetUserByEmailRequest")
 	proto.RegisterType((*GetUserByEmailResponse)(nil), "pb.GetUserByEmailResponse")
 	proto.RegisterType((*User)(nil), "pb.User")
+	proto.RegisterType((*ChangePasswordRequest)(nil), "pb.ChangePasswordRequest")
+	proto.RegisterType((*ChangePasswordResponse)(nil), "pb.ChangePasswordResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -314,6 +416,7 @@ const _ = grpc.SupportPackageIsVersion4
 type UsersClient interface {
 	NewUser(ctx context.Context, in *NewUserRequest, opts ...grpc.CallOption) (*NewUserResponse, error)
 	GetUserByEmail(ctx context.Context, in *GetUserByEmailRequest, opts ...grpc.CallOption) (*GetUserByEmailResponse, error)
+	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 }
 
 type usersClient struct {
@@ -342,11 +445,21 @@ func (c *usersClient) GetUserByEmail(ctx context.Context, in *GetUserByEmailRequ
 	return out, nil
 }
 
+func (c *usersClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
+	out := new(ChangePasswordResponse)
+	err := grpc.Invoke(ctx, "/pb.Users/ChangePassword", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Users service
 
 type UsersServer interface {
 	NewUser(context.Context, *NewUserRequest) (*NewUserResponse, error)
 	GetUserByEmail(context.Context, *GetUserByEmailRequest) (*GetUserByEmailResponse, error)
+	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 }
 
 func RegisterUsersServer(s *grpc.Server, srv UsersServer) {
@@ -389,6 +502,24 @@ func _Users_GetUserByEmail_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).ChangePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Users/ChangePassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Users_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Users",
 	HandlerType: (*UsersServer)(nil),
@@ -401,31 +532,40 @@ var _Users_serviceDesc = grpc.ServiceDesc{
 			MethodName: "GetUserByEmail",
 			Handler:    _Users_GetUserByEmail_Handler,
 		},
+		{
+			MethodName: "ChangePassword",
+			Handler:    _Users_ChangePassword_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "users.proto",
 }
 
-func init() { proto.RegisterFile("users.proto", fileDescriptor_users_e6d1932b48539756) }
+func init() { proto.RegisterFile("users.proto", fileDescriptor_users_ba0f4c9d97f38b55) }
 
-var fileDescriptor_users_e6d1932b48539756 = []byte{
-	// 288 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xcd, 0x4a, 0xc3, 0x40,
-	0x10, 0xc7, 0x4d, 0xb2, 0xd1, 0x3a, 0x85, 0x28, 0xe3, 0x07, 0x31, 0x78, 0x90, 0x3d, 0x79, 0x31,
-	0x87, 0xd6, 0x27, 0x10, 0x8a, 0x06, 0xa4, 0x48, 0xc0, 0x07, 0x48, 0xc8, 0x1e, 0x84, 0xd6, 0x5d,
-	0x77, 0x52, 0x8a, 0x2f, 0x20, 0x3e, 0xb6, 0xcc, 0xe6, 0x83, 0xc6, 0xa6, 0xb7, 0xf9, 0xcc, 0xff,
-	0x3f, 0xbf, 0x2c, 0x4c, 0x37, 0xa4, 0x2c, 0xa5, 0xc6, 0xea, 0x5a, 0xa3, 0x6f, 0x4a, 0xf9, 0xe3,
-	0x41, 0xb4, 0x54, 0xdb, 0x77, 0x52, 0x36, 0x57, 0x5f, 0x1b, 0x45, 0x35, 0x22, 0x88, 0x65, 0xb1,
-	0x56, 0xb1, 0x77, 0xe7, 0xdd, 0x9f, 0xe6, 0x2e, 0xc6, 0x04, 0x26, 0xaf, 0x05, 0xd5, 0xae, 0xee,
-	0xbb, 0x7a, 0x9f, 0xe3, 0x25, 0x84, 0x8b, 0x75, 0xf1, 0xb1, 0x8a, 0x03, 0xd7, 0x68, 0x12, 0xde,
-	0x78, 0x2b, 0x88, 0xb6, 0xda, 0x56, 0xb1, 0x68, 0x36, 0xba, 0x9c, 0x15, 0x72, 0xbd, 0x52, 0x71,
-	0xd8, 0x28, 0x70, 0x2c, 0xe7, 0x70, 0xd6, 0xfb, 0x20, 0xa3, 0x3f, 0x49, 0x61, 0x04, 0x7e, 0x56,
-	0xb5, 0x36, 0xfc, 0xac, 0xc2, 0x73, 0x08, 0x16, 0xd6, 0xb6, 0xfa, 0x1c, 0xca, 0x07, 0xb8, 0x7a,
-	0x56, 0x35, 0x2f, 0x3d, 0x7d, 0x3b, 0xd9, 0xee, 0x86, 0xde, 0x93, 0xb7, 0xe3, 0x49, 0xbe, 0xc0,
-	0xf5, 0xff, 0xf1, 0x56, 0xea, 0x16, 0x04, 0x93, 0x71, 0xe3, 0xd3, 0xd9, 0x24, 0x35, 0x65, 0xea,
-	0xac, 0xb8, 0xea, 0x88, 0xb0, 0x01, 0xc1, 0xfd, 0x3d, 0x8b, 0x1d, 0x3b, 0xff, 0x00, 0xbb, 0xe0,
-	0x10, 0x3b, 0xb1, 0xcb, 0x6e, 0x84, 0xcf, 0xec, 0xd7, 0x83, 0x90, 0x25, 0x09, 0x1f, 0xe1, 0xa4,
-	0x25, 0x85, 0xc8, 0x46, 0x87, 0xbf, 0x2f, 0xb9, 0x18, 0xd4, 0x9a, 0xfb, 0xe4, 0x11, 0x66, 0x10,
-	0x0d, 0x6f, 0xc7, 0x1b, 0x1e, 0x1c, 0xc5, 0x97, 0x24, 0x63, 0xad, 0xee, 0x53, 0xe5, 0xb1, 0x7b,
-	0x3e, 0xf3, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf1, 0xd4, 0xa1, 0xd3, 0x4d, 0x02, 0x00, 0x00,
+var fileDescriptor_users_ba0f4c9d97f38b55 = []byte{
+	// 364 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x93, 0x51, 0x4e, 0xf2, 0x40,
+	0x10, 0xc7, 0x69, 0x29, 0x1f, 0x7c, 0x43, 0x02, 0x66, 0x14, 0x52, 0x1b, 0x1f, 0xc8, 0x3e, 0xf1,
+	0x22, 0x0f, 0xe0, 0x09, 0x44, 0xa2, 0x24, 0x86, 0x98, 0x1a, 0x0f, 0x50, 0x60, 0xa2, 0x26, 0x40,
+	0xeb, 0x4e, 0x1b, 0xc2, 0x05, 0xbc, 0xa0, 0x17, 0x32, 0xbb, 0xdb, 0x36, 0x2d, 0x14, 0xdf, 0x76,
+	0x66, 0x67, 0xe7, 0xff, 0x9f, 0xdf, 0xb4, 0xd0, 0x4e, 0x98, 0x24, 0x8f, 0x22, 0x19, 0xc6, 0x21,
+	0xda, 0xd1, 0x52, 0x7c, 0x5b, 0xd0, 0x59, 0xd0, 0xfe, 0x8d, 0x49, 0xfa, 0xf4, 0x95, 0x10, 0xc7,
+	0x88, 0xe0, 0x2c, 0x82, 0x2d, 0xb9, 0xd6, 0xc0, 0x1a, 0xfe, 0xf7, 0xf5, 0x19, 0x3d, 0x68, 0x3d,
+	0x07, 0x1c, 0xeb, 0xbc, 0xad, 0xf3, 0x79, 0x8c, 0x57, 0xd0, 0x98, 0x6d, 0x83, 0xcf, 0x8d, 0x5b,
+	0xd7, 0x17, 0x26, 0x50, 0x2f, 0x5e, 0x02, 0xe6, 0x7d, 0x28, 0xd7, 0xae, 0x63, 0x5e, 0x64, 0xb1,
+	0x52, 0xf0, 0xc3, 0x0d, 0xb9, 0x0d, 0xa3, 0xa0, 0xce, 0x62, 0x02, 0xdd, 0xdc, 0x07, 0x47, 0xe1,
+	0x8e, 0x09, 0x3b, 0x60, 0xcf, 0xd7, 0xa9, 0x0d, 0x7b, 0xbe, 0xc6, 0x0b, 0xa8, 0xcf, 0xa4, 0x4c,
+	0xf5, 0xd5, 0x51, 0xdc, 0x42, 0xef, 0x91, 0x62, 0xf5, 0xe8, 0xfe, 0xa0, 0x65, 0xb3, 0x19, 0x72,
+	0x4f, 0x56, 0xc1, 0x93, 0x78, 0x82, 0xfe, 0x71, 0x79, 0x2a, 0x75, 0x03, 0x8e, 0x22, 0xa3, 0xcb,
+	0xdb, 0xe3, 0xd6, 0x28, 0x5a, 0x8e, 0xb4, 0x15, 0x9d, 0xad, 0x10, 0x8e, 0xc0, 0x51, 0xf7, 0x27,
+	0x16, 0x33, 0x76, 0xf6, 0x19, 0x76, 0xf5, 0x73, 0xec, 0x9c, 0x22, 0xbb, 0x2a, 0x3e, 0x07, 0xe8,
+	0x4d, 0x3f, 0x82, 0xdd, 0x3b, 0x65, 0x14, 0xff, 0x1c, 0x15, 0x87, 0xd0, 0x9d, 0x26, 0x52, 0xd2,
+	0x2e, 0xce, 0xb7, 0x60, 0x3c, 0x1d, 0xa7, 0x71, 0x00, 0xed, 0x05, 0xed, 0xf3, 0x2a, 0xe3, 0xb0,
+	0x98, 0x12, 0x0f, 0xd0, 0x3f, 0x96, 0x4e, 0xb1, 0xb9, 0xd0, 0x7c, 0x4d, 0x56, 0x2b, 0x62, 0xd6,
+	0xea, 0x2d, 0x3f, 0x0b, 0x4f, 0x91, 0x8d, 0x7f, 0x2c, 0x68, 0x28, 0x66, 0x8c, 0x77, 0xd0, 0x4c,
+	0x57, 0x8d, 0xa8, 0x48, 0x97, 0xbf, 0x3f, 0xef, 0xb2, 0x94, 0x33, 0x4a, 0xa2, 0x86, 0x73, 0xe8,
+	0x94, 0x97, 0x87, 0xd7, 0xaa, 0xb0, 0x72, 0xff, 0x9e, 0x57, 0x75, 0x55, 0x6c, 0x55, 0x1e, 0xc8,
+	0xb4, 0xaa, 0xe4, 0x6b, 0x5a, 0x55, 0xcf, 0x2f, 0x6a, 0xcb, 0x7f, 0xfa, 0x57, 0x9a, 0xfc, 0x06,
+	0x00, 0x00, 0xff, 0xff, 0x26, 0xdc, 0xf8, 0xcf, 0x59, 0x03, 0x00, 0x00,
 }
