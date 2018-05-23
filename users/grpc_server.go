@@ -20,7 +20,7 @@ func (s *grpcServer) NewUser(ctx context.Context, r *pb.NewUserRequest) (*pb.New
 	return resp.(*pb.NewUserResponse), nil
 }
 
-// implement NewUser server Interface in movies.pb.go
+// implement GetUserByEmail server Interface in users.pb.go
 func (s *grpcServer) GetUserByEmail(ctx context.Context, r *pb.GetUserByEmailRequest) (*pb.GetUserByEmailResponse, error) {
 	_, resp, err := s.getUserByEmail.ServeGRPC(ctx, r)
 	if err != nil {

@@ -18,7 +18,7 @@ func EncodeGRPCNewUserRequest(_ context.Context, r interface{}) (interface{}, er
 }
 
 //decode NewUserRequest
-func DecodeGRPCNewUserRequest(ctx context.Context, r interface{}) (interface{}, error) {
+func DecodeGRPCNewUserRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.NewUserRequest)
 	return User{
 		Name:    req.Name,
@@ -55,9 +55,9 @@ func EncodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interfac
 }
 
 //decode GetUserByEmailRequest
-func DecodeGRPCGetUserByEmailRequest(ctx context.Context, r interface{}) (interface{}, error) {
+func DecodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.GetUserByEmailRequest)
-	return User{
+	return getUserByEmailRequest{
 		Email:     req.Email,
 	}, nil
 }
