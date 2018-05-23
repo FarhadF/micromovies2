@@ -37,24 +37,24 @@ func (mw InstrumentingMiddleware) GetMovieById(ctx context.Context, id string) (
 }
 
 //instrumentation per method
-func (mw InstrumentingMiddleware) NewMovie(ctx context.Context, title string, director []string, year string, userid string) (output string, err error) {
+func (mw InstrumentingMiddleware) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (output string, err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "NewMovie", "error", fmt.Sprint(err != nil)}
 		mw.RequestCount.With(lvs...).Add(1)
 		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	output, err = mw.Next.NewMovie(ctx, title, director, year, userid)
+	output, err = mw.Next.NewMovie(ctx, title, director, year, createdBy)
 	return
 }
 
 //instrumentation per method
-func (mw InstrumentingMiddleware) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userid string) (err error) {
+func (mw InstrumentingMiddleware) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) (err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "UpdateMovie", "error", fmt.Sprint(err != nil)}
 		mw.RequestCount.With(lvs...).Add(1)
 		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	err = mw.Next.UpdateMovie(ctx, id, title, director, year, userid)
+	err = mw.Next.UpdateMovie(ctx, id, title, director, year, updatedBy)
 	return
 }
 

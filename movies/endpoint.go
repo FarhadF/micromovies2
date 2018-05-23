@@ -92,7 +92,7 @@ type newMovieRequest struct {
 	Title    string `json:"title"`
 	Director []string `json:"director"`
 	Year     string `json:"year"`
-	Userid   string `json:"userid"`
+	Createdby   string `json:"createdby"`
 }
 
 type newMovieResponse struct {
@@ -104,7 +104,7 @@ type newMovieResponse struct {
 func MakeNewMovieEndpoint(svc Service) (endpoint.Endpoint) {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(newMovieRequest)
-		id, err := svc.NewMovie(ctx, r.Title, r.Director, r.Year, r.Userid)
+		id, err := svc.NewMovie(ctx, r.Title, r.Director, r.Year, r.Createdby)
 		if err != nil {
 			return newMovieResponse{id, err.Error()}, nil
 		}
@@ -114,12 +114,12 @@ func MakeNewMovieEndpoint(svc Service) (endpoint.Endpoint) {
 
 // Wrapping Endpoints as a Service implementation.
 // Will be used in gRPC client
-func (e Endpoints) NewMovie(ctx context.Context, title string, director []string, year string, userid string) (string, error) {
+func (e Endpoints) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
 	req := newMovieRequest{
 		Title:    title,
 		Director: director,
 		Year:     year,
-		Userid:   userid,
+		Createdby:   createdBy,
 	}
 	resp, err := e.NewMovieEndpoint(ctx, req)
 	if err != nil {
@@ -176,7 +176,7 @@ type updateMovieRequest struct {
 	Title    string `json:"title"`
 	Director []string `json:"director"`
 	Year     string `json:"year"`
-	Userid   string `json:"userid"`
+	Createdby   string `json:"createdby"`
 }
 
 type updateMovieResponse struct {
@@ -186,7 +186,7 @@ type updateMovieResponse struct {
 func MakeUpdateMovieEndpoint(svc Service) (endpoint.Endpoint) {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(updateMovieRequest)
-		err := svc.UpdateMovie(ctx, r.Id, r.Title, r.Director, r.Year, r.Userid)
+		err := svc.UpdateMovie(ctx, r.Id, r.Title, r.Director, r.Year, r.Createdby)
 		if err != nil {
 			return updateMovieResponse{ err.Error()}, nil
 		}
@@ -196,13 +196,13 @@ func MakeUpdateMovieEndpoint(svc Service) (endpoint.Endpoint) {
 
 // Wrapping Endpoints as a Service implementation.
 // Will be used in gRPC client
-func (e Endpoints) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userid string) error {
+func (e Endpoints) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, createdBy string) error {
 	req := updateMovieRequest{
 		Id: id,
 		Title: title,
 		Director: director,
 		Year: year,
-		Userid: userid,
+		Createdby: createdBy,
 	}
 	resp, err := e.UpdateMovieEndpoint(ctx, req)
 	if err != nil {

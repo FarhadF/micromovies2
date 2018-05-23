@@ -32,9 +32,10 @@ message Movie {
     string title = 2;
     repeated Director director = 3;
     string year = 4;
-    string userid = 5;
+    string createdby = 5;
     google.protobuf.Timestamp createdon = 6;
-    google.protobuf.Timestamp updatedon = 7;
+    string updatedby = 7;
+    google.protobuf.Timestamp updatedon = 8;
 }
 
 message Director {
@@ -53,7 +54,7 @@ message NewMovieRequest {
     string title = 1;
     repeated Director director = 2;
     string year = 3;
-    string userid = 4;
+    string createdby = 4;
 }
 
 message NewMovieResponse {
@@ -74,7 +75,7 @@ message UpdateMovieRequest {
     string title = 2;
     repeated Director director = 3;
     string year = 4;
-    string userid = 5;
+    string createdby = 5;
 }
 
 message UpdateMovieResponse {

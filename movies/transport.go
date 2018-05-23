@@ -40,8 +40,9 @@ func EncodeGRPCGetMoviesResponse(_ context.Context, r interface{}) (interface{},
 			Title:     movie.Title,
 			Director:  director,
 			Year:      movie.Year,
-			Userid:    movie.Userid,
+			Createdby:    movie.CreatedBy,
 			Createdon: createdOn,
+			Updatedby: movie.UpdatedBy,
 			Updatedon: updatedOn,
 		}
 		movies = append(movies, m)
@@ -75,8 +76,9 @@ func DecodeGRPCGetMoviesResponse(_ context.Context, r interface{}) (interface{},
 			Title:     movie.Title,
 			Director:  director,
 			Year:      movie.Year,
-			Userid:    movie.Userid,
+			CreatedBy:    movie.Createdby,
 			CreatedOn: createdOn,
+			UpdatedBy: movie.Updatedby,
 			UpdatedOn: updatedOn,
 		}
 		movies = append(movies, m)
@@ -126,8 +128,9 @@ func EncodeGRPCGetMovieByIdResponse(_ context.Context, r interface{}) (interface
 			Title:     resp.Movie.Title,
 			Director:  director,
 			Year:      resp.Movie.Year,
-			Userid:    resp.Movie.Userid,
+			Createdby:    resp.Movie.CreatedBy,
 			Createdon: createdOn,
+			Updatedby: resp.Movie.UpdatedBy,
 			Updatedon: updatedOn,
 		}
 
@@ -159,8 +162,9 @@ func DecodeGRPCGetMovieByIdResponse(_ context.Context, r interface{}) (interface
 		Title:     resp.Movie.Title,
 		Director:  director,
 		Year:      resp.Movie.Year,
-		Userid:    resp.Movie.Userid,
+		CreatedBy:    resp.Movie.Createdby,
 		CreatedOn: createdOn,
+		UpdatedBy: resp.Movie.Updatedby,
 		UpdatedOn: updatedOn,
 	}
 
@@ -183,7 +187,7 @@ func EncodeGRPCNewMovieRequest(_ context.Context, r interface{}) (interface{}, e
 		Title:    req.Title,
 		Director: director,
 		Year:     req.Year,
-		Userid:   req.Userid,
+		Createdby:   req.Createdby,
 	}, nil
 }
 
@@ -198,7 +202,7 @@ func DecodeGRPCNewMovieRequest(ctx context.Context, r interface{}) (interface{},
 		Title:    req.Title,
 		Director: director,
 		Year:     req.Year,
-		Userid:   req.Userid,
+		Createdby:   req.Createdby,
 	}, nil
 }
 
@@ -262,7 +266,7 @@ func EncodeGRPCUpdateMovieRequest(_ context.Context, r interface{}) (interface{}
 		Title: req.Title,
 		Director: director,
 		Year: req.Year,
-		Userid: req.Userid,
+		Createdby: req.Createdby,
 	}, nil
 }
 
@@ -278,7 +282,7 @@ func DecodeGRPCUpdateMovieRequest(ctx context.Context, r interface{}) (interface
 		Title: req.Title,
 		Director: director,
 		Year: req.Year,
-		Userid: req.Userid,
+		Createdby: req.Createdby,
 	}, nil
 }
 

@@ -13,9 +13,9 @@ import (
 type Service interface {
 	GetMovies(ctx context.Context) ([]Movie, error)
 	GetMovieById(ctx context.Context, id string) (Movie, error)
-	NewMovie(ctx context.Context, title string, director []string, year string, userid string) (string, error)
+	NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error)
 	DeleteMovie(ctx context.Context, id string) error
-	UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userid string) (error)
+	UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) (error)
 }
 
 //implementation with database and logger
@@ -41,7 +41,7 @@ func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
 	movies := make([]Movie, 0)
 	for rows.Next() {
 		movie := new(Movie)
-		err = rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.Userid, &movie.CreatedOn, &movie.UpdatedOn)
+		err = rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.CreatedBy, &movie.CreatedOn, &movie.UpdatedBy, &movie.UpdatedOn)
 		if err != nil {
 			return nil, err
 		}
@@ -69,7 +69,7 @@ func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
 func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, error) {
 	var movie Movie
 	rows := m.db.QueryRow("select * from movies where id = $1", id)
-	err := rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.Userid, &movie.CreatedOn, &movie.UpdatedOn)
+	err := rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.CreatedBy, &movie.CreatedOn, &movie.UpdatedBy, &movie.UpdatedOn)
 	if err != nil {
 		return movie, err
 	}
@@ -88,7 +88,7 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 }
 
 //implementation
-func (m moviesService) NewMovie(ctx context.Context, title string, director []string, year string, userid string) (string, error) {
+func (m moviesService) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
 	rows, err := m.db.Query("select * from movies where title='" + title + "'")
 	defer rows.Close()
 	if err != nil {
@@ -97,14 +97,14 @@ func (m moviesService) NewMovie(ctx context.Context, title string, director []st
 	}
 	if !rows.Next() {
 		var id string
-		err := m.db.QueryRow("insert into movies (title, year, userid) values($1,$2,$3) returning id", title, year, userid).Scan(&id)
+		err := m.db.QueryRow("insert into movies (title, year, createdBy) values($1,$2,$3) returning id", title, year, createdBy).Scan(&id)
 		//res, err := stmt.Exec(movie.Title,movie.Director, movie.Year, movie.Userid)
 		//id, err := res.LastInsertId()
 		if err != nil {
 			return "", err
 		}
 		for _, d := range director {
-			_, err = m.db.Exec("insert into movie_directors (movie_id, director) values($1,$2)", id, d)
+			_, err = m.db.Exec("insert into movie_directors (movie_id, director, createdby) values($1,$2,$3)", id, d, createdBy)
 			if err != nil {
 				//rollback
 				err1 := err
@@ -142,7 +142,7 @@ func (m moviesService) DeleteMovie(ctx context.Context, id string) error {
 }
 
 //implementation
-func (m moviesService) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userid string) error {
+func (m moviesService) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) error {
 	rows, err := m.db.Query("select * from movies where id='" + id + "'")
 	defer rows.Close()
 	if err != nil {
@@ -151,9 +151,9 @@ func (m moviesService) UpdateMovie(ctx context.Context, id string, title string,
 	if !rows.Next() {
 		return errors.New("movie does not exist")
 	}
-	updatedon := time.Now().UTC()
-	_, err = m.db.Exec("update movies set title = $1, year = $2, updatedon = $3 where id = $4", title, year,
-		updatedon.Format("2006-01-02 15:04:05.999999"), id)
+	updatedOn := time.Now().UTC()
+	_, err = m.db.Exec("update movies set title = $1, year = $2, updatedon = $3, updatedby = $4 where id = $5", title, year,
+		updatedOn.Format("2006-01-02 15:04:05.999999"), updatedBy, id)
 	if err != nil {
 		return err
 	}
@@ -181,7 +181,8 @@ func (m moviesService) UpdateMovie(ctx context.Context, id string, title string,
 		return err
 	}
 	for _, d := range director {
-		_, err = m.db.Exec("insert into movie_directors (movie_id, director) values($1,$2)", id, d)
+		_, err = m.db.Exec("insert into movie_directors (movie_id, director, createdby, createdOn) values($1,$2,$3,$4)",
+			id, d, updatedBy, updatedOn)
 		if err != nil {
 			//todo:rollback
 			return err
