@@ -40,7 +40,7 @@ func (s usersService) NewUser (ctx context.Context, user User) (string, error) {
 		return "", err
 	}
 	if !rows.Next() {
-		conn, err := grpc.Dial(":8081", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+		conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 		if err != nil {
 			s.logger.Error().Err(err).Msg("grpc dial err")
 			return "", err
@@ -84,7 +84,7 @@ func (s usersService) ChangePassword (ctx context.Context, email string, current
 	if err != nil {
 		return false, err
 	}
-	conn, err := grpc.Dial(":8081", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
 		s.logger.Error().Err(err).Msg("grpc dial err")
 		return false, err
