@@ -15,11 +15,11 @@ type Service interface {
 type jwtService struct {
 }
 
-func NewService () jwtService {
+func NewService () Service {
 	return jwtService{}
 }
 
-func (j jwtService) GenerateToken(email string, role string) (string, error) {
+func (jwtService) GenerateToken(ctx context.Context, email string, role string) (string, error) {
 	// Create the token
 	tokenObject := jwt.New(jwt.SigningMethodHS256)
 	// Set some claims
