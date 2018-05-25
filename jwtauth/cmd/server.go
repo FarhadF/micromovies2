@@ -15,9 +15,9 @@ import (
 	"zerolog/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	"micromovies2/jwt"
+	"micromovies2/jwtauth"
 	"google.golang.org/grpc"
-	"micromovies2/jwt/pb"
+	"micromovies2/jwtauth/pb"
 )
 
 func main() {
@@ -53,15 +53,15 @@ func main() {
 	}, fieldKeys)
 
 	// init jwt service
-	svc := jwt.NewService()
+	svc := jwtauth.NewService()
 	//wire logging
-	svc = jwt.LoggingMiddleware{logger, svc}
+	svc = jwtauth.LoggingMiddleware{logger, svc}
 	//wire instrumentation
-	svc = jwt.InstrumentingMiddleware{requestCount, requestLatency,  svc}
+	svc = jwtauth.InstrumentingMiddleware{requestCount, requestLatency,  svc}
 	errChan := make(chan error)
 	// creating Endpoints struct
-	endpoints := jwt.Endpoints{
-		GenerateTokenEndpoint: jwt.MakeGenerateTokenEndpoint(svc),
+	endpoints := jwtauth.Endpoints{
+		GenerateTokenEndpoint: jwtauth.MakeGenerateTokenEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {
@@ -70,7 +70,7 @@ func main() {
 			errChan <- err
 			return
 		}
-		handler := jwt.NewGRPCServer(ctx, endpoints)
+		handler := jwtauth.NewGRPCServer(ctx, endpoints)
 		grpcServer := grpc.NewServer()
 		pb.RegisterJWTServer(grpcServer, handler)
 		errChan <- grpcServer.Serve(listener)

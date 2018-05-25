@@ -1,4 +1,4 @@
-package jwt
+package jwtauth
 
 import (
 	"github.com/go-kit/kit/metrics"

@@ -1,4 +1,4 @@
-package jwt
+package jwtauth
 
 import (
 	"github.com/dgrijalva/jwt-go"
@@ -10,6 +10,7 @@ const mySigningKey = "Super_Dup3r_S3cret"
 
 type Service interface {
 	GenerateToken(ctx context.Context, email string, role string) (string, error)
+	ParseToken(ctx context.Context, token string) (map[string]interface{}, error)
 }
 
 type jwtService struct {
@@ -33,5 +34,19 @@ func (jwtService) GenerateToken(ctx context.Context, email string, role string) 
 	// Sign and get the complete encoded token as a string
 	tokenString, err := tokenObject.SignedString([]byte(mySigningKey))
 	return tokenString, err
+}
+
+
+func (jwtService) ParseToken (ctx context.Context, myToken string) (map[string]interface{}, error) {
+	parsedToken, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
+		return []byte(mySigningKey), nil
+	})
+	c := parsedToken.Claims.(jwt.MapClaims)
+	//fmt.Println(token.Claims)
+	if err == nil && parsedToken.Valid {
+		return c, nil
+	} else {
+		return nil, err
+	}
 }
 

@@ -1,4 +1,4 @@
-package jwt
+package jwtauth
 
 import (
 	"github.com/go-kit/kit/endpoint"
@@ -9,6 +9,7 @@ import (
 //Endpoints Wrapper
 type Endpoints struct {
 	GenerateTokenEndpoint    endpoint.Endpoint
+	ParseTokenEndpoint 	endpoint.Endpoint
 }
 
 //model request
@@ -17,7 +18,7 @@ type generateTokenRequest struct {
 	Role string `json:"role"`
 }
 
-//odel response
+//model response
 type generateTokenResponse struct {
 	Token string `json:"token"`
 	Err string `json:"err"`
@@ -49,5 +50,39 @@ func (e Endpoints) GenerateToken(ctx context.Context, email string, role string)
 	return generateTokenResp.Token, nil
 }
 
+//model request
+type parseTokenRequest struct {
+	Token string `json:"token"`
+}
 
+//model response
+type parseTokenResponse struct {
+	Token map[string]interface{} `json:"token"`
+	Err string `json:"err"`
+}
 
+//Make actual endpoint per Method
+func MakeParseTokenEndpoint(svc Service) (endpoint.Endpoint) {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(parseTokenRequest)
+		token, err := svc.ParseToken(ctx, r.Token)
+		if err != nil {
+			return parseTokenResponse{nil, err.Error()}, nil
+		}
+		return parseTokenResponse{token, ""}, nil
+	}
+}
+
+// Wrapping Endpoints as a Service implementation.
+// Will be used in gRPC client
+func (e Endpoints) ParsedToken(ctx context.Context, myToken string) (map[string]interface{}, error) {
+	resp, err := e.ParseTokenEndpoint(ctx, parseTokenRequest{Token: myToken})
+	if err != nil {
+		return nil, err
+	}
+	parseTokenResp := resp.(parseTokenResponse)
+	if parseTokenResp.Err != "" {
+		return nil, errors.New(parseTokenResp.Err)
+	}
+	return parseTokenResp.Token, nil
+}

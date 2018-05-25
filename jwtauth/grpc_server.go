@@ -1,9 +1,9 @@
-package jwt
+package jwtauth
 
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"context"
-	"micromovies2/jwt/pb"
+	"micromovies2/jwtauth/pb"
 )
 //grpcServer Wrapper
 type grpcServer struct {

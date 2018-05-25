@@ -1,8 +1,8 @@
-package jwt
+package jwtauth
 
 import (
 	"context"
-	"micromovies2/jwt/pb"
+	"micromovies2/jwtauth/pb"
 )
 
 //encode GenerateTokenRequest

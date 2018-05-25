@@ -6,7 +6,7 @@ import (
 	"context"
 	"github.com/rs/zerolog"
 	"os"
-	"micromovies2/jwt/client"
+	"micromovies2/jwtauth/client"
 )
 
 func main() {

@@ -2,25 +2,25 @@ package client
 
 import (
 	"google.golang.org/grpc"
-	"micromovies2/jwt"
+	"micromovies2/jwtauth"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"micromovies2/jwt/pb"
+	"micromovies2/jwtauth/pb"
 	"context"
 )
 
-func NewGRPCClient(conn *grpc.ClientConn) jwt.Service {
+func NewGRPCClient(conn *grpc.ClientConn) jwtauth.Service {
 	var generateTokenEndpoint = grpctransport.NewClient(
 		conn, "pb.JWT", "GenerateToken",
-		jwt.EncodeGRPCGenerateTokenRequest,
-		jwt.DecodeGRPCGenerateTokenResponse,
+		jwtauth.EncodeGRPCGenerateTokenRequest,
+		jwtauth.DecodeGRPCGenerateTokenResponse,
 		pb.GenerateTokenResponse{},
 	).Endpoint()
-	return jwt.Endpoints{
+	return jwtauth.Endpoints{
 		GenerateTokenEndpoint:     generateTokenEndpoint,
 	}
 }
 
-func GenerateToken(ctx context.Context, service jwt.Service, email string, role string) (string, error){
+func GenerateToken(ctx context.Context, service jwtauth.Service, email string, role string) (string, error){
 	h, err := service.GenerateToken(ctx, email, role)
 	if err != nil {
 		return "", err

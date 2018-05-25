@@ -1,0 +1,29 @@
+syntax = "proto3";
+package pb;
+import "google/protobuf/any.proto";
+
+service JWT {
+    rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse) {
+    }
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+    }
+}
+
+message GenerateTokenRequest {
+    string Email = 1;
+    string Role = 2;
+}
+
+message GenerateTokenResponse {
+    string Token = 1;
+    string Err = 2;
+}
+
+message ValidateTokenRequest {
+    string Token = 1;
+}
+
+message ValidateTokenResponse {
+    map<string,google.protobuf.Any> claims = 1;
+    string err = 2;
+}
