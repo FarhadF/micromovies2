@@ -7,7 +7,7 @@ import (
 )
 
 type grpcServer struct {
-	newUser    grpctransport.Handler
+	newUser        grpctransport.Handler
 	getUserByEmail grpctransport.Handler
 	changePassword grpctransport.Handler
 }
@@ -38,7 +38,6 @@ func (s *grpcServer) ChangePassword(ctx context.Context, r *pb.ChangePasswordReq
 	}
 	return resp.(*pb.ChangePasswordResponse), nil
 }
-
 
 // create new grpc server
 func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {

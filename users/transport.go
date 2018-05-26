@@ -9,11 +9,11 @@ import (
 func EncodeGRPCNewUserRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(User)
 	return &pb.NewUserRequest{
-		Name:    req.Name,
+		Name:     req.Name,
 		LastName: req.LastName,
-		Email:     req.Email,
-		Password:   req.Password,
-		Role: req.Role,
+		Email:    req.Email,
+		Password: req.Password,
+		Role:     req.Role,
 	}, nil
 }
 
@@ -21,11 +21,11 @@ func EncodeGRPCNewUserRequest(_ context.Context, r interface{}) (interface{}, er
 func DecodeGRPCNewUserRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.NewUserRequest)
 	return User{
-		Name:    req.Name,
+		Name:     req.Name,
 		LastName: req.LastName,
-		Email:     req.Email,
-		Password:   req.Password,
-		Role: req.Role,
+		Email:    req.Email,
+		Password: req.Password,
+		Role:     req.Role,
 	}, nil
 }
 
@@ -50,7 +50,7 @@ func DecodeGRPCNewUserResponse(_ context.Context, r interface{}) (interface{}, e
 func EncodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(getUserByEmailRequest)
 	return &pb.GetUserByEmailRequest{
-		Email:     req.Email,
+		Email: req.Email,
 	}, nil
 }
 
@@ -58,7 +58,7 @@ func EncodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interfac
 func DecodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.GetUserByEmailRequest)
 	return getUserByEmailRequest{
-		Email:     req.Email,
+		Email: req.Email,
 	}, nil
 }
 
@@ -66,30 +66,30 @@ func DecodeGRPCGetUserByEmailRequest(_ context.Context, r interface{}) (interfac
 func EncodeGRPCGetUserByEmailResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(getUserByEmailResponse)
 	u := &pb.User{
-		Id:        resp.User.Id,
-		Name:    resp.User.Name,
+		Id:       resp.User.Id,
+		Name:     resp.User.Name,
 		LastName: resp.User.LastName,
-		Email:     resp.User.Email,
-		Role: resp.User.Role,
+		Email:    resp.User.Email,
+		Role:     resp.User.Role,
 	}
 	return &pb.GetUserByEmailResponse{
-		User:  u,
-		Err: resp.Err,
+		User: u,
+		Err:  resp.Err,
 	}, nil
 }
 
 func DecodeGRPCGetUserByEmailResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(*pb.GetUserByEmailResponse)
 	u := User{
-		Id:        resp.User.Id,
-		Name:    resp.User.Name,
+		Id:       resp.User.Id,
+		Name:     resp.User.Name,
 		LastName: resp.User.LastName,
-		Email:     resp.User.Email,
-		Role: resp.User.Role,
+		Email:    resp.User.Email,
+		Role:     resp.User.Role,
 	}
 	return getUserByEmailResponse{
-		User:  u,
-		Err: resp.Err,
+		User: u,
+		Err:  resp.Err,
 	}, nil
 }
 
@@ -97,9 +97,9 @@ func DecodeGRPCGetUserByEmailResponse(_ context.Context, r interface{}) (interfa
 func EncodeGRPCChangePasswordRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(changePasswordRequest)
 	return &pb.ChangePasswordRequest{
-		Email:     req.Email,
+		Email:           req.Email,
 		CurrentPassword: req.CurrentPassword,
-		NewPassword: req.NewPassword,
+		NewPassword:     req.NewPassword,
 	}, nil
 }
 
@@ -107,9 +107,9 @@ func EncodeGRPCChangePasswordRequest(_ context.Context, r interface{}) (interfac
 func DecodeGRPCChangePasswordRequest(_ context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.ChangePasswordRequest)
 	return changePasswordRequest{
-		Email:     req.Email,
+		Email:           req.Email,
 		CurrentPassword: req.CurrentPassword,
-		NewPassword: req.NewPassword,
+		NewPassword:     req.NewPassword,
 	}, nil
 }
 
@@ -117,15 +117,15 @@ func DecodeGRPCChangePasswordRequest(_ context.Context, r interface{}) (interfac
 func EncodeGRPCChangePasswordResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(changePasswordResponse)
 	return &pb.ChangePasswordResponse{
-		Success:  resp.Success,
-		Err: resp.Err,
+		Success: resp.Success,
+		Err:     resp.Err,
 	}, nil
 }
 
 func DecodeGRPCChangePasswordResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(*pb.ChangePasswordResponse)
 	return changePasswordResponse{
-		Success:  resp.Success,
-		Err: resp.Err,
+		Success: resp.Success,
+		Err:     resp.Err,
 	}, nil
 }

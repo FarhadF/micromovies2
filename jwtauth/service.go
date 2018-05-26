@@ -17,7 +17,7 @@ type Service interface {
 type jwtService struct {
 }
 
-func NewService () Service {
+func NewService() Service {
 	return jwtService{}
 }
 
@@ -37,15 +37,14 @@ func (jwtService) GenerateToken(ctx context.Context, email string, role string) 
 	return tokenString, err
 }
 
-
 type Claims struct {
-	Exp int64 `json:"exp"`
-	Iat int64 `json:"iat"`
+	Exp   int64  `json:"exp"`
+	Iat   int64  `json:"iat"`
 	Email string `json:"email"`
-	Role string `json:"role"`
+	Role  string `json:"role"`
 }
 
-func (jwtService) ParseToken (ctx context.Context, myToken string) (Claims, error) {
+func (jwtService) ParseToken(ctx context.Context, myToken string) (Claims, error) {
 	parsedToken, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(mySigningKey), nil
 	})
@@ -55,14 +54,13 @@ func (jwtService) ParseToken (ctx context.Context, myToken string) (Claims, erro
 		fmt.Println(c["exp"])
 		claims := Claims{
 			//todo: why is it float64 when I defiend int64 and unix returns int64?!
-			Exp: int64(c["exp"].(float64)),
-			Iat: int64(c["iat"].(float64)),
+			Exp:   int64(c["exp"].(float64)),
+			Iat:   int64(c["iat"].(float64)),
 			Email: c["email"].(string),
-			Role: c["role"].(string),
+			Role:  c["role"].(string),
 		}
 		return claims, nil
 	} else {
 		return Claims{}, err
 	}
 }
-

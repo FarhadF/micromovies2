@@ -2,9 +2,9 @@ syntax = "proto3";
 package pb;
 
 service JWT {
-    rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse) {
+    rpc GenerateToken (GenerateTokenRequest) returns (GenerateTokenResponse) {
     }
-    rpc ParseToken(ParseTokenRequest) returns (ParseTokenResponse) {
+    rpc ParseToken (ParseTokenRequest) returns (ParseTokenResponse) {
     }
 }
 

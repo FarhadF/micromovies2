@@ -10,7 +10,7 @@ import (
 	"errors"
 )
 
-type Service interface{
+type Service interface {
 	NewUser(ctx context.Context, user User) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
@@ -33,7 +33,7 @@ func NewService(db *pgx.ConnPool, logger zerolog.Logger) Service {
 }
 
 //method implementation
-func (s usersService) NewUser (ctx context.Context, user User) (string, error) {
+func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 	rows, err := s.db.Query("select * from users where email='" + user.Email + "'")
 	defer rows.Close()
 	if err != nil {
@@ -68,7 +68,7 @@ func (s usersService) NewUser (ctx context.Context, user User) (string, error) {
 }
 
 //method implementation
-func (s usersService) GetUserByEmail (ctx context.Context, email string) (User, error) {
+func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, error) {
 	var user User
 	err := s.db.QueryRow("select * from users where email='" + email + "'").Scan(&user.Id, &user.Name, &user.LastName,
 		&user.Email, &user.Password, &user.Role, &user.CreatedOn, &user.UpdatedOn, &user.LastLogin)
@@ -79,7 +79,7 @@ func (s usersService) GetUserByEmail (ctx context.Context, email string) (User, 
 }
 
 //method implementation
-func (s usersService) ChangePassword (ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
+func (s usersService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
 	var currentPasswordHash string
 	err := s.db.QueryRow("select password from users where email='" + email + "'").Scan(&currentPasswordHash)
 	if err != nil {
@@ -92,7 +92,7 @@ func (s usersService) ChangePassword (ctx context.Context, email string, current
 	}
 	defer conn.Close()
 	vaultService := client.New(conn)
-	valid, err := client.Validate(ctx, vaultService, currentPassword, currentPasswordHash )
+	valid, err := client.Validate(ctx, vaultService, currentPassword, currentPasswordHash)
 	if err != nil {
 		return false, err
 	}

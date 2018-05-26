@@ -11,7 +11,7 @@ type InstrumentingMiddleware struct {
 	RequestCount   metrics.Counter
 	RequestLatency metrics.Histogram
 	//CountResult    metrics.Histogram
-	Next           Service
+	Next Service
 }
 
 //instrumentation per method

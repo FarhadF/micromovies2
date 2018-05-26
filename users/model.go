@@ -19,7 +19,6 @@ type Credential struct {
 	Password string `json:"password"`
 }
 
-
 /*
 CREATE TABLE users (
 id UUID NOT NULL DEFAULT gen_random_uuid(),

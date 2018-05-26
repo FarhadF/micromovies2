@@ -20,7 +20,9 @@ import (
 	"micromovies2/users"
 	"micromovies2/users/pb"
 )
+
 var pool *pgx.ConnPool
+
 func main() {
 	//zerolog
 	logger := zerolog.New(os.Stderr).With().Timestamp().Caller().Logger()
@@ -79,11 +81,11 @@ func main() {
 	//wire logging
 	svc = users.LoggingMiddleware{logger, svc}
 	//wire instrumentation
-	svc = users.InstrumentingMiddleware{requestCount, requestLatency,  svc}
+	svc = users.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
 	// creating Endpoints struct
 	endpoints := users.Endpoints{
-		NewUserEndpoint: users.MakeNewUserEndpoint(svc),
+		NewUserEndpoint:        users.MakeNewUserEndpoint(svc),
 		GetUserByEmailEndpoint: users.MakeGetUserByEmailEndpoint(svc),
 		ChangePasswordEndpoint: users.MakeChangePasswordEndpoint(svc),
 	}

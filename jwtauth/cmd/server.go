@@ -57,12 +57,12 @@ func main() {
 	//wire logging
 	svc = jwtauth.LoggingMiddleware{logger, svc}
 	//wire instrumentation
-	svc = jwtauth.InstrumentingMiddleware{requestCount, requestLatency,  svc}
+	svc = jwtauth.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
 	// creating Endpoints struct
 	endpoints := jwtauth.Endpoints{
 		GenerateTokenEndpoint: jwtauth.MakeGenerateTokenEndpoint(svc),
-		ParseTokenEndpoint: jwtauth.MakeParseTokenEndpoint(svc),
+		ParseTokenEndpoint:    jwtauth.MakeParseTokenEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {
@@ -92,4 +92,3 @@ func main() {
 	}()
 	logger.Error().Err(<-errChan).Msg("")
 }
-

@@ -40,7 +40,7 @@ func EncodeGRPCGetMoviesResponse(_ context.Context, r interface{}) (interface{},
 			Title:     movie.Title,
 			Director:  director,
 			Year:      movie.Year,
-			Createdby:    movie.CreatedBy,
+			Createdby: movie.CreatedBy,
 			Createdon: createdOn,
 			Updatedby: movie.UpdatedBy,
 			Updatedon: updatedOn,
@@ -76,7 +76,7 @@ func DecodeGRPCGetMoviesResponse(_ context.Context, r interface{}) (interface{},
 			Title:     movie.Title,
 			Director:  director,
 			Year:      movie.Year,
-			CreatedBy:    movie.Createdby,
+			CreatedBy: movie.Createdby,
 			CreatedOn: createdOn,
 			UpdatedBy: movie.Updatedby,
 			UpdatedOn: updatedOn,
@@ -118,21 +118,21 @@ func EncodeGRPCGetMovieByIdResponse(_ context.Context, r interface{}) (interface
 		//todo bring logger
 		return nil, err
 	}
-		//pb director type conversion
-		var director []*pb.Director
-		for _, d := range resp.Movie.Director {
-			director = append(director, &pb.Director{Director: d})
-		}
-		m := &pb.Movie{
-			Id:        resp.Movie.Id,
-			Title:     resp.Movie.Title,
-			Director:  director,
-			Year:      resp.Movie.Year,
-			Createdby:    resp.Movie.CreatedBy,
-			Createdon: createdOn,
-			Updatedby: resp.Movie.UpdatedBy,
-			Updatedon: updatedOn,
-		}
+	//pb director type conversion
+	var director []*pb.Director
+	for _, d := range resp.Movie.Director {
+		director = append(director, &pb.Director{Director: d})
+	}
+	m := &pb.Movie{
+		Id:        resp.Movie.Id,
+		Title:     resp.Movie.Title,
+		Director:  director,
+		Year:      resp.Movie.Year,
+		Createdby: resp.Movie.CreatedBy,
+		Createdon: createdOn,
+		Updatedby: resp.Movie.UpdatedBy,
+		Updatedon: updatedOn,
+	}
 
 	return &pb.GetMovieByIdResponse{
 		Movie: m,
@@ -162,7 +162,7 @@ func DecodeGRPCGetMovieByIdResponse(_ context.Context, r interface{}) (interface
 		Title:     resp.Movie.Title,
 		Director:  director,
 		Year:      resp.Movie.Year,
-		CreatedBy:    resp.Movie.Createdby,
+		CreatedBy: resp.Movie.Createdby,
 		CreatedOn: createdOn,
 		UpdatedBy: resp.Movie.Updatedby,
 		UpdatedOn: updatedOn,
@@ -184,10 +184,10 @@ func EncodeGRPCNewMovieRequest(_ context.Context, r interface{}) (interface{}, e
 	}
 
 	return &pb.NewMovieRequest{
-		Title:    req.Title,
-		Director: director,
-		Year:     req.Year,
-		Createdby:   req.Createdby,
+		Title:     req.Title,
+		Director:  director,
+		Year:      req.Year,
+		Createdby: req.Createdby,
 	}, nil
 }
 
@@ -199,10 +199,10 @@ func DecodeGRPCNewMovieRequest(ctx context.Context, r interface{}) (interface{},
 		director = append(director, d.Director)
 	}
 	return newMovieRequest{
-		Title:    req.Title,
-		Director: director,
-		Year:     req.Year,
-		Createdby:   req.Createdby,
+		Title:     req.Title,
+		Director:  director,
+		Year:      req.Year,
+		Createdby: req.Createdby,
 	}, nil
 }
 
@@ -262,10 +262,10 @@ func EncodeGRPCUpdateMovieRequest(_ context.Context, r interface{}) (interface{}
 		director = append(director, &pb.Director{Director: d})
 	}
 	return &pb.UpdateMovieRequest{
-		Id: req.Id,
-		Title: req.Title,
-		Director: director,
-		Year: req.Year,
+		Id:        req.Id,
+		Title:     req.Title,
+		Director:  director,
+		Year:      req.Year,
 		Createdby: req.Createdby,
 	}, nil
 }
@@ -278,10 +278,10 @@ func DecodeGRPCUpdateMovieRequest(ctx context.Context, r interface{}) (interface
 		director = append(director, d.Director)
 	}
 	return updateMovieRequest{
-		Id: req.Id,
-		Title: req.Title,
-		Director: director,
-		Year: req.Year,
+		Id:        req.Id,
+		Title:     req.Title,
+		Director:  director,
+		Year:      req.Year,
 		Createdby: req.Createdby,
 	}, nil
 }

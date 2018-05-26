@@ -29,13 +29,13 @@ func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 		pb.ChangePasswordResponse{},
 	).Endpoint()
 	return users.Endpoints{
-		NewUserEndpoint:     newUserEndpoint,
+		NewUserEndpoint:        newUserEndpoint,
 		GetUserByEmailEndpoint: getUserByEmailEndpoint,
 		ChangePasswordEndpoint: changePasswordEndpoint,
 	}
 }
 
-func NewUser(ctx context.Context, service users.Service, user users.User) (string, error){
+func NewUser(ctx context.Context, service users.Service, user users.User) (string, error) {
 	id, err := service.NewUser(ctx, user)
 	if err != nil {
 		return "", err
@@ -43,7 +43,7 @@ func NewUser(ctx context.Context, service users.Service, user users.User) (strin
 	return id, nil
 }
 
-func GetUserByEmail(ctx context.Context, service users.Service, email string) (users.User, error){
+func GetUserByEmail(ctx context.Context, service users.Service, email string) (users.User, error) {
 	user, err := service.GetUserByEmail(ctx, email)
 	if err != nil {
 		return users.User{}, err
@@ -51,7 +51,7 @@ func GetUserByEmail(ctx context.Context, service users.Service, email string) (u
 	return user, nil
 }
 
-func ChangePassword(ctx context.Context, service users.Service, email string, currentPassword string, newPassword string) (bool, error){
+func ChangePassword(ctx context.Context, service users.Service, email string, currentPassword string, newPassword string) (bool, error) {
 	success, err := service.ChangePassword(ctx, email, currentPassword, newPassword)
 	if err != nil {
 		return success, err

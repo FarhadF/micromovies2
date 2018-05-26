@@ -52,7 +52,7 @@ func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
 		}
 		var director []string
 		var d string
-		for r.Next()	{
+		for r.Next() {
 			err = r.Scan(&d)
 			if err != nil {
 				return nil, err
@@ -75,7 +75,7 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 	}
 	r, err := m.db.Query("select director from movie_directors where movie_id=$1", movie.Id)
 	var director []string
-	for r.Next()	{
+	for r.Next() {
 		var d string
 		err = r.Scan(&d)
 		if err != nil {
@@ -164,7 +164,7 @@ func (m moviesService) UpdateMovie(ctx context.Context, id string, title string,
 		return err
 	}
 	var dir []string
-	for r.Next()	{
+	for r.Next() {
 		var d string
 		err = r.Scan(&d)
 		if err != nil {

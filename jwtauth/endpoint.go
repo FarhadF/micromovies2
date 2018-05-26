@@ -8,20 +8,20 @@ import (
 
 //Endpoints Wrapper
 type Endpoints struct {
-	GenerateTokenEndpoint    endpoint.Endpoint
-	ParseTokenEndpoint 	endpoint.Endpoint
+	GenerateTokenEndpoint endpoint.Endpoint
+	ParseTokenEndpoint    endpoint.Endpoint
 }
 
 //model request
 type generateTokenRequest struct {
 	Email string `json:"email"`
-	Role string `json:"role"`
+	Role  string `json:"role"`
 }
 
 //model response
 type generateTokenResponse struct {
 	Token string `json:"token"`
-	Err string `json:"err"`
+	Err   string `json:"err"`
 }
 
 //Make actual endpoint per Method
@@ -55,12 +55,10 @@ type parseTokenRequest struct {
 	Token string `json:"token"`
 }
 
-
-
 //model response
 type parseTokenResponse struct {
 	Claims Claims `json:"claims"`
-	Err string `json:"err"`
+	Err    string `json:"err"`
 }
 
 //Make actual endpoint per Method

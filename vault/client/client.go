@@ -6,7 +6,6 @@ import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"micromovies2/vault/pb"
 	"context"
-
 )
 
 func New(conn *grpc.ClientConn) vault.Service {
@@ -28,7 +27,7 @@ func New(conn *grpc.ClientConn) vault.Service {
 	}
 }
 
-func Hash(ctx context.Context, service vault.Service, password string) (string, error){
+func Hash(ctx context.Context, service vault.Service, password string) (string, error) {
 	h, err := service.Hash(ctx, password)
 	if err != nil {
 		return "", err

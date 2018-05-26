@@ -15,8 +15,8 @@ func main() {
 		email         string
 		generateToken bool
 		role          string
-		parseToken bool
-		token string
+		parseToken    bool
+		token         string
 	)
 	flag.StringVarP(&grpcAddr, "addr", "a", ":8087", "gRPC address")
 	flag.StringVarP(&email, "email", "e", "", "email")

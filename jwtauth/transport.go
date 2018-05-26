@@ -10,7 +10,7 @@ func EncodeGRPCGenerateTokenRequest(_ context.Context, r interface{}) (interface
 	req := r.(generateTokenRequest)
 	return &pb.GenerateTokenRequest{
 		Email: req.Email,
-		Role: req.Role,
+		Role:  req.Role,
 	}, nil
 }
 
@@ -19,7 +19,7 @@ func DecodeGRPCGenerateTokenRequest(ctx context.Context, r interface{}) (interfa
 	req := r.(*pb.GenerateTokenRequest)
 	return generateTokenRequest{
 		Email: req.Email,
-		Role: req.Role,
+		Role:  req.Role,
 	}, nil
 }
 
@@ -61,14 +61,14 @@ func DecodeGRPCParseTokenRequest(ctx context.Context, r interface{}) (interface{
 func EncodeGRPCParseTokenResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(parseTokenResponse)
 	claims := &pb.Claims{
-		Exp: resp.Claims.Exp,
-		Iat: resp.Claims.Iat,
+		Exp:   resp.Claims.Exp,
+		Iat:   resp.Claims.Iat,
 		Email: resp.Claims.Email,
-		Role: resp.Claims.Role,
+		Role:  resp.Claims.Role,
 	}
 	return &pb.ParseTokenResponse{
 		Claims: claims,
-		Err:   resp.Err,
+		Err:    resp.Err,
 	}, nil
 }
 
@@ -76,13 +76,13 @@ func EncodeGRPCParseTokenResponse(_ context.Context, r interface{}) (interface{}
 func DecodeGRPCParseTokenResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(*pb.ParseTokenResponse)
 	claims := Claims{
-		Exp: resp.Claims.Exp,
-		Iat: resp.Claims.Iat,
+		Exp:   resp.Claims.Exp,
+		Iat:   resp.Claims.Iat,
 		Email: resp.Claims.Email,
-		Role: resp.Claims.Role,
+		Role:  resp.Claims.Role,
 	}
 	return parseTokenResponse{
 		Claims: claims,
-		Err:   resp.Err,
+		Err:    resp.Err,
 	}, nil
 }

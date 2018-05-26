@@ -8,14 +8,14 @@ import (
 
 //Endpoints Wrapper
 type Endpoints struct {
-	NewUserEndpoint    endpoint.Endpoint
+	NewUserEndpoint        endpoint.Endpoint
 	GetUserByEmailEndpoint endpoint.Endpoint
 	ChangePasswordEndpoint endpoint.Endpoint
 }
 
 //model request and response
 type newUserResponse struct {
-	Id string `json:"id"`
+	Id  string `json:"id"`
 	Err string `json:"err"`
 }
 
@@ -51,8 +51,8 @@ type getUserByEmailRequest struct {
 }
 
 type getUserByEmailResponse struct {
-	User User `json:"user"`
-	Err string `json:"err"`
+	User User   `json:"user"`
+	Err  string `json:"err"`
 }
 
 //make the actual endpoint
@@ -84,14 +84,14 @@ func (e Endpoints) GetUserByEmail(ctx context.Context, email string) (User, erro
 
 //model request and response
 type changePasswordRequest struct {
-	Email string `json:"email"`
+	Email           string `json:"email"`
 	CurrentPassword string `json:"currentpassword"`
-	NewPassword	string `json:"newpassword"`
+	NewPassword     string `json:"newpassword"`
 }
 
 type changePasswordResponse struct {
-	Success bool `json:"success"`
-	Err string `json:"err"`
+	Success bool   `json:"success"`
+	Err     string `json:"err"`
 }
 
 //make the actual endpoint

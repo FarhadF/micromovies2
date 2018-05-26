@@ -6,9 +6,9 @@ package pb;
 service Users {
     rpc NewUser (NewUserRequest) returns (NewUserResponse) {
     }
-    rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse){
+    rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse) {
     }
-    rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse){
+    rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordResponse) {
     }
 }
 

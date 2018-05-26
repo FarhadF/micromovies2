@@ -5,10 +5,11 @@ import (
 	"context"
 	"micromovies2/jwtauth/pb"
 )
+
 //grpcServer Wrapper
 type grpcServer struct {
-	generateToken    grpctransport.Handler
-	parseToken 		 grpctransport.Handler
+	generateToken grpctransport.Handler
+	parseToken    grpctransport.Handler
 }
 
 // implement GenerateToken server Interface in jwt.pb.go
@@ -44,4 +45,3 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.JWTServer {
 		),
 	}
 }
-

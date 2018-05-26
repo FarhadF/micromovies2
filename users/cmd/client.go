@@ -12,15 +12,15 @@ import (
 
 func main() {
 	var (
-		grpcAddr string
-		newUser bool
-		name    string
-		lastname string
-		email     string
-		password   string
-		role	string
+		grpcAddr       string
+		newUser        bool
+		name           string
+		lastname       string
+		email          string
+		password       string
+		role           string
 		changePassword bool
-		newPassword string
+		newPassword    string
 	)
 	flag.StringVarP(&grpcAddr, "addr", "a", ":8084", "gRPC address")
 	flag.StringVarP(&name, "name", "f", "", "name")
@@ -44,7 +44,7 @@ func main() {
 	}
 	defer conn.Close()
 	usersService := client.NewGRPCClient(conn)
-	if newUser == true && name != "" && lastname != "" && email != "" && password != ""{
+	if newUser == true && name != "" && lastname != "" && email != "" && password != "" {
 		user := users.User{Name: name, LastName: lastname, Email: email, Password: password}
 		id, err := client.NewUser(ctx, usersService, user)
 		if err != nil {
@@ -69,4 +69,3 @@ func main() {
 		}
 	}
 }
-

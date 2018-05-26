@@ -45,23 +45,23 @@ func NewGRPCClient(conn *grpc.ClientConn) movies.Service {
 		pb.UpdateMovieResponse{},
 	).Endpoint()
 	return movies.Endpoints{
-		GetMoviesEndpoint: getMoviesEndpoint,
+		GetMoviesEndpoint:    getMoviesEndpoint,
 		GetMovieByIdEndpoint: getMovieByIdEndpoint,
-		NewMovieEndpoint: newMovieEndpoint,
-		DeleteMovieEndpoint: deleteMovieEndpoint,
-		UpdateMovieEndpoint: updateMovieEndpoint,
+		NewMovieEndpoint:     newMovieEndpoint,
+		DeleteMovieEndpoint:  deleteMovieEndpoint,
+		UpdateMovieEndpoint:  updateMovieEndpoint,
 	}
 }
 
 func main() {
 	var (
-		grpcAddr string
-		movieId  string
-		newMovie bool
-		title    string
-		director string
-		year     string
-		userId   string
+		grpcAddr    string
+		movieId     string
+		newMovie    bool
+		title       string
+		director    string
+		year        string
+		userId      string
 		deleteMovie bool
 		updateMovie bool
 	)
@@ -87,7 +87,7 @@ func main() {
 	}
 	defer conn.Close()
 	moviesService := NewGRPCClient(conn)
-	if movieId == "" && newMovie == false{
+	if movieId == "" && newMovie == false {
 		callGetMovies(ctx, moviesService, logger)
 	}
 	if movieId != "" && deleteMovie == false {

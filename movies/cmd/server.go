@@ -19,8 +19,10 @@ import (
 	"github.com/jackc/pgx"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	)
+)
+
 var pool *pgx.ConnPool
+
 func main() {
 	//zerolog
 	logger := zerolog.New(os.Stderr).With().Timestamp().Caller().Logger()
@@ -38,7 +40,7 @@ func main() {
 		logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 	ctx := context.Background()
-    //database
+	//database
 	connPoolConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
 			Host:     "127.0.0.1",
@@ -79,15 +81,15 @@ func main() {
 	//wire logging
 	svc = movies.LoggingMiddleware{logger, svc}
 	//wire instrumentation
-	svc = movies.InstrumentingMiddleware{requestCount, requestLatency,  svc}
+	svc = movies.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
 	// creating Endpoints struct
 	endpoints := movies.Endpoints{
-		GetMoviesEndpoint: movies.MakeGetMoviesEndpoint(svc),
+		GetMoviesEndpoint:    movies.MakeGetMoviesEndpoint(svc),
 		GetMovieByIdEndpoint: movies.MakeGetMovieByIdEndpoint(svc),
-		NewMovieEndpoint: movies.MakeNewMovieEndpoint(svc),
-		DeleteMovieEndpoint: movies.MakeDeleteMovieEndpoint(svc),
-		UpdateMovieEndpoint: movies.MakeUpdateMovieEndpoint(svc),
+		NewMovieEndpoint:     movies.MakeNewMovieEndpoint(svc),
+		DeleteMovieEndpoint:  movies.MakeDeleteMovieEndpoint(svc),
+		UpdateMovieEndpoint:  movies.MakeUpdateMovieEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {

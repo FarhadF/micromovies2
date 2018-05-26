@@ -27,7 +27,7 @@ func NewGRPCClient(conn *grpc.ClientConn) jwtauth.Service {
 	}
 }
 
-func GenerateToken(ctx context.Context, service jwtauth.Service, email string, role string) (string, error){
+func GenerateToken(ctx context.Context, service jwtauth.Service, email string, role string) (string, error) {
 	h, err := service.GenerateToken(ctx, email, role)
 	if err != nil {
 		return "", err
@@ -35,7 +35,7 @@ func GenerateToken(ctx context.Context, service jwtauth.Service, email string, r
 	return h, nil
 }
 
-func ParseToken(ctx context.Context, service jwtauth.Service, token string) (jwtauth.Claims, error){
+func ParseToken(ctx context.Context, service jwtauth.Service, token string) (jwtauth.Claims, error) {
 	h, err := service.ParseToken(ctx, token)
 	if err != nil {
 		return jwtauth.Claims{}, err

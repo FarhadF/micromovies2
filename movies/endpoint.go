@@ -17,7 +17,7 @@ type Endpoints struct {
 	GetMoviesEndpoint    endpoint.Endpoint
 	GetMovieByIdEndpoint endpoint.Endpoint
 	NewMovieEndpoint     endpoint.Endpoint
-	DeleteMovieEndpoint	 endpoint.Endpoint
+	DeleteMovieEndpoint  endpoint.Endpoint
 	UpdateMovieEndpoint  endpoint.Endpoint
 }
 
@@ -89,10 +89,10 @@ func (e Endpoints) GetMovieById(ctx context.Context, id string) (Movie, error) {
 
 //model request and response
 type newMovieRequest struct {
-	Title    string `json:"title"`
-	Director []string `json:"director"`
-	Year     string `json:"year"`
-	Createdby   string `json:"createdby"`
+	Title     string   `json:"title"`
+	Director  []string `json:"director"`
+	Year      string   `json:"year"`
+	Createdby string   `json:"createdby"`
 }
 
 type newMovieResponse struct {
@@ -116,10 +116,10 @@ func MakeNewMovieEndpoint(svc Service) (endpoint.Endpoint) {
 // Will be used in gRPC client
 func (e Endpoints) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
 	req := newMovieRequest{
-		Title:    title,
-		Director: director,
-		Year:     year,
-		Createdby:   createdBy,
+		Title:     title,
+		Director:  director,
+		Year:      year,
+		Createdby: createdBy,
 	}
 	resp, err := e.NewMovieEndpoint(ctx, req)
 	if err != nil {
@@ -138,7 +138,7 @@ type deleteMovieRequest struct {
 }
 
 type deleteMovieResponse struct {
-	Err   string `json:="err"`
+	Err string `json:="err"`
 }
 
 //Make actual endpoint per Method
@@ -147,7 +147,7 @@ func MakeDeleteMovieEndpoint(svc Service) (endpoint.Endpoint) {
 		r := req.(deleteMovieRequest)
 		err := svc.DeleteMovie(ctx, r.Id)
 		if err != nil {
-			return deleteMovieResponse{ err.Error()}, nil
+			return deleteMovieResponse{err.Error()}, nil
 		}
 		return deleteMovieResponse{""}, nil
 	}
@@ -172,23 +172,24 @@ func (e Endpoints) DeleteMovie(ctx context.Context, id string) error {
 
 //model request and response
 type updateMovieRequest struct {
-	Id 		 string `json:"id"`
-	Title    string `json:"title"`
-	Director []string `json:"director"`
-	Year     string `json:"year"`
-	Createdby   string `json:"createdby"`
+	Id        string   `json:"id"`
+	Title     string   `json:"title"`
+	Director  []string `json:"director"`
+	Year      string   `json:"year"`
+	Createdby string   `json:"createdby"`
 }
 
 type updateMovieResponse struct {
-	Err   string `json:="err"`
+	Err string `json:="err"`
 }
+
 //Make actual endpoint per Method
 func MakeUpdateMovieEndpoint(svc Service) (endpoint.Endpoint) {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(updateMovieRequest)
 		err := svc.UpdateMovie(ctx, r.Id, r.Title, r.Director, r.Year, r.Createdby)
 		if err != nil {
-			return updateMovieResponse{ err.Error()}, nil
+			return updateMovieResponse{err.Error()}, nil
 		}
 		return updateMovieResponse{""}, nil
 	}
@@ -198,10 +199,10 @@ func MakeUpdateMovieEndpoint(svc Service) (endpoint.Endpoint) {
 // Will be used in gRPC client
 func (e Endpoints) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, createdBy string) error {
 	req := updateMovieRequest{
-		Id: id,
-		Title: title,
-		Director: director,
-		Year: year,
+		Id:        id,
+		Title:     title,
+		Director:  director,
+		Year:      year,
 		Createdby: createdBy,
 	}
 	resp, err := e.UpdateMovieEndpoint(ctx, req)

@@ -7,11 +7,11 @@ import (
 type Movie struct {
 	Id        string    `json:"id"`
 	Title     string    `json:"title"`
-	Director  []string    `json:"director"`
+	Director  []string  `json:"director"`
 	Year      string    `json:"year"`
-	CreatedBy    string    `json:"createdby"`
+	CreatedBy string    `json:"createdby"`
 	CreatedOn time.Time `json:"createdon"`
-	UpdatedBy 	string  `json:"updatedby"`
+	UpdatedBy string    `json:"updatedby"`
 	UpdatedOn time.Time `json:"updatedon"`
 }
 

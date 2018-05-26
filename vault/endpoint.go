@@ -26,7 +26,6 @@ type validateResponse struct {
 	Err   string `json:"err,omitempty"`
 }
 
-
 //An endpoint for each service method
 func MakeHashEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
