@@ -21,3 +21,13 @@ func (mw LoggingMiddleware) GenerateToken(ctx context.Context, email string, rol
 	output, err = mw.Next.GenerateToken(ctx, email, role)
 	return
 }
+
+//each method will have its own logger for app logs
+func (mw LoggingMiddleware) ParseToken(ctx context.Context, token string) (output Claims, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info().Str("method", "ParseToken").Err(err).Dur("took", time.Since(begin)).
+			Str("token", token).Msg("")
+	}(time.Now())
+	output, err = mw.Next.ParseToken(ctx, token)
+	return
+}

@@ -4,13 +4,14 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"time"
 	"context"
+	"fmt"
 )
 
 const mySigningKey = "Super_Dup3r_S3cret"
 
 type Service interface {
 	GenerateToken(ctx context.Context, email string, role string) (string, error)
-	ParseToken(ctx context.Context, token string) (map[string]interface{}, error)
+	ParseToken(ctx context.Context, token string) (Claims, error)
 }
 
 type jwtService struct {
@@ -37,16 +38,31 @@ func (jwtService) GenerateToken(ctx context.Context, email string, role string) 
 }
 
 
-func (jwtService) ParseToken (ctx context.Context, myToken string) (map[string]interface{}, error) {
+type Claims struct {
+	Exp int64 `json:"exp"`
+	Iat int64 `json:"iat"`
+	Email string `json:"email"`
+	Role string `json:"role"`
+}
+
+func (jwtService) ParseToken (ctx context.Context, myToken string) (Claims, error) {
 	parsedToken, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(mySigningKey), nil
 	})
-	c := parsedToken.Claims.(jwt.MapClaims)
 	//fmt.Println(token.Claims)
 	if err == nil && parsedToken.Valid {
-		return c, nil
+		c := parsedToken.Claims.(jwt.MapClaims)
+		fmt.Println(c["exp"])
+		claims := Claims{
+			//todo: why is it float64 when I defiend int64 and unix returns int64?!
+			Exp: int64(c["exp"].(float64)),
+			Iat: int64(c["iat"].(float64)),
+			Email: c["email"].(string),
+			Role: c["role"].(string),
+		}
+		return claims, nil
 	} else {
-		return nil, err
+		return Claims{}, err
 	}
 }
 

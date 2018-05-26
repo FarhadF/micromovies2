@@ -55,9 +55,11 @@ type parseTokenRequest struct {
 	Token string `json:"token"`
 }
 
+
+
 //model response
 type parseTokenResponse struct {
-	Token map[string]interface{} `json:"token"`
+	Claims Claims `json:"claims"`
 	Err string `json:"err"`
 }
 
@@ -65,24 +67,25 @@ type parseTokenResponse struct {
 func MakeParseTokenEndpoint(svc Service) (endpoint.Endpoint) {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(parseTokenRequest)
-		token, err := svc.ParseToken(ctx, r.Token)
+		claims, err := svc.ParseToken(ctx, r.Token)
+
 		if err != nil {
-			return parseTokenResponse{nil, err.Error()}, nil
+			return parseTokenResponse{Claims{}, err.Error()}, nil
 		}
-		return parseTokenResponse{token, ""}, nil
+		return parseTokenResponse{claims, ""}, nil
 	}
 }
 
 // Wrapping Endpoints as a Service implementation.
 // Will be used in gRPC client
-func (e Endpoints) ParsedToken(ctx context.Context, myToken string) (map[string]interface{}, error) {
+func (e Endpoints) ParseToken(ctx context.Context, myToken string) (Claims, error) {
 	resp, err := e.ParseTokenEndpoint(ctx, parseTokenRequest{Token: myToken})
 	if err != nil {
-		return nil, err
+		return Claims{}, err
 	}
 	parseTokenResp := resp.(parseTokenResponse)
 	if parseTokenResp.Err != "" {
-		return nil, errors.New(parseTokenResp.Err)
+		return Claims{}, errors.New(parseTokenResp.Err)
 	}
-	return parseTokenResp.Token, nil
+	return parseTokenResp.Claims, nil
 }

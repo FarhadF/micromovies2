@@ -15,8 +15,15 @@ func NewGRPCClient(conn *grpc.ClientConn) jwtauth.Service {
 		jwtauth.DecodeGRPCGenerateTokenResponse,
 		pb.GenerateTokenResponse{},
 	).Endpoint()
+	var parseTokenEndpoint = grpctransport.NewClient(
+		conn, "pb.JWT", "ParseToken",
+		jwtauth.EncodeGRPCParseTokenRequest,
+		jwtauth.DecodeGRPCParseTokenResponse,
+		pb.ParseTokenResponse{},
+	).Endpoint()
 	return jwtauth.Endpoints{
-		GenerateTokenEndpoint:     generateTokenEndpoint,
+		GenerateTokenEndpoint: generateTokenEndpoint,
+		ParseTokenEndpoint:    parseTokenEndpoint,
 	}
 }
 
@@ -28,3 +35,10 @@ func GenerateToken(ctx context.Context, service jwtauth.Service, email string, r
 	return h, nil
 }
 
+func ParseToken(ctx context.Context, service jwtauth.Service, token string) (jwtauth.Claims, error){
+	h, err := service.ParseToken(ctx, token)
+	if err != nil {
+		return jwtauth.Claims{}, err
+	}
+	return h, nil
+}

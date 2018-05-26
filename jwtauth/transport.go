@@ -40,3 +40,49 @@ func DecodeGRPCGenerateTokenResponse(_ context.Context, r interface{}) (interfac
 		Err:   resp.Err,
 	}, nil
 }
+
+//encode ParseTokenRequest
+func EncodeGRPCParseTokenRequest(_ context.Context, r interface{}) (interface{}, error) {
+	req := r.(parseTokenRequest)
+	return &pb.ParseTokenRequest{
+		Token: req.Token,
+	}, nil
+}
+
+//decode ParseTokenRequest
+func DecodeGRPCParseTokenRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.ParseTokenRequest)
+	return parseTokenRequest{
+		Token: req.Token,
+	}, nil
+}
+
+// encode ParseToken Response
+func EncodeGRPCParseTokenResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(parseTokenResponse)
+	claims := &pb.Claims{
+		Exp: resp.Claims.Exp,
+		Iat: resp.Claims.Iat,
+		Email: resp.Claims.Email,
+		Role: resp.Claims.Role,
+	}
+	return &pb.ParseTokenResponse{
+		Claims: claims,
+		Err:   resp.Err,
+	}, nil
+}
+
+// decode ParseToken Response
+func DecodeGRPCParseTokenResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(*pb.ParseTokenResponse)
+	claims := Claims{
+		Exp: resp.Claims.Exp,
+		Iat: resp.Claims.Iat,
+		Email: resp.Claims.Email,
+		Role: resp.Claims.Role,
+	}
+	return parseTokenResponse{
+		Claims: claims,
+		Err:   resp.Err,
+	}, nil
+}

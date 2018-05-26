@@ -6,7 +6,6 @@ package pb
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import any "github.com/golang/protobuf/ptypes/any"
 
 import (
 	context "golang.org/x/net/context"
@@ -36,7 +35,7 @@ func (m *GenerateTokenRequest) Reset()         { *m = GenerateTokenRequest{} }
 func (m *GenerateTokenRequest) String() string { return proto.CompactTextString(m) }
 func (*GenerateTokenRequest) ProtoMessage()    {}
 func (*GenerateTokenRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_jwt_076016844287edc8, []int{0}
+	return fileDescriptor_jwt_35b5bc3fa6679961, []int{0}
 }
 func (m *GenerateTokenRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GenerateTokenRequest.Unmarshal(m, b)
@@ -82,7 +81,7 @@ func (m *GenerateTokenResponse) Reset()         { *m = GenerateTokenResponse{} }
 func (m *GenerateTokenResponse) String() string { return proto.CompactTextString(m) }
 func (*GenerateTokenResponse) ProtoMessage()    {}
 func (*GenerateTokenResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_jwt_076016844287edc8, []int{1}
+	return fileDescriptor_jwt_35b5bc3fa6679961, []int{1}
 }
 func (m *GenerateTokenResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_GenerateTokenResponse.Unmarshal(m, b)
@@ -116,86 +115,148 @@ func (m *GenerateTokenResponse) GetErr() string {
 	return ""
 }
 
-type ValidateTokenRequest struct {
+type ParseTokenRequest struct {
 	Token                string   `protobuf:"bytes,1,opt,name=Token" json:"Token,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ValidateTokenRequest) Reset()         { *m = ValidateTokenRequest{} }
-func (m *ValidateTokenRequest) String() string { return proto.CompactTextString(m) }
-func (*ValidateTokenRequest) ProtoMessage()    {}
-func (*ValidateTokenRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_jwt_076016844287edc8, []int{2}
+func (m *ParseTokenRequest) Reset()         { *m = ParseTokenRequest{} }
+func (m *ParseTokenRequest) String() string { return proto.CompactTextString(m) }
+func (*ParseTokenRequest) ProtoMessage()    {}
+func (*ParseTokenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_jwt_35b5bc3fa6679961, []int{2}
 }
-func (m *ValidateTokenRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ValidateTokenRequest.Unmarshal(m, b)
+func (m *ParseTokenRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ParseTokenRequest.Unmarshal(m, b)
 }
-func (m *ValidateTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ValidateTokenRequest.Marshal(b, m, deterministic)
+func (m *ParseTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ParseTokenRequest.Marshal(b, m, deterministic)
 }
-func (dst *ValidateTokenRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ValidateTokenRequest.Merge(dst, src)
+func (dst *ParseTokenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ParseTokenRequest.Merge(dst, src)
 }
-func (m *ValidateTokenRequest) XXX_Size() int {
-	return xxx_messageInfo_ValidateTokenRequest.Size(m)
+func (m *ParseTokenRequest) XXX_Size() int {
+	return xxx_messageInfo_ParseTokenRequest.Size(m)
 }
-func (m *ValidateTokenRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ValidateTokenRequest.DiscardUnknown(m)
+func (m *ParseTokenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ParseTokenRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ValidateTokenRequest proto.InternalMessageInfo
+var xxx_messageInfo_ParseTokenRequest proto.InternalMessageInfo
 
-func (m *ValidateTokenRequest) GetToken() string {
+func (m *ParseTokenRequest) GetToken() string {
 	if m != nil {
 		return m.Token
 	}
 	return ""
 }
 
-type ValidateTokenResponse struct {
-	Claims               map[string]*any.Any `protobuf:"bytes,1,rep,name=claims" json:"claims,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	Err                  string              `protobuf:"bytes,2,opt,name=err" json:"err,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
-	XXX_unrecognized     []byte              `json:"-"`
-	XXX_sizecache        int32               `json:"-"`
+type ParseTokenResponse struct {
+	Claims               *Claims  `protobuf:"bytes,1,opt,name=Claims" json:"Claims,omitempty"`
+	Err                  string   `protobuf:"bytes,2,opt,name=err" json:"err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ValidateTokenResponse) Reset()         { *m = ValidateTokenResponse{} }
-func (m *ValidateTokenResponse) String() string { return proto.CompactTextString(m) }
-func (*ValidateTokenResponse) ProtoMessage()    {}
-func (*ValidateTokenResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_jwt_076016844287edc8, []int{3}
+func (m *ParseTokenResponse) Reset()         { *m = ParseTokenResponse{} }
+func (m *ParseTokenResponse) String() string { return proto.CompactTextString(m) }
+func (*ParseTokenResponse) ProtoMessage()    {}
+func (*ParseTokenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_jwt_35b5bc3fa6679961, []int{3}
 }
-func (m *ValidateTokenResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ValidateTokenResponse.Unmarshal(m, b)
+func (m *ParseTokenResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ParseTokenResponse.Unmarshal(m, b)
 }
-func (m *ValidateTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ValidateTokenResponse.Marshal(b, m, deterministic)
+func (m *ParseTokenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ParseTokenResponse.Marshal(b, m, deterministic)
 }
-func (dst *ValidateTokenResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ValidateTokenResponse.Merge(dst, src)
+func (dst *ParseTokenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ParseTokenResponse.Merge(dst, src)
 }
-func (m *ValidateTokenResponse) XXX_Size() int {
-	return xxx_messageInfo_ValidateTokenResponse.Size(m)
+func (m *ParseTokenResponse) XXX_Size() int {
+	return xxx_messageInfo_ParseTokenResponse.Size(m)
 }
-func (m *ValidateTokenResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ValidateTokenResponse.DiscardUnknown(m)
+func (m *ParseTokenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ParseTokenResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ValidateTokenResponse proto.InternalMessageInfo
+var xxx_messageInfo_ParseTokenResponse proto.InternalMessageInfo
 
-func (m *ValidateTokenResponse) GetClaims() map[string]*any.Any {
+func (m *ParseTokenResponse) GetClaims() *Claims {
 	if m != nil {
 		return m.Claims
 	}
 	return nil
 }
 
-func (m *ValidateTokenResponse) GetErr() string {
+func (m *ParseTokenResponse) GetErr() string {
 	if m != nil {
 		return m.Err
+	}
+	return ""
+}
+
+type Claims struct {
+	Exp                  int64    `protobuf:"varint,1,opt,name=Exp" json:"Exp,omitempty"`
+	Iat                  int64    `protobuf:"varint,2,opt,name=Iat" json:"Iat,omitempty"`
+	Email                string   `protobuf:"bytes,3,opt,name=Email" json:"Email,omitempty"`
+	Role                 string   `protobuf:"bytes,4,opt,name=Role" json:"Role,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Claims) Reset()         { *m = Claims{} }
+func (m *Claims) String() string { return proto.CompactTextString(m) }
+func (*Claims) ProtoMessage()    {}
+func (*Claims) Descriptor() ([]byte, []int) {
+	return fileDescriptor_jwt_35b5bc3fa6679961, []int{4}
+}
+func (m *Claims) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Claims.Unmarshal(m, b)
+}
+func (m *Claims) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Claims.Marshal(b, m, deterministic)
+}
+func (dst *Claims) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Claims.Merge(dst, src)
+}
+func (m *Claims) XXX_Size() int {
+	return xxx_messageInfo_Claims.Size(m)
+}
+func (m *Claims) XXX_DiscardUnknown() {
+	xxx_messageInfo_Claims.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Claims proto.InternalMessageInfo
+
+func (m *Claims) GetExp() int64 {
+	if m != nil {
+		return m.Exp
+	}
+	return 0
+}
+
+func (m *Claims) GetIat() int64 {
+	if m != nil {
+		return m.Iat
+	}
+	return 0
+}
+
+func (m *Claims) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *Claims) GetRole() string {
+	if m != nil {
+		return m.Role
 	}
 	return ""
 }
@@ -203,9 +264,9 @@ func (m *ValidateTokenResponse) GetErr() string {
 func init() {
 	proto.RegisterType((*GenerateTokenRequest)(nil), "pb.GenerateTokenRequest")
 	proto.RegisterType((*GenerateTokenResponse)(nil), "pb.GenerateTokenResponse")
-	proto.RegisterType((*ValidateTokenRequest)(nil), "pb.ValidateTokenRequest")
-	proto.RegisterType((*ValidateTokenResponse)(nil), "pb.ValidateTokenResponse")
-	proto.RegisterMapType((map[string]*any.Any)(nil), "pb.ValidateTokenResponse.ClaimsEntry")
+	proto.RegisterType((*ParseTokenRequest)(nil), "pb.ParseTokenRequest")
+	proto.RegisterType((*ParseTokenResponse)(nil), "pb.ParseTokenResponse")
+	proto.RegisterType((*Claims)(nil), "pb.Claims")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -220,7 +281,7 @@ const _ = grpc.SupportPackageIsVersion4
 
 type JWTClient interface {
 	GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...grpc.CallOption) (*GenerateTokenResponse, error)
-	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
+	ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenResponse, error)
 }
 
 type jWTClient struct {
@@ -240,9 +301,9 @@ func (c *jWTClient) GenerateToken(ctx context.Context, in *GenerateTokenRequest,
 	return out, nil
 }
 
-func (c *jWTClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
-	out := new(ValidateTokenResponse)
-	err := grpc.Invoke(ctx, "/pb.JWT/ValidateToken", in, out, c.cc, opts...)
+func (c *jWTClient) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenResponse, error) {
+	out := new(ParseTokenResponse)
+	err := grpc.Invoke(ctx, "/pb.JWT/ParseToken", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +314,7 @@ func (c *jWTClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest,
 
 type JWTServer interface {
 	GenerateToken(context.Context, *GenerateTokenRequest) (*GenerateTokenResponse, error)
-	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenResponse, error)
 }
 
 func RegisterJWTServer(s *grpc.Server, srv JWTServer) {
@@ -278,20 +339,20 @@ func _JWT_GenerateToken_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JWT_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateTokenRequest)
+func _JWT_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParseTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JWTServer).ValidateToken(ctx, in)
+		return srv.(JWTServer).ParseToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.JWT/ValidateToken",
+		FullMethod: "/pb.JWT/ParseToken",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JWTServer).ValidateToken(ctx, req.(*ValidateTokenRequest))
+		return srv.(JWTServer).ParseToken(ctx, req.(*ParseTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -305,36 +366,33 @@ var _JWT_serviceDesc = grpc.ServiceDesc{
 			Handler:    _JWT_GenerateToken_Handler,
 		},
 		{
-			MethodName: "ValidateToken",
-			Handler:    _JWT_ValidateToken_Handler,
+			MethodName: "ParseToken",
+			Handler:    _JWT_ParseToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "jwt.proto",
 }
 
-func init() { proto.RegisterFile("jwt.proto", fileDescriptor_jwt_076016844287edc8) }
+func init() { proto.RegisterFile("jwt.proto", fileDescriptor_jwt_35b5bc3fa6679961) }
 
-var fileDescriptor_jwt_076016844287edc8 = []byte{
-	// 305 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0xd1, 0x4a, 0xfb, 0x30,
-	0x14, 0xc6, 0x97, 0xed, 0xbf, 0xc1, 0xce, 0xf8, 0x83, 0x84, 0x0e, 0xba, 0x5d, 0x8d, 0x80, 0x30,
-	0x44, 0x32, 0x98, 0x37, 0x22, 0x88, 0x8a, 0x4c, 0xc1, 0x1b, 0xa1, 0x0c, 0xbd, 0x4e, 0xf5, 0x38,
-	0xea, 0xb2, 0xa4, 0xa6, 0xad, 0xd2, 0x07, 0xf1, 0x61, 0x7c, 0x3b, 0x49, 0xd2, 0xa1, 0x9b, 0xb9,
-	0x3b, 0x39, 0xe7, 0x3b, 0xbf, 0x7e, 0xe7, 0x2b, 0xf4, 0x5f, 0x3f, 0x4a, 0x9e, 0x1b, 0x5d, 0x6a,
-	0xda, 0xce, 0xd3, 0xf1, 0x68, 0xa5, 0xf5, 0x4a, 0xe2, 0xcc, 0x75, 0xd2, 0xea, 0x65, 0x26, 0x54,
-	0xed, 0xc7, 0xec, 0x12, 0xa2, 0x5b, 0x54, 0x68, 0x44, 0x89, 0x4b, 0xbd, 0x46, 0x95, 0xe0, 0x5b,
-	0x85, 0x45, 0x49, 0x23, 0xe8, 0x2e, 0x36, 0x22, 0x93, 0x31, 0x99, 0x90, 0x69, 0x3f, 0xf1, 0x0f,
-	0x4a, 0xe1, 0x5f, 0xa2, 0x25, 0xc6, 0x6d, 0xd7, 0x74, 0x35, 0xbb, 0x80, 0xe1, 0x1e, 0xa1, 0xc8,
-	0xb5, 0x2a, 0xd0, 0x22, 0x5c, 0x63, 0x8b, 0x70, 0x0f, 0x7a, 0x00, 0x9d, 0x85, 0x31, 0x0d, 0xc1,
-	0x96, 0xec, 0x18, 0xa2, 0x07, 0x21, 0xb3, 0xe7, 0x80, 0x85, 0xbf, 0xfb, 0xec, 0x8b, 0xc0, 0x70,
-	0x4f, 0xde, 0x7c, 0xef, 0x1c, 0x7a, 0x4f, 0x52, 0x64, 0x9b, 0x22, 0x26, 0x93, 0xce, 0x74, 0x30,
-	0x3f, 0xe4, 0x79, 0xca, 0x83, 0x52, 0x7e, 0xed, 0x74, 0x0b, 0x55, 0x9a, 0x3a, 0x69, 0x96, 0xac,
-	0x31, 0xfc, 0x31, 0x86, 0xc6, 0x8c, 0xef, 0x61, 0xf0, 0x4b, 0x68, 0x05, 0x6b, 0xac, 0x1b, 0x37,
-	0xb6, 0xa4, 0x47, 0xd0, 0x7d, 0x17, 0xb2, 0xf2, 0x79, 0x0c, 0xe6, 0x11, 0xf7, 0x39, 0xf3, 0x6d,
-	0xce, 0xfc, 0x4a, 0xd5, 0x89, 0x97, 0x9c, 0xb5, 0x4f, 0xc9, 0xfc, 0x93, 0x40, 0xe7, 0xee, 0x71,
-	0x49, 0x6f, 0xe0, 0xff, 0x4e, 0x64, 0x34, 0xb6, 0x56, 0x43, 0xff, 0x61, 0x3c, 0x0a, 0x4c, 0xfc,
-	0x11, 0xac, 0x65, 0x39, 0x3b, 0xf7, 0x79, 0x4e, 0x28, 0x4c, 0xcf, 0x09, 0x86, 0xc1, 0x5a, 0x69,
-	0xcf, 0x19, 0x3e, 0xf9, 0x0e, 0x00, 0x00, 0xff, 0xff, 0xc1, 0xc8, 0x6b, 0x46, 0x37, 0x02, 0x00,
-	0x00,
+var fileDescriptor_jwt_35b5bc3fa6679961 = []byte{
+	// 260 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x51, 0xc1, 0x4a, 0xc3, 0x40,
+	0x10, 0x35, 0xdd, 0x5a, 0xe8, 0x88, 0xa0, 0x43, 0x2b, 0xb1, 0x27, 0xd9, 0x93, 0x5e, 0x72, 0xa8,
+	0x67, 0x51, 0x90, 0x28, 0xf6, 0x24, 0x4b, 0xd1, 0xf3, 0x06, 0xe6, 0x50, 0x4d, 0xb3, 0xeb, 0xee,
+	0x8a, 0x7e, 0x84, 0x1f, 0x2d, 0x3b, 0x49, 0x49, 0x9b, 0xe4, 0xf6, 0xf6, 0xcd, 0x9b, 0xf7, 0x32,
+	0x2f, 0x30, 0xfd, 0xf8, 0x09, 0x99, 0x75, 0x26, 0x18, 0x1c, 0xd9, 0x42, 0x3e, 0xc0, 0xec, 0x99,
+	0x2a, 0x72, 0x3a, 0xd0, 0xda, 0x7c, 0x52, 0xa5, 0xe8, 0xeb, 0x9b, 0x7c, 0xc0, 0x19, 0x1c, 0xe7,
+	0x5b, 0xbd, 0x29, 0xd3, 0xe4, 0x2a, 0xb9, 0x9e, 0xaa, 0xfa, 0x81, 0x08, 0x63, 0x65, 0x4a, 0x4a,
+	0x47, 0x4c, 0x32, 0x96, 0xf7, 0x30, 0xef, 0x38, 0x78, 0x6b, 0x2a, 0x4f, 0xd1, 0x82, 0x89, 0x9d,
+	0x05, 0x3f, 0xf0, 0x0c, 0x44, 0xee, 0x5c, 0xe3, 0x10, 0xa1, 0xbc, 0x81, 0xf3, 0x57, 0xed, 0x7c,
+	0x2f, 0xbf, 0xbf, 0x2c, 0x57, 0x80, 0xfb, 0xd2, 0x26, 0x48, 0xc2, 0xe4, 0xb1, 0xd4, 0x9b, 0xad,
+	0x67, 0xf1, 0xc9, 0x12, 0x32, 0x5b, 0x64, 0x35, 0xa3, 0x9a, 0x49, 0x8c, 0xa5, 0x36, 0x96, 0x9c,
+	0x93, 0x6f, 0xb0, 0x37, 0xcb, 0x7f, 0x2d, 0x2f, 0x0b, 0x15, 0x61, 0x64, 0x5e, 0x74, 0x60, 0xb5,
+	0x50, 0x11, 0xb6, 0x7d, 0x88, 0xa1, 0x3e, 0xc6, 0x6d, 0x1f, 0xcb, 0xbf, 0x04, 0xc4, 0xea, 0x7d,
+	0x8d, 0x4f, 0x70, 0x7a, 0xd0, 0x0b, 0xa6, 0xf1, 0xb3, 0x86, 0xca, 0x5e, 0x5c, 0x0e, 0x4c, 0xea,
+	0xdb, 0xe4, 0x11, 0xde, 0x01, 0xb4, 0x37, 0xe3, 0x3c, 0x4a, 0x7b, 0x75, 0x2d, 0x2e, 0xba, 0xf4,
+	0x6e, 0xbd, 0x98, 0xf0, 0xbf, 0xbe, 0xfd, 0x0f, 0x00, 0x00, 0xff, 0xff, 0x2a, 0xbe, 0xef, 0xa6,
+	0xf8, 0x01, 0x00, 0x00,
 }

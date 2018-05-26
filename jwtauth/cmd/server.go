@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"context"
 	"github.com/rs/zerolog"
-	"zerolog/log"
+	"github.com/rs/zerolog/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"micromovies2/jwtauth"
@@ -62,6 +62,7 @@ func main() {
 	// creating Endpoints struct
 	endpoints := jwtauth.Endpoints{
 		GenerateTokenEndpoint: jwtauth.MakeGenerateTokenEndpoint(svc),
+		ParseTokenEndpoint: jwtauth.MakeParseTokenEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {

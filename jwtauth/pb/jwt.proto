@@ -1,11 +1,10 @@
 syntax = "proto3";
 package pb;
-import "google/protobuf/any.proto";
 
 service JWT {
     rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse) {
     }
-    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+    rpc ParseToken(ParseTokenRequest) returns (ParseTokenResponse) {
     }
 }
 
@@ -19,11 +18,18 @@ message GenerateTokenResponse {
     string Err = 2;
 }
 
-message ValidateTokenRequest {
+message ParseTokenRequest {
     string Token = 1;
 }
 
-message ValidateTokenResponse {
-    map<string,google.protobuf.Any> claims = 1;
+message ParseTokenResponse {
+    Claims Claims = 1;
     string err = 2;
+}
+
+message Claims {
+    int64 Exp = 1;
+    int64 Iat = 2;
+    string Email = 3;
+    string Role = 4;
 }
