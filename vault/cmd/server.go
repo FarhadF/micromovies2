@@ -1,23 +1,23 @@
 package main
 
 import (
-	flag "github.com/spf13/pflag"
-	"micromovies2/vault"
 	"context"
+	"fmt"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/julienschmidt/httprouter"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+	flag "github.com/spf13/pflag"
+	"google.golang.org/grpc"
+	"micromovies2/vault"
+	"micromovies2/vault/pb"
+	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"fmt"
-	"net/http"
-	"github.com/rs/zerolog"
-	"net"
-	"micromovies2/vault/pb"
-	"google.golang.org/grpc"
-	"github.com/rs/zerolog/log"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	"github.com/julienschmidt/httprouter"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -70,8 +70,7 @@ func main() {
 	hashEndpoint := vault.MakeHashEndpoint(svc)
 	validateEndpoint := vault.MakeValidateEndpoint(svc)
 	endpoints := vault.Endpoints{
-		HashEndpoint:
-		hashEndpoint,
+		HashEndpoint:     hashEndpoint,
 		ValidateEndpoint: validateEndpoint,
 	}
 	// HTTP transport

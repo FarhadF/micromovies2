@@ -1,10 +1,10 @@
 package movies
 
 import (
+	"context"
+	"fmt"
 	"github.com/go-kit/kit/metrics"
 	"time"
-	"fmt"
-	"context"
 )
 
 type InstrumentingMiddleware struct {

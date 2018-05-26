@@ -1,9 +1,9 @@
 package users
 
 import (
+	"context"
 	"github.com/rs/zerolog"
 	"time"
-	"context"
 )
 
 type LoggingMiddleware struct {

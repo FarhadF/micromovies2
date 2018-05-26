@@ -1,23 +1,23 @@
 package main
 
 import (
-	"os"
-	flag "github.com/spf13/pflag"
-	"net"
-	"github.com/julienschmidt/httprouter"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
-	"os/signal"
-	"syscall"
-	"fmt"
 	"context"
+	"fmt"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/julienschmidt/httprouter"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	"micromovies2/jwtauth"
+	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
+	"micromovies2/jwtauth"
 	"micromovies2/jwtauth/pb"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {

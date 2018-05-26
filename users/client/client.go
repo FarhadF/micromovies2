@@ -1,10 +1,10 @@
 package client
 
 import (
-	"google.golang.org/grpc"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"micromovies2/users/pb"
 	"context"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc"
+	"micromovies2/users/pb"
 
 	"micromovies2/users"
 )

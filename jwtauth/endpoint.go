@@ -1,9 +1,9 @@
 package jwtauth
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 )
 
 //Endpoints Wrapper
@@ -25,7 +25,7 @@ type generateTokenResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeGenerateTokenEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeGenerateTokenEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(generateTokenRequest)
 		token, err := svc.GenerateToken(ctx, r.Email, r.Role)
@@ -62,7 +62,7 @@ type parseTokenResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeParseTokenEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeParseTokenEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(parseTokenRequest)
 		claims, err := svc.ParseToken(ctx, r.Token)

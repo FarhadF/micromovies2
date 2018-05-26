@@ -1,10 +1,10 @@
 package jwtauth
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	"time"
 	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
+	"time"
 )
 
 const mySigningKey = "Super_Dup3r_S3cret"

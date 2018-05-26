@@ -3,11 +3,11 @@ package movies
 import (
 	"context"
 
-	"github.com/rs/zerolog"
 	"errors"
-	"time"
-	"reflect"
 	"github.com/jackc/pgx"
+	"github.com/rs/zerolog"
+	"reflect"
+	"time"
 )
 
 type Service interface {
@@ -15,7 +15,7 @@ type Service interface {
 	GetMovieById(ctx context.Context, id string) (Movie, error)
 	NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error)
 	DeleteMovie(ctx context.Context, id string) error
-	UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) (error)
+	UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) error
 }
 
 //implementation with database and logger

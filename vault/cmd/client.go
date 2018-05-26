@@ -1,18 +1,18 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"github.com/rs/zerolog"
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
-	"time"
-	"context"
-	"github.com/rs/zerolog"
-	"os"
-	"micromovies2/vault/pb"
-	"micromovies2/vault"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"fmt"
 	"log"
+	"micromovies2/vault"
 	"micromovies2/vault/client"
+	"micromovies2/vault/pb"
+	"os"
+	"time"
 )
 
 func main() {

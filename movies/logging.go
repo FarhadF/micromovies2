@@ -1,9 +1,9 @@
 package movies
 
 import (
+	"context"
 	"github.com/rs/zerolog"
 	"time"
-	"context"
 )
 
 //struct passing the logger

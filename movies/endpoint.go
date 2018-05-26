@@ -1,9 +1,9 @@
 package movies
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 )
 
 //model request and response
@@ -22,7 +22,7 @@ type Endpoints struct {
 }
 
 //Make actual endpoint per Method
-func MakeGetMoviesEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeGetMoviesEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		movies, err := svc.GetMovies(ctx)
 		if err != nil {
@@ -58,7 +58,7 @@ type getMovieByIdResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeGetMovieByIdEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeGetMovieByIdEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(getMovieByIdRequest)
 		movie, err := svc.GetMovieById(ctx, r.Id)
@@ -101,7 +101,7 @@ type newMovieResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeNewMovieEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeNewMovieEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(newMovieRequest)
 		id, err := svc.NewMovie(ctx, r.Title, r.Director, r.Year, r.Createdby)
@@ -142,7 +142,7 @@ type deleteMovieResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeDeleteMovieEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeDeleteMovieEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(deleteMovieRequest)
 		err := svc.DeleteMovie(ctx, r.Id)
@@ -184,7 +184,7 @@ type updateMovieResponse struct {
 }
 
 //Make actual endpoint per Method
-func MakeUpdateMovieEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeUpdateMovieEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(updateMovieRequest)
 		err := svc.UpdateMovie(ctx, r.Id, r.Title, r.Director, r.Year, r.Createdby)

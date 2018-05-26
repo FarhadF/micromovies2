@@ -1,12 +1,12 @@
 package main
 
 import (
-	"google.golang.org/grpc"
-	flag "github.com/spf13/pflag"
 	"context"
 	"github.com/rs/zerolog"
-	"os"
+	flag "github.com/spf13/pflag"
+	"google.golang.org/grpc"
 	"micromovies2/jwtauth/client"
+	"os"
 )
 
 func main() {

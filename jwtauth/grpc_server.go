@@ -1,8 +1,8 @@
 package jwtauth
 
 import (
-	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"context"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"micromovies2/jwtauth/pb"
 )
 

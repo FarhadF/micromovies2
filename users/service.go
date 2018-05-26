@@ -1,13 +1,13 @@
 package users
 
 import (
+	"context"
+	"errors"
 	"github.com/jackc/pgx"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
-	"time"
 	"micromovies2/vault/client"
-	"context"
-	"errors"
+	"time"
 )
 
 type Service interface {
@@ -70,7 +70,7 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 //method implementation
 func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, error) {
 	var user User
-	err := s.db.QueryRow("select * from users where email='" + email + "'").Scan(&user.Id, &user.Name, &user.LastName,
+	err := s.db.QueryRow("select * from users where email='"+email+"'").Scan(&user.Id, &user.Name, &user.LastName,
 		&user.Email, &user.Password, &user.Role, &user.CreatedOn, &user.UpdatedOn, &user.LastLogin)
 	if err != nil {
 		return user, err

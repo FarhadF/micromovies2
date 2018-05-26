@@ -1,9 +1,9 @@
 package users
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 )
 
 //Endpoints Wrapper
@@ -20,7 +20,7 @@ type newUserResponse struct {
 }
 
 //make the actual endpoint
-func MakeNewUserEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeNewUserEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(User)
 		id, err := svc.NewUser(ctx, r)
@@ -56,7 +56,7 @@ type getUserByEmailResponse struct {
 }
 
 //make the actual endpoint
-func MakeGetUserByEmailEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeGetUserByEmailEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(getUserByEmailRequest)
 		user, err := svc.GetUserByEmail(ctx, r.Email)
@@ -95,7 +95,7 @@ type changePasswordResponse struct {
 }
 
 //make the actual endpoint
-func MakeChangePasswordEndpoint(svc Service) (endpoint.Endpoint) {
+func MakeChangePasswordEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(changePasswordRequest)
 		success, err := svc.ChangePassword(ctx, r.Email, r.CurrentPassword, r.NewPassword)

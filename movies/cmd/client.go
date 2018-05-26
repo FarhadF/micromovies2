@@ -1,13 +1,13 @@
 package main
 
 import (
+	"context"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"github.com/rs/zerolog"
+	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
 	"micromovies2/movies"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"micromovies2/movies/pb"
-	flag "github.com/spf13/pflag"
-	"context"
-	"github.com/rs/zerolog"
 	"os"
 	"strings"
 )

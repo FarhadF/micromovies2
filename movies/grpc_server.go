@@ -2,8 +2,8 @@ package movies
 
 import (
 	"context"
-	"micromovies2/movies/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"micromovies2/movies/pb"
 )
 
 //grpcServer Wrapper

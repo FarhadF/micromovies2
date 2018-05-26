@@ -1,9 +1,9 @@
 package vault
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 )
 
 //request and responses should be modeled.

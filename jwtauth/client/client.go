@@ -1,11 +1,11 @@
 package client
 
 import (
+	"context"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
 	"micromovies2/jwtauth"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"micromovies2/jwtauth/pb"
-	"context"
 )
 
 func NewGRPCClient(conn *grpc.ClientConn) jwtauth.Service {

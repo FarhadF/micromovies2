@@ -1,24 +1,24 @@
 package main
 
 import (
-	"os"
-	flag "github.com/spf13/pflag"
-	"net"
-	"github.com/julienschmidt/httprouter"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
-	"os/signal"
-	"syscall"
+	"context"
 	"fmt"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/jackc/pgx"
+	"github.com/julienschmidt/httprouter"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"context"
+	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
-	"github.com/jackc/pgx"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"micromovies2/users"
 	"micromovies2/users/pb"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var pool *pgx.ConnPool

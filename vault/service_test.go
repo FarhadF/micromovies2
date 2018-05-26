@@ -1,8 +1,8 @@
 package vault
 
 import (
-	"testing"
 	"context"
+	"testing"
 )
 
 func TestHashService(t *testing.T) {
