@@ -2,7 +2,6 @@ package jwtauth
 
 import (
 	"context"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -48,10 +47,8 @@ func (jwtService) ParseToken(ctx context.Context, myToken string) (Claims, error
 	parsedToken, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(mySigningKey), nil
 	})
-	//fmt.Println(token.Claims)
 	if err == nil && parsedToken.Valid {
 		c := parsedToken.Claims.(jwt.MapClaims)
-		fmt.Println(c["exp"])
 		claims := Claims{
 			//todo: why is it float64 when I defiend int64 and unix returns int64?!
 			Exp:   int64(c["exp"].(float64)),

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/rs/zerolog"
 	flag "github.com/spf13/pflag"
@@ -38,9 +37,9 @@ func main() {
 		password, args = pop(args)
 		h, err := client.Hash(ctx, vaultService, password)
 		if err != nil {
-			log.Fatalln(err.Error())
+			logger.Error().Err(err).Msg("")
 		}
-		fmt.Println(h)
+		logger.Info().Str("hash", h).Msg("")
 	case "validate":
 		var password, hash string
 		password, args = pop(args)
@@ -50,10 +49,10 @@ func main() {
 			log.Fatalln(err.Error())
 		}
 		if !valid {
-			fmt.Println("invalid")
+			logger.Info().Msg("invalid")
 			os.Exit(1)
 		}
-		fmt.Println("valid")
+		logger.Info().Msg("valid")
 	default:
 		logger.Fatal().Str("unknown command", cmd).Msg("")
 	}
