@@ -43,7 +43,6 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 	if !rows.Next() {
 		conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 		if err != nil {
-			s.logger.Error().Err(err).Msg("grpc dial err")
 			return "", err
 		}
 		defer conn.Close()
