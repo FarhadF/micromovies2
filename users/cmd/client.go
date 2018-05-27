@@ -21,6 +21,7 @@ func main() {
 		role           string
 		changePassword bool
 		newPassword    string
+		login          bool
 	)
 	flag.StringVarP(&grpcAddr, "addr", "a", ":8084", "gRPC address")
 	flag.StringVarP(&name, "name", "f", "", "name")
@@ -31,6 +32,8 @@ func main() {
 	flag.BoolVarP(&newUser, "newuser", "n", false, "newUser")
 	flag.BoolVarP(&changePassword, "changepassword", "c", false, "changePassword")
 	flag.StringVarP(&newPassword, "newpassword", "b", "", "newPassword")
+	flag.BoolVarP(&login, "login", "L", false, "login")
+
 	//flag.StringVarP(&requestType, "requestType", "r", "word", "Should be word, sentence or paragraph")
 	//flag.IntVarP(&min,"min", "m", 5, "minimum value")
 	//flag.IntVarP(&max,"Max", "M", 10, "Maximum value")
@@ -66,6 +69,14 @@ func main() {
 			logger.Error().Err(err).Msg("")
 		} else {
 			logger.Info().Interface("success", success).Msg("")
+		}
+	}
+	if login != false && email != "" && password != "" {
+		token, err := client.Login(ctx, usersService, email, password)
+		if err != nil {
+			logger.Error().Err(err).Msg("")
+		} else {
+			logger.Info().Str("token", token).Msg("")
 		}
 	}
 }

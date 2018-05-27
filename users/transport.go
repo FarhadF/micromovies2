@@ -129,3 +129,38 @@ func DecodeGRPCChangePasswordResponse(_ context.Context, r interface{}) (interfa
 		Err:     resp.Err,
 	}, nil
 }
+
+//encode LoginRequest
+func EncodeGRPCLoginRequest(_ context.Context, r interface{}) (interface{}, error) {
+	req := r.(loginRequest)
+	return &pb.LoginRequest{
+		Email:    req.Email,
+		Password: req.Password,
+	}, nil
+}
+
+//decode LoginRequest
+func DecodeGRPCLoginRequest(_ context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.LoginRequest)
+	return loginRequest{
+		Email:    req.Email,
+		Password: req.Password,
+	}, nil
+}
+
+// Encode and Decode LoginResponse
+func EncodeGRPCLoginResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(loginResponse)
+	return &pb.LoginResponse{
+		Token: resp.Token,
+		Err:   resp.Err,
+	}, nil
+}
+
+func DecodeGRPCLoginResponse(_ context.Context, r interface{}) (interface{}, error) {
+	resp := r.(*pb.LoginResponse)
+	return loginResponse{
+		Token: resp.Token,
+		Err:   resp.Err,
+	}, nil
+}

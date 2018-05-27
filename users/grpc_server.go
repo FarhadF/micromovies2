@@ -10,6 +10,7 @@ type grpcServer struct {
 	newUser        grpctransport.Handler
 	getUserByEmail grpctransport.Handler
 	changePassword grpctransport.Handler
+	login          grpctransport.Handler
 }
 
 // implement NewUser server Interface in movies.pb.go
@@ -39,6 +40,15 @@ func (s *grpcServer) ChangePassword(ctx context.Context, r *pb.ChangePasswordReq
 	return resp.(*pb.ChangePasswordResponse), nil
 }
 
+// implement Login server Interface in users.pb.go
+func (s *grpcServer) Login(ctx context.Context, r *pb.LoginRequest) (*pb.LoginResponse, error) {
+	_, resp, err := s.login.ServeGRPC(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*pb.LoginResponse), nil
+}
+
 // create new grpc server
 func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 	return &grpcServer{
@@ -56,6 +66,11 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 			endpoint.ChangePasswordEndpoint,
 			DecodeGRPCChangePasswordRequest,
 			EncodeGRPCChangePasswordResponse,
+		),
+		login: grpctransport.NewServer(
+			endpoint.LoginEndpoint,
+			DecodeGRPCLoginRequest,
+			EncodeGRPCLoginResponse,
 		),
 	}
 }

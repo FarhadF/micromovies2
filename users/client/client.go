@@ -28,10 +28,17 @@ func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 		users.DecodeGRPCChangePasswordResponse,
 		pb.ChangePasswordResponse{},
 	).Endpoint()
+	var loginEndpoint = grpctransport.NewClient(
+		conn, "pb.Users", "Login",
+		users.EncodeGRPCLoginRequest,
+		users.DecodeGRPCLoginResponse,
+		pb.LoginResponse{},
+	).Endpoint()
 	return users.Endpoints{
 		NewUserEndpoint:        newUserEndpoint,
 		GetUserByEmailEndpoint: getUserByEmailEndpoint,
 		ChangePasswordEndpoint: changePasswordEndpoint,
+		LoginEndpoint:          loginEndpoint,
 	}
 }
 
@@ -57,4 +64,12 @@ func ChangePassword(ctx context.Context, service users.Service, email string, cu
 		return success, err
 	}
 	return success, nil
+}
+
+func Login(ctx context.Context, service users.Service, email string, Password string) (string, error) {
+	token, err := service.Login(ctx, email, Password)
+	if err != nil {
+		return token, err
+	}
+	return token, nil
 }

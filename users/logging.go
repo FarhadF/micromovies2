@@ -37,3 +37,12 @@ func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, cu
 	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
 	return
 }
+
+func (mw LoggingMiddleware) Login(ctx context.Context, email string, Password string) (output string, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info().Str("method", "Login").
+			Str("email", email).Err(err).Dur("took", time.Since(begin)).Msg("")
+	}(time.Now())
+	output, err = mw.Next.Login(ctx, email, Password)
+	return
+}

@@ -88,6 +88,7 @@ func main() {
 		NewUserEndpoint:        users.MakeNewUserEndpoint(svc),
 		GetUserByEmailEndpoint: users.MakeGetUserByEmailEndpoint(svc),
 		ChangePasswordEndpoint: users.MakeChangePasswordEndpoint(svc),
+		LoginEndpoint:          users.MakeLoginEndpoint(svc),
 	}
 	//execute grpc server
 	go func() {

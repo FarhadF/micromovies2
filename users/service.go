@@ -6,7 +6,8 @@ import (
 	"github.com/jackc/pgx"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
-	"micromovies2/vault/client"
+	jwtClient "micromovies2/jwtauth/client"
+	vaultClient "micromovies2/vault/client"
 	"time"
 )
 
@@ -14,7 +15,7 @@ type Service interface {
 	NewUser(ctx context.Context, user User) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
-	//todo: login
+	Login(ctx context.Context, email string, password string) (string, error)
 	//todo: edit user
 }
 
@@ -46,8 +47,8 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 			return "", err
 		}
 		defer conn.Close()
-		vaultService := client.New(conn)
-		hash, err := client.Hash(ctx, vaultService, user.Password)
+		vaultService := vaultClient.New(conn)
+		hash, err := vaultClient.Hash(ctx, vaultService, user.Password)
 		if err != nil {
 			return "", err
 		}
@@ -87,19 +88,18 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 	}
 	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
-		s.logger.Error().Err(err).Msg("grpc dial err")
 		return false, err
 	}
 	defer conn.Close()
-	vaultService := client.New(conn)
-	valid, err := client.Validate(ctx, vaultService, currentPassword, currentPasswordHash)
+	vaultService := vaultClient.New(conn)
+	valid, err := vaultClient.Validate(ctx, vaultService, currentPassword, currentPasswordHash)
 	if err != nil {
 		return false, err
 	}
 	if valid != true {
 		return false, errors.New("wrong password")
 	}
-	hash, err := client.Hash(ctx, vaultService, newPassword)
+	hash, err := vaultClient.Hash(ctx, vaultService, newPassword)
 	if err != nil {
 		return false, err
 	}
@@ -108,4 +108,32 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 		return false, err
 	}
 	return true, nil
+}
+
+func (s usersService) Login(ctx context.Context, email string, password string) (string, error) {
+	user, err := s.GetUserByEmail(ctx, email)
+	if err != nil {
+		return "", err
+	}
+	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	vaultService := vaultClient.New(conn)
+	valid, err := vaultClient.Validate(ctx, vaultService, password, user.Password)
+	if valid != true {
+		return "", errors.New("wrong password")
+	}
+	conn1, err := grpc.Dial(":8087", grpc.WithInsecure())
+	if err != nil {
+		return "", err
+	}
+	defer conn1.Close()
+	jwtService := jwtClient.NewGRPCClient(conn1)
+	token, err := jwtClient.GenerateToken(ctx, jwtService, email, user.Role)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
