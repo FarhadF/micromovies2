@@ -10,7 +10,7 @@ import (
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/login", e.HandleLoginPost)
-	r.Handler("GET", "/metrics", promttp.Handler())
+	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
 //each method needs a http handler handlers are registered in the register func
