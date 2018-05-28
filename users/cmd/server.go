@@ -8,8 +8,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
 	"micromovies2/users"
@@ -19,13 +17,15 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"go.uber.org/zap"
 )
 
 var pool *pgx.ConnPool
 
 func main() {
-	//zerolog
-	logger := zerolog.New(os.Stderr).With().Timestamp().Caller().Logger()
+    //zap
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
 	var (
 		console  bool
 		httpAddr string
@@ -35,11 +35,8 @@ func main() {
 	flag.StringVarP(&gRPCAddr, "grpc", "g", ":8084", "GRPC Address")
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
-	logger.Info().Msg("starting grpc server at" + string(gRPCAddr))
-	if console {
-		logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	}
-	ctx := context.Background()
+	logger.Info("starting grpc server at" + gRPCAddr)
+		ctx := context.Background()
 	//database
 	connPoolConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
@@ -53,7 +50,7 @@ func main() {
 	}
 	pool, err := pgx.NewConnPool(connPoolConfig)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("Unable to create connection pool")
+		logger.Fatal("Unable to create connection pool", zap.Error(err))
 	}
 	/*db, err := sql.Open("postgres", "postgresql://app_user@localhost:26257/app_database?sslmode=disable")
 	if err != nil {
@@ -77,9 +74,9 @@ func main() {
 
 	// init users service
 	var svc users.Service
-	svc = users.NewService(pool, logger)
+	svc = users.NewService(pool, *logger)
 	//wire logging
-	svc = users.LoggingMiddleware{logger, svc}
+	svc = users.LoggingMiddleware{*logger, svc}
 	//wire instrumentation
 	svc = users.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
@@ -116,5 +113,5 @@ func main() {
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
-	logger.Error().Err(<-errChan).Msg("")
+	logger.Error("",zap.Error(<-errChan))
 }

@@ -2,13 +2,13 @@ package users
 
 import (
 	"context"
-	"errors"
 	"github.com/jackc/pgx"
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	jwtClient "micromovies2/jwtauth/client"
 	vaultClient "micromovies2/vault/client"
 	"time"
+	"go.uber.org/zap"
+	"github.com/pkg/errors"
 )
 
 type Service interface {
@@ -22,11 +22,11 @@ type Service interface {
 //implementation with database and logger
 type usersService struct {
 	db     *pgx.ConnPool
-	logger zerolog.Logger
+	logger zap.Logger
 }
 
 //constructor - we can later add initialization if needed
-func NewService(db *pgx.ConnPool, logger zerolog.Logger) Service {
+func NewService(db *pgx.ConnPool, logger zap.Logger) Service {
 	return usersService{
 		db,
 		logger,
