@@ -1,12 +1,12 @@
 package apigateway
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"net/http"
 	"encoding/json"
+	"errors"
+	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
-	"errors"
+	"net/http"
 )
 
 //using http router, register func will do the routing path registration

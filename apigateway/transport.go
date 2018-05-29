@@ -1,9 +1,9 @@
 package apigateway
 
 import (
-	"net/http"
-	"encoding/json"
 	"context"
+	"encoding/json"
+	"net/http"
 )
 
 //decode function for each method

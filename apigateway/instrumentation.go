@@ -24,4 +24,3 @@ func (mw InstrumentingMiddleware) Login(ctx context.Context, email string, passw
 	output, err = mw.Next.Login(ctx, email, password)
 	return
 }
-

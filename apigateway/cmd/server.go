@@ -1,19 +1,19 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/julienschmidt/httprouter"
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
 	"micromovies2/apigateway"
-	"context"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
-	"fmt"
-	"net/http"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -47,7 +47,7 @@ func main() {
 
 	svc := apigateway.NewService()
 	svc = apigateway.LoggingMiddleware{logger, svc}
-	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency,  svc}
+	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
 	//os signal handling
 	go func() {
@@ -66,7 +66,7 @@ func main() {
 			// This is incredibly laborious when we want to add e.g. rate
 			// limiters. It would be better to bundle all the endpoints up,
 			// somehow... or, use code generation, of course.
-			LoginEndpoint:     apigateway.MakeLoginEndpoint(svc),
+			LoginEndpoint: apigateway.MakeLoginEndpoint(svc),
 		}.Register(r)
 		errChan <- http.ListenAndServe(httpAddr, r)
 	}()

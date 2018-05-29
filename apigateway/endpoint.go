@@ -1,15 +1,15 @@
 package apigateway
 
 import (
-	"github.com/go-kit/kit/endpoint"
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
 )
 
 //Endpoints Wrapper
 type Endpoints struct {
-	Ctx              context.Context
-	LoginEndpoint          endpoint.Endpoint
+	Ctx           context.Context
+	LoginEndpoint endpoint.Endpoint
 }
 
 //model request and response

@@ -3,12 +3,12 @@ package users
 import (
 	"context"
 	"github.com/jackc/pgx"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	jwtClient "micromovies2/jwtauth/client"
 	vaultClient "micromovies2/vault/client"
 	"time"
-	"go.uber.org/zap"
-	"github.com/pkg/errors"
 )
 
 type Service interface {

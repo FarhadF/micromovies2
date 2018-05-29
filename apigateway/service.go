@@ -1,9 +1,9 @@
 package apigateway
 
 import (
+	"context"
 	"google.golang.org/grpc"
 	usersClient "micromovies2/users/client"
-	"context"
 )
 
 type Service interface {
@@ -12,11 +12,11 @@ type Service interface {
 
 type apigatewayService struct{}
 
-func NewService() Service{
+func NewService() Service {
 	return apigatewayService{}
 }
 
-func (apigatewayService) Login (ctx context.Context, email string, password string) (string, error) {
+func (apigatewayService) Login(ctx context.Context, email string, password string) (string, error) {
 	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
 	if err != nil {
 		return "", err
@@ -29,4 +29,3 @@ func (apigatewayService) Login (ctx context.Context, email string, password stri
 	}
 	return token, nil
 }
-

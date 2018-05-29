@@ -9,6 +9,7 @@ import (
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	flag "github.com/spf13/pflag"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"micromovies2/users"
 	"micromovies2/users/pb"
@@ -17,13 +18,12 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"go.uber.org/zap"
 )
 
 var pool *pgx.ConnPool
 
 func main() {
-    //zap
+	//zap
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	var (
@@ -36,7 +36,7 @@ func main() {
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
 	logger.Info("starting grpc server at" + gRPCAddr)
-		ctx := context.Background()
+	ctx := context.Background()
 	//database
 	connPoolConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
@@ -113,5 +113,5 @@ func main() {
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
-	logger.Error("",zap.Error(<-errChan))
+	logger.Error("", zap.Error(<-errChan))
 }
