@@ -96,7 +96,7 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 		return false, errors.WithStack(err)
 	}
 	if valid != true {
-		return false, errors.WithStack(errors.New("wrong password"))
+		return false, errors.WithStack(errors.New("email or password incorrect"))
 	}
 	hash, err := vaultClient.Hash(ctx, vaultService, newPassword)
 	if err != nil {
@@ -122,7 +122,7 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	vaultService := vaultClient.New(conn)
 	valid, err := vaultClient.Validate(ctx, vaultService, password, user.Password)
 	if valid != true {
-		return "", errors.WithStack(errors.New("wrong password"))
+		return "", errors.WithStack(errors.New("email or password incorrect"))
 	}
 	conn1, err := grpc.Dial(":8087", grpc.WithInsecure())
 	if err != nil {

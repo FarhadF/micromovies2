@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"encoding/json"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"io"
+	"errors"
 )
 
 //using http router, register func will do the routing path registration
@@ -17,6 +19,14 @@ func (e Endpoints) Register(r *httprouter.Router) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
+		if err == io.EOF {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		if err.Error() == "no rows in result set" {
+			respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
+			return
+		}
 		respondError(w, 500, err)
 		return
 	}
