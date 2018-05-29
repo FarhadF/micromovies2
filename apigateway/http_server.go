@@ -11,7 +11,10 @@ import (
 
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
+	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa111111"}'
 	r.Handle("POST", "/v1/login", e.HandleLoginPost)
+	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
+	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -36,6 +39,25 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 		return
 	}
 	respondSuccess(w, resp.(loginResponse))
+}
+
+//each method needs a http handler handlers are registered in the register func
+func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	decodedRegisterReq, err := decodeRegisterRequest(e.Ctx, r)
+	if err != nil {
+		if err == io.EOF {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		respondError(w, 500, err)
+		return
+	}
+	resp, err := e.RegisterEndpoint(e.Ctx, decodedRegisterReq.(registerRequest))
+	if err != nil {
+		respondError(w, 500, err)
+		return
+	}
+	respondSuccess(w, resp.(registerResponse))
 }
 
 // respondError in some canonical format.

@@ -24,3 +24,14 @@ func (mw InstrumentingMiddleware) Login(ctx context.Context, email string, passw
 	output, err = mw.Next.Login(ctx, email, password)
 	return
 }
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) Register(ctx context.Context, email string, password string, firstname string, lastname string) (output string, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "Register", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	output, err = mw.Next.Register(ctx, email, password, firstname, lastname)
+	return
+}

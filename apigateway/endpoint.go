@@ -2,14 +2,14 @@ package apigateway
 
 import (
 	"context"
-	"errors"
 	"github.com/go-kit/kit/endpoint"
 )
 
 //Endpoints Wrapper
 type Endpoints struct {
-	Ctx           context.Context
-	LoginEndpoint endpoint.Endpoint
+	Ctx              context.Context
+	LoginEndpoint    endpoint.Endpoint
+	RegisterEndpoint endpoint.Endpoint
 }
 
 //model request and response
@@ -35,17 +35,28 @@ func MakeLoginEndpoint(svc Service) endpoint.Endpoint {
 	}
 }
 
-// Wrapping Endpoints as a Service implementation.
-// Will be used in gRPC client
-func (e Endpoints) Login(ctx context.Context, email string, Password string) (string, error) {
-	req := loginRequest{Email: email, Password: Password}
-	resp, err := e.LoginEndpoint(ctx, req)
-	if err != nil {
-		return "", err
+//model request
+type registerRequest struct {
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	FirstName string `json:"firstname"`
+	LastName  string `json:"lastname"`
+}
+
+//model response
+type registerResponse struct {
+	Id  string `json:"id"`
+	Err string `json"err"`
+}
+
+//make the actual endpoint
+func MakeRegisterEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(registerRequest)
+		id, err := svc.Register(ctx, r.Email, r.Password, r.FirstName, r.LastName)
+		if err != nil {
+			return registerResponse{id, err.Error()}, nil
+		}
+		return registerResponse{id, ""}, nil
 	}
-	loginResp := resp.(loginResponse)
-	if loginResp.Err != "" {
-		return "", errors.New(loginResp.Err)
-	}
-	return loginResp.Token, nil
 }

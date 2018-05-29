@@ -6,9 +6,8 @@ import (
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/julienschmidt/httprouter"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
+	"go.uber.org/zap"
 	"micromovies2/apigateway"
 	"net/http"
 	"os"
@@ -25,12 +24,9 @@ func main() {
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
 	ctx := context.Background()
-	//zerolog
-	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
-	//console pretty printing
-	if console {
-		logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	}
+	//zap
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
 	fieldKeys := []string{"method", "error"}
 	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 		Namespace: "my_group",
@@ -46,7 +42,7 @@ func main() {
 	}, fieldKeys)
 
 	svc := apigateway.NewService()
-	svc = apigateway.LoggingMiddleware{logger, svc}
+	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	errChan := make(chan error)
 	//os signal handling
@@ -57,7 +53,7 @@ func main() {
 	}()
 	// HTTP transport
 	go func() {
-		logger.Info().Str("http:", httpAddr).Msg("")
+		logger.Info("", zap.String("http:", httpAddr))
 		//handler := apigateway.NewHTTPServer(ctx, endpoints)
 		//httprouter
 		r := httprouter.New()
@@ -66,9 +62,10 @@ func main() {
 			// This is incredibly laborious when we want to add e.g. rate
 			// limiters. It would be better to bundle all the endpoints up,
 			// somehow... or, use code generation, of course.
-			LoginEndpoint: apigateway.MakeLoginEndpoint(svc),
+			LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
+			RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
 		}.Register(r)
 		errChan <- http.ListenAndServe(httpAddr, r)
 	}()
-	logger.Fatal().Err(<-errChan).Msg("")
+	logger.Fatal("", zap.Error(<-errChan))
 }
