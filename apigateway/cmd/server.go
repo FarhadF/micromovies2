@@ -2,17 +2,15 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"github.com/casbin/casbin"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/julienschmidt/httprouter"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	flag "github.com/spf13/pflag"
 	"go.uber.org/zap"
 	"micromovies2/apigateway"
+	"micromovies2/jwtauth"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {
@@ -44,28 +42,27 @@ func main() {
 	svc := apigateway.NewService()
 	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
-	errChan := make(chan error)
-	//os signal handling
-	go func() {
-		c := make(chan os.Signal, 1)
-		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
-		errChan <- fmt.Errorf("%s", <-c)
-	}()
+
+	// setup casbin auth rules
+	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv")
+	if err != nil {
+		logger.Fatal("", zap.Error(err))
+	}
+	jwtAuthService := jwtauth.NewService()
 	// HTTP transport
-	go func() {
-		logger.Info("", zap.String("http:", httpAddr))
-		//handler := apigateway.NewHTTPServer(ctx, endpoints)
-		//httprouter
-		r := httprouter.New()
-		apigateway.Endpoints{
-			Ctx: ctx,
-			// This is incredibly laborious when we want to add e.g. rate
-			// limiters. It would be better to bundle all the endpoints up,
-			// somehow... or, use code generation, of course.
-			LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
-			RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
-		}.Register(r)
-		errChan <- http.ListenAndServe(httpAddr, r)
-	}()
-	logger.Fatal("", zap.Error(<-errChan))
+
+	logger.Info("", zap.String("http:", httpAddr))
+	//handler := apigateway.NewHTTPServer(ctx, endpoints)
+	//httprouter
+	r := httprouter.New()
+	apigateway.Endpoints{
+		Ctx: ctx,
+		// This is incredibly laborious when we want to add e.g. rate
+		// limiters. It would be better to bundle all the endpoints up,
+		// somehow... or, use code generation, of course.
+		LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
+		RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
+	}.Register(r)
+	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService)
+	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
 }

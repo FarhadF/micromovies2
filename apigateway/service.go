@@ -51,3 +51,17 @@ func (apigatewayService) Register(ctx context.Context, email string, password st
 	}
 	return id, nil
 }
+
+func (apigatewayService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
+	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
+	if err != nil {
+		return false, err
+	}
+	defer conn.Close()
+	usersService := usersClient.NewGRPCClient(conn)
+	success, err := usersClient.ChangePassword(ctx, usersService, email, currentPassword, newPassword)
+	if err != nil {
+		return false, err
+	}
+	return success, nil
+}

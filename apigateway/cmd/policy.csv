@@ -1,0 +1,2 @@
+p, user, /v1/register/*, POST
+p, public, /v1/login, POST
