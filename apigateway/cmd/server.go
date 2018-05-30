@@ -44,7 +44,7 @@ func main() {
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 
 	// setup casbin auth rules
-	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv")
+	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv", false)
 	//disable casbin log
 	e.EnableLog(false)
 	if err != nil {

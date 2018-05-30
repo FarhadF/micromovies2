@@ -65,36 +65,3 @@ func (a *Authorizer) getClaims(ctx context.Context, jwtAuthService jwtauth.Servi
 	claims, err := client.ParseToken(ctx, jwtAuthService, token)
 	return claims, err
 }
-
-/*func Authorization(a *Authorizer, next httprouter.Handle) httprouter.Handle {
-		return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-			auth := &Authorizer{enforcer: a.enforcer}
-			//extract token
-			token := auth.getToken(r)
-			var role string
-			if token == "" {
-				role = "public"
-			} else {
-				//parse and validate token
-				claims, err := auth.getClaims(a.ctx, a.jwtAuthService, token)
-				if err != nil {
-					respondError(w, http.StatusForbidden, err)
-					return
-				}
-				role = claims.Role
-			}
-			// casbin enforce
-			res, err := a.enforcer.EnforceSafe(role, r.URL.Path, r.Method)
-			if err != nil {
-				respondError(w, http.StatusInternalServerError, err)
-				return
-			}
-			if res {
-				next(w, r, params)
-			} else {
-				respondError(w, http.StatusForbidden, errors.New("unauthorized"))
-				return
-			}
-		}
-	}
-}*/
