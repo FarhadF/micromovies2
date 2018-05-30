@@ -45,6 +45,8 @@ func main() {
 
 	// setup casbin auth rules
 	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv")
+	//disable casbin log
+	e.EnableLog(false)
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
@@ -52,14 +54,10 @@ func main() {
 	// HTTP transport
 
 	logger.Info("", zap.String("http:", httpAddr))
-	//handler := apigateway.NewHTTPServer(ctx, endpoints)
 	//httprouter
 	r := httprouter.New()
 	apigateway.Endpoints{
-		Ctx: ctx,
-		// This is incredibly laborious when we want to add e.g. rate
-		// limiters. It would be better to bundle all the endpoints up,
-		// somehow... or, use code generation, of course.
+		Ctx:              ctx,
 		LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
 		RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
 	}.Register(r)
