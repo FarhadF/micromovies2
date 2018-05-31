@@ -8,10 +8,31 @@ import (
 	"micromovies2/jwtauth"
 	"micromovies2/jwtauth/client"
 	"net/http"
+	"fmt"
 )
 
 // Authorizer is a middleware for authorization
 func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	//todo: exclude public urls
+	// check exclude url
+	if len(a.excludeUrl) > 0 {
+		for _, url := range a.excludeUrl {
+			fmt.Println(url,r.URL.Path)
+			if url == r.URL.Path {
+				a.next.ServeHTTP(w, r)
+				return
+			}
+		}
+	}
+	// check exclude url prefix
+/*	if len(config.ExcludePrefix) > 0 {
+		for _, prefix := range config.ExcludePrefix {
+			if strings.HasPrefix(c.Req.URL.Path, prefix) {
+				c.Next()
+				return
+			}
+		}
+	}*/
 	auth := &Authorizer{enforcer: a.enforcer}
 	//extract token
 	token := auth.getToken(r)
@@ -47,11 +68,12 @@ type Authorizer struct {
 	next           *httprouter.Router
 	enforcer       *casbin.Enforcer
 	jwtAuthService jwtauth.Service
+	excludeUrl 	   []string
 }
 
 // Make a constructor for our middleware type since its fields are not exported (in lowercase)
-func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer, jwtAuthService jwtauth.Service) *Authorizer {
-	return &Authorizer{ctx: ctx, next: next, enforcer: e, jwtAuthService: jwtAuthService}
+func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer, jwtAuthService jwtauth.Service, excludeUrls []string) *Authorizer {
+	return &Authorizer{ctx: ctx, next: next, enforcer: e, jwtAuthService: jwtAuthService, excludeUrl: excludeUrls}
 }
 
 // GetToken gets the jwt token from the request.
