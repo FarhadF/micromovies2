@@ -9,6 +9,7 @@ import (
 	"micromovies2/jwtauth"
 	"micromovies2/jwtauth/client"
 	"net/http"
+	"strings"
 )
 
 // Authorizer is a middleware for authorization
@@ -25,14 +26,14 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	// check exclude url prefix
-	/*	if len(config.ExcludePrefix) > 0 {
-		for _, prefix := range config.ExcludePrefix {
-			if strings.HasPrefix(c.Req.URL.Path, prefix) {
-				c.Next()
+	if len(a.excludePrefix) > 0 {
+		for _, prefix := range a.excludePrefix {
+			if strings.HasPrefix(r.URL.Path, prefix) {
+				a.next.ServeHTTP(w, r)
 				return
 			}
 		}
-	}*/
+	}
 	auth := &Authorizer{enforcer: a.enforcer}
 	//extract token
 	token := auth.getToken(r)
@@ -69,6 +70,7 @@ type Authorizer struct {
 	enforcer       *casbin.Enforcer
 	jwtAuthService jwtauth.Service
 	excludeUrl     []string
+	excludePrefix  []string
 }
 
 // Make a constructor for our middleware type since its fields are not exported (in lowercase)
