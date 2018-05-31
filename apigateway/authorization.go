@@ -3,12 +3,12 @@ package apigateway
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/casbin/casbin"
 	"github.com/julienschmidt/httprouter"
 	"micromovies2/jwtauth"
 	"micromovies2/jwtauth/client"
 	"net/http"
-	"fmt"
 )
 
 // Authorizer is a middleware for authorization
@@ -17,7 +17,7 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// check exclude url
 	if len(a.excludeUrl) > 0 {
 		for _, url := range a.excludeUrl {
-			fmt.Println(url,r.URL.Path)
+			fmt.Println(url, r.URL.Path)
 			if url == r.URL.Path {
 				a.next.ServeHTTP(w, r)
 				return
@@ -25,7 +25,7 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	// check exclude url prefix
-/*	if len(config.ExcludePrefix) > 0 {
+	/*	if len(config.ExcludePrefix) > 0 {
 		for _, prefix := range config.ExcludePrefix {
 			if strings.HasPrefix(c.Req.URL.Path, prefix) {
 				c.Next()
@@ -68,7 +68,7 @@ type Authorizer struct {
 	next           *httprouter.Router
 	enforcer       *casbin.Enforcer
 	jwtAuthService jwtauth.Service
-	excludeUrl 	   []string
+	excludeUrl     []string
 }
 
 // Make a constructor for our middleware type since its fields are not exported (in lowercase)

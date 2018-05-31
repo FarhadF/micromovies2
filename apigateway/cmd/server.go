@@ -61,7 +61,7 @@ func main() {
 		LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
 		RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
 	}.Register(r)
-	excludeUrls := []string{"/v1/login","/v1/register"}
+	excludeUrls := []string{"/v1/login", "/v1/register"}
 	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)
 	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
 }
