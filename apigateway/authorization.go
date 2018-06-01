@@ -3,7 +3,6 @@ package apigateway
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/casbin/casbin"
 	"github.com/julienschmidt/httprouter"
 	"micromovies2/jwtauth"
@@ -46,12 +45,16 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		//parse and validate token
 		claims, err := auth.getClaims(a.ctx, a.jwtAuthService, token[1])
-		fmt.Println(claims, token)
 		if err != nil {
 			respondError(w, http.StatusForbidden, err)
 			return
 		}
 		role = claims.Role
+		//put desired data in the context
+		a.ctx = context.WithValue(a.ctx, "email", claims.Email)
+		a.ctx = context.WithValue(a.ctx, "role", claims.Role)
+		//put the context in the http.request context and make sure you take it out at http handlers
+		r = r.WithContext(a.ctx)
 	}
 	// casbin enforce
 	res, err := a.enforcer.EnforceSafe(role, r.URL.Path, r.Method)
@@ -79,7 +82,8 @@ type Authorizer struct {
 }
 
 // Make a constructor for our middleware type since its fields are not exported
-func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer, jwtAuthService jwtauth.Service, excludeUrls []string) *Authorizer {
+func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer,
+	jwtAuthService jwtauth.Service, excludeUrls []string) *Authorizer {
 	return &Authorizer{ctx: ctx, next: next, enforcer: e, jwtAuthService: jwtAuthService, excludeUrl: excludeUrls}
 }
 

@@ -21,6 +21,8 @@ func (e Endpoints) Register(r *httprouter.Router) {
 
 //each method needs a http handler handlers are registered in the register func
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
+	e.Ctx = r.Context()
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {
@@ -44,6 +46,8 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 
 //each method needs a http handler handlers are registered in the register func
 func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
+	e.Ctx = r.Context()
 	decodedRegisterReq, err := decodeRegisterRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {
@@ -63,6 +67,8 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 
 //each method needs a http handler handlers are changePassworded in the changePassword func
 func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
+	e.Ctx = r.Context()
 	decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {

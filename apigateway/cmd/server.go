@@ -42,7 +42,6 @@ func main() {
 	svc := apigateway.NewService()
 	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
-
 	// setup casbin auth rules
 	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv", false)
 	//disable casbin log
@@ -52,7 +51,6 @@ func main() {
 	}
 	jwtAuthService := jwtauth.NewService()
 	// HTTP transport
-
 	logger.Info("", zap.String("http:", httpAddr))
 	//httprouter
 	r := httprouter.New()
