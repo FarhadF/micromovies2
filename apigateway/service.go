@@ -10,6 +10,7 @@ import (
 type Service interface {
 	Login(ctx context.Context, email string, password string) (string, error)
 	Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error)
+	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 }
 
 type apigatewayService struct{}

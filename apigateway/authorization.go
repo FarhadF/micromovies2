@@ -12,13 +12,11 @@ import (
 	"strings"
 )
 
-// Authorizer is a middleware for authorization
+//overload the ServeHTTP method
 func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//todo: exclude public urls
 	// check exclude url
 	if len(a.excludeUrl) > 0 {
 		for _, url := range a.excludeUrl {
-			fmt.Println(url, r.URL.Path)
 			if url == r.URL.Path {
 				a.next.ServeHTTP(w, r)
 				return
@@ -36,13 +34,19 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	auth := &Authorizer{enforcer: a.enforcer}
 	//extract token
-	token := auth.getToken(r)
+	authHeader := auth.getToken(r)
 	var role string
-	if token == "" {
+	if authHeader == "" {
 		role = "public"
 	} else {
+		token := strings.Split(authHeader, " ")
+		if len(token) != 2 || token[0] != "Bearer" {
+			respondError(w, http.StatusBadRequest, errors.New("bad token"))
+			return
+		}
 		//parse and validate token
-		claims, err := auth.getClaims(a.ctx, a.jwtAuthService, token)
+		claims, err := auth.getClaims(a.ctx, a.jwtAuthService, token[1])
+		fmt.Println(claims, token)
 		if err != nil {
 			respondError(w, http.StatusForbidden, err)
 			return
@@ -63,7 +67,8 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Authorizer stores the casbin handler
+// Authorizer is a middleware for authorization
+// Authorizer stores the casbin handler plus everything we need to feed to ServeHTTP
 type Authorizer struct {
 	ctx            context.Context
 	next           *httprouter.Router
@@ -73,7 +78,7 @@ type Authorizer struct {
 	excludePrefix  []string
 }
 
-// Make a constructor for our middleware type since its fields are not exported (in lowercase)
+// Make a constructor for our middleware type since its fields are not exported
 func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer, jwtAuthService jwtauth.Service, excludeUrls []string) *Authorizer {
 	return &Authorizer{ctx: ctx, next: next, enforcer: e, jwtAuthService: jwtAuthService, excludeUrl: excludeUrls}
 }

@@ -34,3 +34,13 @@ func (mw LoggingMiddleware) Register(ctx context.Context, email string, password
 	output, err = mw.Next.Register(ctx, email, password, firstname, lastname)
 	return
 }
+
+//each method will have its own logger for app logs
+func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (output bool, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info("", zap.String("method", "ChangePassword"), zap.String("email", email), zap.Error(err),
+			zap.Duration("took", time.Since(begin)))
+	}(time.Now())
+	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
+	return
+}

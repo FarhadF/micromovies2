@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+//business logic methods
 type Service interface {
 	NewUser(ctx context.Context, user User) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
@@ -109,6 +110,7 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 	return true, nil
 }
 
+//method implementation
 func (s usersService) Login(ctx context.Context, email string, password string) (string, error) {
 	user, err := s.GetUserByEmail(ctx, email)
 	if err != nil {

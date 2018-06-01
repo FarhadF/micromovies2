@@ -1,2 +1,3 @@
 p, user, /v1/register/*, POST
 p, user, /v1/login, POST
+p, user, /v1/changepassword, POST

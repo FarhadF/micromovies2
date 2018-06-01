@@ -46,7 +46,7 @@ func main() {
 	// setup casbin auth rules
 	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv", false)
 	//disable casbin log
-	e.EnableLog(true)
+	e.EnableLog(false)
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
@@ -57,9 +57,10 @@ func main() {
 	//httprouter
 	r := httprouter.New()
 	apigateway.Endpoints{
-		Ctx:              ctx,
-		LoginEndpoint:    apigateway.MakeLoginEndpoint(svc),
-		RegisterEndpoint: apigateway.MakeRegisterEndpoint(svc),
+		Ctx:                    ctx,
+		LoginEndpoint:          apigateway.MakeLoginEndpoint(svc),
+		RegisterEndpoint:       apigateway.MakeRegisterEndpoint(svc),
+		ChangePasswordEndpoint: apigateway.MakeChangePasswordEndpoint(svc),
 	}.Register(r)
 	excludeUrls := []string{"/v1/login", "/v1/register"}
 	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)

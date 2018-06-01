@@ -26,6 +26,16 @@ func decodeRegisterRequest(ctx context.Context, r *http.Request) (interface{}, e
 	return req, nil
 }
 
+//decode function for each method
+func decodeChangePasswordRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req changePasswordRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 //single encode func for all
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)

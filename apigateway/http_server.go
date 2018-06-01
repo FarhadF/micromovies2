@@ -15,6 +15,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/login", e.HandleLoginPost)
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
+	r.Handle("POST", "/v1/changepassword", e.HandleChangePasswordPost)
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -58,6 +59,25 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 		return
 	}
 	respondSuccess(w, resp.(registerResponse))
+}
+
+//each method needs a http handler handlers are changePassworded in the changePassword func
+func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
+	if err != nil {
+		if err == io.EOF {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		respondError(w, 500, err)
+		return
+	}
+	resp, err := e.ChangePasswordEndpoint(e.Ctx, decodedChangePasswordReq.(changePasswordRequest))
+	if err != nil {
+		respondError(w, 500, err)
+		return
+	}
+	respondSuccess(w, resp.(changePasswordResponse))
 }
 
 // respondError in some canonical format.

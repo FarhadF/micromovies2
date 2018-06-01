@@ -7,9 +7,10 @@ import (
 
 //Endpoints Wrapper
 type Endpoints struct {
-	Ctx              context.Context
-	LoginEndpoint    endpoint.Endpoint
-	RegisterEndpoint endpoint.Endpoint
+	Ctx                    context.Context
+	LoginEndpoint          endpoint.Endpoint
+	RegisterEndpoint       endpoint.Endpoint
+	ChangePasswordEndpoint endpoint.Endpoint
 }
 
 //model request and response
@@ -58,5 +59,29 @@ func MakeRegisterEndpoint(svc Service) endpoint.Endpoint {
 			return registerResponse{id, err.Error()}, nil
 		}
 		return registerResponse{id, ""}, nil
+	}
+}
+
+//model request and response
+type changePasswordRequest struct {
+	Email           string `json:"email"`
+	CurrentPassword string `json:"currentpassword"`
+	NewPassword     string `json:"newpassword"`
+}
+
+type changePasswordResponse struct {
+	Success bool   `json:"success"`
+	Err     string `json:"err"`
+}
+
+//make the actual endpoint
+func MakeChangePasswordEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(changePasswordRequest)
+		success, err := svc.ChangePassword(ctx, r.Email, r.CurrentPassword, r.NewPassword)
+		if err != nil {
+			return changePasswordResponse{success, err.Error()}, nil
+		}
+		return changePasswordResponse{success, ""}, nil
 	}
 }
