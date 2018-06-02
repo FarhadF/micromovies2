@@ -53,8 +53,8 @@ type getMovieByIdRequest struct {
 }
 
 type getMovieByIdResponse struct {
-	Movie Movie  `json:="movie"`
-	Err   string `json:="err"`
+	Movie Movie  `json:"movie"`
+	Err   string `json:"err"`
 }
 
 //Make actual endpoint per Method
@@ -138,7 +138,7 @@ type deleteMovieRequest struct {
 }
 
 type deleteMovieResponse struct {
-	Err string `json:="err"`
+	Err string `json:"err"`
 }
 
 //Make actual endpoint per Method
@@ -180,7 +180,7 @@ type updateMovieRequest struct {
 }
 
 type updateMovieResponse struct {
-	Err string `json:="err"`
+	Err string `json:"err"`
 }
 
 //Make actual endpoint per Method
