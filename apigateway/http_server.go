@@ -25,23 +25,20 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 	e.Ctx = r.Context()
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
-		if err == io.EOF {
-			respondError(w, http.StatusBadRequest, err)
-			return
-		}
-		if err.Error() == "no rows in result set" {
-			respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
-			return
-		}
-		respondError(w, 500, err)
+		respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
 		return
 	}
 	resp, err := e.LoginEndpoint(e.Ctx, decodedLoginReq.(loginRequest))
+	res := resp.(loginResponse)
 	if err != nil {
 		respondError(w, 500, err)
 		return
 	}
-	respondSuccess(w, resp.(loginResponse))
+	if res.Err != "" {
+		respondError(w, 500, errors.New(res.Err))
+		return
+	}
+	respondSuccess(w, res)
 }
 
 //each method needs a http handler handlers are registered in the register func
