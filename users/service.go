@@ -9,8 +9,6 @@ import (
 	jwtClient "micromovies2/jwtauth/client"
 	vaultClient "micromovies2/vault/client"
 	"time"
-	"google.golang.org/grpc/metadata"
-	"fmt"
 )
 
 //business logic methods
@@ -139,12 +137,4 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 		return "", errors.WithStack(err)
 	}
 	return token, nil
-}
-
-func injectEmail(ctx context.Context, md *metadata.MD) context.Context {
-	if hdr, ok := ctx.Value(correlationID).(string); ok {
-		fmt.Printf("\tClient found correlationID %q in context, set metadata header\n", hdr)
-		(*md)[string(correlationID)] = append((*md)[string(correlationID)], hdr)
-	}
-	return ctx
 }

@@ -32,6 +32,7 @@ func (apigatewayService) Login(ctx context.Context, email string, password strin
 	}
 	return token, nil
 }
+
 //todo pass down ctx to downstream microservice
 //todo make downstream ports flags/envs
 func (apigatewayService) Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error) {
@@ -53,6 +54,7 @@ func (apigatewayService) Register(ctx context.Context, email string, password st
 	}
 	return id, nil
 }
+
 //todo make it available to admin and current user only
 func (apigatewayService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
 	conn, err := grpc.Dial(":8084", grpc.WithInsecure())

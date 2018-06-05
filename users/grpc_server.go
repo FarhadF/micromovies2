@@ -3,9 +3,8 @@ package users
 import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"micromovies2/users/pb"
 	"google.golang.org/grpc/metadata"
-	"fmt"
+	"micromovies2/users/pb"
 )
 
 type grpcServer struct {
@@ -58,7 +57,6 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 			endpoint.NewUserEndpoint,
 			DecodeGRPCNewUserRequest,
 			EncodeGRPCNewUserResponse,
-			grpctransport.ServerBefore(getGRPCContext),
 		),
 		getUserByEmail: grpctransport.NewServer(
 			endpoint.GetUserByEmailEndpoint,
@@ -69,6 +67,7 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 			endpoint.ChangePasswordEndpoint,
 			DecodeGRPCChangePasswordRequest,
 			EncodeGRPCChangePasswordResponse,
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		login: grpctransport.NewServer(
 			endpoint.LoginEndpoint,
@@ -78,12 +77,11 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 	}
 }
 
-//serverbefore funcs
+//server before: this will retreive email from grpc metadata from upstream server and put it in the ctx
 func getGRPCContext(ctx context.Context, md metadata.MD) context.Context {
-	if hdr, ok := md[string("email")]; ok {
-		email := hdr[len(hdr)-1]
+	if email, ok := md[string("email")]; ok {
+		email := email[len(email)-1]
 		ctx = context.WithValue(ctx, "email", email)
-		fmt.Printf("\tServer received email %q in metadata header, set context\n", email)
 	}
 	return ctx
 }
