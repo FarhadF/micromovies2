@@ -29,7 +29,7 @@ func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 		users.DecodeGRPCChangePasswordResponse,
 		pb.ChangePasswordResponse{},
 		//this will inject email in the metadata to be passed to downstream service
-		grpctransport.ClientBefore(injectEmail),
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var loginEndpoint = grpctransport.NewClient(
 		conn, "pb.Users", "Login",
@@ -77,10 +77,13 @@ func Login(ctx context.Context, service users.Service, email string, Password st
 	return token, nil
 }
 
-//client before function
-func injectEmail(ctx context.Context, md *metadata.MD) context.Context {
+//client before function to inject context into grpc metadata to pass to downstream service
+func injectContext(ctx context.Context, md *metadata.MD) context.Context {
 	if email, ok := ctx.Value("email").(string); ok {
 		(*md)["email"] = append((*md)["email"], email)
+	}
+	if role, ok := ctx.Value("role").(string); ok {
+		(*md)["role"] = append((*md)["role"], role)
 	}
 	return ctx
 }

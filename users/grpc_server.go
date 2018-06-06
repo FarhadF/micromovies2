@@ -77,11 +77,15 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 	}
 }
 
-//server before: this will retreive email from grpc metadata from upstream server and put it in the ctx
+//server before: this will retreive email and role from grpc metadata from upstream server and put it in the ctx
 func getGRPCContext(ctx context.Context, md metadata.MD) context.Context {
-	if email, ok := md[string("email")]; ok {
+	if email, ok := md["email"]; ok {
 		email := email[len(email)-1]
 		ctx = context.WithValue(ctx, "email", email)
+	}
+	if role, ok := md["role"]; ok {
+		role := role[len(role)-1]
+		ctx = context.WithValue(ctx, "role", role)
 	}
 	return ctx
 }
