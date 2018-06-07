@@ -3,6 +3,7 @@ package apigateway
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
@@ -12,7 +13,7 @@ import (
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
 	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa111111"}'
-	r.Handle("POST", "/v1/login", e.HandleLoginPost)
+	r.Handle("POST", "/v1/login", UUIDMiddleware(e.HandleLoginPost))
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	r.Handle("POST", "/v1/changepassword", e.HandleChangePasswordPost)
@@ -23,6 +24,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
+	fmt.Println(e.Ctx.Value("correlationid"))
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))

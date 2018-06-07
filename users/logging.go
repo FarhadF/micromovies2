@@ -31,7 +31,9 @@ func (mw LoggingMiddleware) GetUserByEmail(ctx context.Context, email string) (o
 
 func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (output bool, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "ChangePassword"), zap.String("email", email), zap.Error(err),
+		mw.Logger.Info("", zap.String("method", "ChangePassword"), zap.String("email", email),
+			zap.String("ctxemail", ctx.Value("email").(string)),
+			zap.String("ctxrole", ctx.Value("role").(string)), zap.Error(err),
 			zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)

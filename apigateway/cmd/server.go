@@ -61,6 +61,7 @@ func main() {
 		ChangePasswordEndpoint: apigateway.MakeChangePasswordEndpoint(svc),
 	}.Register(r)
 	excludeUrls := []string{"/v1/login", "/v1/register"}
+	//uuidMiddleware := apigateway.NewUUIDMiddleware(ctx, r)
 	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)
 	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
 }
