@@ -3,7 +3,6 @@ package apigateway
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
@@ -16,7 +15,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/login", UUIDMiddleware(e.HandleLoginPost))
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
-	r.Handle("POST", "/v1/changepassword", e.HandleChangePasswordPost)
+	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(e.HandleChangePasswordPost))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -24,7 +23,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	fmt.Println(e.Ctx.Value("correlationid"))
+	//fmt.Println(e.Ctx.Value("correlationid"))
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
@@ -68,6 +67,7 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
+	//fmt.Println(e.Ctx)
 	decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {

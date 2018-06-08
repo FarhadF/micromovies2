@@ -87,5 +87,10 @@ func getGRPCContext(ctx context.Context, md metadata.MD) context.Context {
 		role := role[len(role)-1]
 		ctx = context.WithValue(ctx, "role", role)
 	}
+
+	if correlationid, ok := md["correlationid"]; ok {
+		correlationid := correlationid[len(correlationid)-1]
+		ctx = context.WithValue(ctx, "correlationid", correlationid)
+	}
 	return ctx
 }

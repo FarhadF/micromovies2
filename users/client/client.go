@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"micromovies2/users/pb"
 
+	"github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"micromovies2/users"
 )
@@ -28,7 +29,7 @@ func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 		users.EncodeGRPCChangePasswordRequest,
 		users.DecodeGRPCChangePasswordResponse,
 		pb.ChangePasswordResponse{},
-		//this will inject email in the metadata to be passed to downstream service
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
 		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var loginEndpoint = grpctransport.NewClient(
@@ -85,5 +86,7 @@ func injectContext(ctx context.Context, md *metadata.MD) context.Context {
 	if role, ok := ctx.Value("role").(string); ok {
 		(*md)["role"] = append((*md)["role"], role)
 	}
+	correlationid := ctx.Value("correlationid")
+	(*md)["correlationid"] = append((*md)["correlationid"], correlationid.(uuid.UUID).String())
 	return ctx
 }

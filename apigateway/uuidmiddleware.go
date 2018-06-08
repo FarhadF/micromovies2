@@ -7,14 +7,14 @@ import (
 	"net/http"
 )
 
-type uUIDMiddleware struct {
+/*type uUIDMiddleware struct {
 	ctx  context.Context
 	next *httprouter.Router
 }
 
 func NewUUIDMiddleware(ctx context.Context, next *httprouter.Router) *uUIDMiddleware {
 	return &uUIDMiddleware{ctx, next}
-}
+}*/
 
 /*func (e *uUIDMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("here")
@@ -36,8 +36,9 @@ func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
 		if err != nil {
 			respondError(w, http.StatusInternalServerError, err)
 		}
-		ctx := context.Background()
+		ctx := r.Context()
 		ctx = context.WithValue(ctx, "correlationid", u2)
+		//fmt.Println(ctx)
 		r = r.WithContext(ctx)
 		next(w, r, ps)
 	}
