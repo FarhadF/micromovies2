@@ -86,7 +86,8 @@ func injectContext(ctx context.Context, md *metadata.MD) context.Context {
 	if role, ok := ctx.Value("role").(string); ok {
 		(*md)["role"] = append((*md)["role"], role)
 	}
-	correlationid := ctx.Value("correlationid")
-	(*md)["correlationid"] = append((*md)["correlationid"], correlationid.(uuid.UUID).String())
+	if correlationid, ok := ctx.Value("correlationid").(uuid.UUID); ok {
+		(*md)["correlationid"] = append((*md)["correlationid"], correlationid.String())
+	}
 	return ctx
 }
