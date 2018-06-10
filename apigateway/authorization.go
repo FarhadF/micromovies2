@@ -17,6 +17,7 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(a.excludeUrl) > 0 {
 		for _, url := range a.excludeUrl {
 			if url == r.URL.Path {
+				r = r.WithContext(a.ctx)
 				a.next.ServeHTTP(w, r)
 				return
 			}
@@ -26,6 +27,7 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(a.excludePrefix) > 0 {
 		for _, prefix := range a.excludePrefix {
 			if strings.HasPrefix(r.URL.Path, prefix) {
+				r = r.WithContext(a.ctx)
 				a.next.ServeHTTP(w, r)
 				return
 			}
