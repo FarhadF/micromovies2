@@ -2,12 +2,17 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/casbin/casbin"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/julienschmidt/httprouter"
+	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	flag "github.com/spf13/pflag"
+	"github.com/uber/jaeger-client-go"
+	"github.com/uber/jaeger-client-go/config"
 	"go.uber.org/zap"
+	"io"
 	"micromovies2/apigateway"
 	"micromovies2/jwtauth"
 	"net/http"
@@ -50,6 +55,14 @@ func main() {
 		logger.Fatal("", zap.Error(err))
 	}
 	jwtAuthService := jwtauth.NewService()
+	//tracing
+	tracer, closer := initJaeger("micromovies")
+	defer closer.Close()
+	opentracing.SetGlobalTracer(tracer)
+	span := tracer.StartSpan("api-gateway")
+	defer span.Finish()
+
+	ctx = opentracing.ContextWithSpan(ctx, span)
 	// HTTP transport
 	logger.Info("", zap.String("http:", httpAddr))
 	//httprouter
@@ -64,4 +77,23 @@ func main() {
 	//uuidMiddleware := apigateway.NewUUIDMiddleware(ctx, r)
 	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)
 	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
+}
+
+// initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
+func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+	cfg := &config.Configuration{
+		Sampler: &config.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+		Reporter: &config.ReporterConfig{
+			LogSpans: false,
+		},
+		ServiceName: service,
+	}
+	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	return tracer, closer
 }

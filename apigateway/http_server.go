@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"github.com/opentracing/opentracing-go"
 )
 
 //using http router, register func will do the routing path registration
@@ -24,6 +25,14 @@ func (e Endpoints) Register(r *httprouter.Router) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
+	//span, _ := opentracing.StartSpanFromContext(e.Ctx, "HandleLoginPost")
+	//defer span.Finish()
+	//e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleLoginPost", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
 	//fmt.Println(e.Ctx.Value("correlationid"))
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {

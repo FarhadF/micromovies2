@@ -5,6 +5,7 @@ import (
 	"google.golang.org/grpc"
 	"micromovies2/users"
 	usersClient "micromovies2/users/client"
+	"github.com/opentracing/opentracing-go"
 )
 
 type Service interface {
@@ -20,6 +21,14 @@ func NewService() Service {
 }
 
 func (apigatewayService) Login(ctx context.Context, email string, password string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+
+
+	}
 	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
 	if err != nil {
 		return "", err
