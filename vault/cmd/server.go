@@ -4,13 +4,18 @@ import (
 	"context"
 	"fmt"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/julienschmidt/httprouter"
+	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
+	"github.com/uber/jaeger-client-go"
+	"github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
+	"io"
 	"micromovies2/vault"
 	"micromovies2/vault/pb"
 	"net"
@@ -73,6 +78,12 @@ func main() {
 		HashEndpoint:     hashEndpoint,
 		ValidateEndpoint: validateEndpoint,
 	}
+	//tracing
+	tracer, closer := initJaeger("vaultService")
+	defer closer.Close()
+	opentracing.SetGlobalTracer(tracer)
+	span := tracer.StartSpan("server")
+	defer span.Finish()
 	// HTTP transport
 	go func() {
 		//httprouter initialization
@@ -90,11 +101,31 @@ func main() {
 		}
 		logger.Info().Str("grpc:", gRPCAddr).Msg("")
 		handler := vault.NewGRPCServer(ctx, endpoints)
-		gRPCServer := grpc.NewServer()
+		//add grpc_opentracing interceptor for server
+		gRPCServer := grpc.NewServer(grpc.UnaryInterceptor(grpc_opentracing.UnaryServerInterceptor()))
 		pb.RegisterVaultServer(gRPCServer, handler)
 		errChan <- gRPCServer.Serve(listener)
 	}()
 
 	logger.Info().Msg(gRPCAddr)
 	logger.Fatal().Err(<-errChan).Msg("")
+}
+
+// initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
+func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+	cfg := &config.Configuration{
+		Sampler: &config.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+		Reporter: &config.ReporterConfig{
+			LogSpans: false,
+		},
+		ServiceName: service,
+	}
+	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	return tracer, closer
 }

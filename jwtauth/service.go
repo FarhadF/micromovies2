@@ -3,6 +3,7 @@ package jwtauth
 import (
 	"context"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/opentracing/opentracing-go"
 	"time"
 )
 
@@ -21,6 +22,12 @@ func NewService() Service {
 }
 
 func (jwtService) GenerateToken(ctx context.Context, email string, role string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("GenerateToken", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	// Create the token
 	tokenObject := jwt.New(jwt.SigningMethodHS256)
 	// Set some claims
@@ -44,6 +51,12 @@ type Claims struct {
 }
 
 func (jwtService) ParseToken(ctx context.Context, myToken string) (Claims, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("ParseToken", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	parsedToken, err := jwt.Parse(myToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte(mySigningKey), nil
 	})

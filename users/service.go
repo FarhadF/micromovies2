@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/jackc/pgx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
@@ -123,8 +124,8 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
-	//call vault service
-	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	//call vault service + grpc_opentracing interceptor for client
+	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
@@ -134,8 +135,8 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	if valid != true {
 		return "", errors.WithStack(errors.New("email or password incorrect"))
 	}
-	//call jwt client
-	conn1, err := grpc.Dial(":8087", grpc.WithInsecure())
+	//call jwt client + grpc_opentracing interceptor for client
+	conn1, err := grpc.Dial(":8087", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", errors.WithStack(err)
 	}

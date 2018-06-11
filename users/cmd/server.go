@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/jackc/pgx"
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
@@ -106,8 +106,8 @@ func main() {
 			return
 		}
 		handler := users.NewGRPCServer(ctx, endpoints)
-		//grpc server with otgrpc interceptor
-		grpcServer := grpc.NewServer(grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer)))
+		//grpc server with grpc-ecosystem/go-grpc-middleware interceptor
+		grpcServer := grpc.NewServer(grpc.UnaryInterceptor(grpc_opentracing.UnaryServerInterceptor()))
 		pb.RegisterUsersServer(grpcServer, handler)
 		errChan <- grpcServer.Serve(listener)
 	}()

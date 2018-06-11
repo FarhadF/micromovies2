@@ -4,13 +4,18 @@ import (
 	"context"
 	"fmt"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/julienschmidt/httprouter"
+	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
+	"github.com/uber/jaeger-client-go"
+	"github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
+	"io"
 	"micromovies2/jwtauth"
 	"micromovies2/jwtauth/pb"
 	"net"
@@ -64,6 +69,12 @@ func main() {
 		GenerateTokenEndpoint: jwtauth.MakeGenerateTokenEndpoint(svc),
 		ParseTokenEndpoint:    jwtauth.MakeParseTokenEndpoint(svc),
 	}
+	//tracing
+	tracer, closer := initJaeger("jwtService")
+	defer closer.Close()
+	opentracing.SetGlobalTracer(tracer)
+	span := tracer.StartSpan("server")
+	defer span.Finish()
 	//execute grpc server
 	go func() {
 		listener, err := net.Listen("tcp", gRPCAddr)
@@ -72,7 +83,8 @@ func main() {
 			return
 		}
 		handler := jwtauth.NewGRPCServer(ctx, endpoints)
-		grpcServer := grpc.NewServer()
+		//add grpc_opentracing interceptor for server
+		grpcServer := grpc.NewServer(grpc.UnaryInterceptor(grpc_opentracing.UnaryServerInterceptor()))
 		pb.RegisterJWTServer(grpcServer, handler)
 		errChan <- grpcServer.Serve(listener)
 	}()
@@ -91,4 +103,23 @@ func main() {
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
 	logger.Error().Err(<-errChan).Msg("")
+}
+
+// initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
+func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+	cfg := &config.Configuration{
+		Sampler: &config.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+		Reporter: &config.ReporterConfig{
+			LogSpans: false,
+		},
+		ServiceName: service,
+	}
+	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	if err != nil {
+		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+	}
+	return tracer, closer
 }

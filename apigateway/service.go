@@ -2,7 +2,7 @@ package apigateway
 
 import (
 	"context"
-	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"micromovies2/users"
@@ -28,7 +28,7 @@ func (apigatewayService) Login(ctx context.Context, email string, password strin
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
-	conn, err := grpc.Dial(":8084", grpc.WithInsecure(), grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.SpanFromContext(ctx).Tracer())))
+	conn, err := grpc.Dial(":8084", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", err
 	}
