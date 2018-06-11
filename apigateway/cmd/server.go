@@ -56,12 +56,11 @@ func main() {
 	}
 	jwtAuthService := jwtauth.NewService()
 	//tracing
-	tracer, closer := initJaeger("micromovies")
+	tracer, closer := initJaeger("api-gateway")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 	span := tracer.StartSpan("api-gateway")
 	defer span.Finish()
-
 	ctx = opentracing.ContextWithSpan(ctx, span)
 	// HTTP transport
 	logger.Info("", zap.String("http:", httpAddr))

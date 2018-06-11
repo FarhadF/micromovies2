@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/julienschmidt/httprouter"
+	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
 	"net/http"
 	"strings"
-	"github.com/opentracing/opentracing-go"
 )
 
 //using http router, register func will do the routing path registration

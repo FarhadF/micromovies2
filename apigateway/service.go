@@ -2,10 +2,11 @@ package apigateway
 
 import (
 	"context"
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
+	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
 	"micromovies2/users"
 	usersClient "micromovies2/users/client"
-	"github.com/opentracing/opentracing-go"
 )
 
 type Service interface {
@@ -26,10 +27,8 @@ func (apigatewayService) Login(ctx context.Context, email string, password strin
 		span.SetTag("email", email)
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
-
-
 	}
-	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
+	conn, err := grpc.Dial(":8084", grpc.WithInsecure(), grpc.WithUnaryInterceptor(otgrpc.OpenTracingClientInterceptor(opentracing.SpanFromContext(ctx).Tracer())))
 	if err != nil {
 		return "", err
 	}

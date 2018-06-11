@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"github.com/jackc/pgx"
+	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -112,10 +113,17 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 
 //method implementation
 func (s usersService) Login(ctx context.Context, email string, password string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	user, err := s.GetUserByEmail(ctx, email)
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
+	//call vault service
 	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
 		return "", errors.WithStack(err)
@@ -126,6 +134,7 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	if valid != true {
 		return "", errors.WithStack(errors.New("email or password incorrect"))
 	}
+	//call jwt client
 	conn1, err := grpc.Dial(":8087", grpc.WithInsecure())
 	if err != nil {
 		return "", errors.WithStack(err)
