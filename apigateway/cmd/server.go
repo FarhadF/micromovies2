@@ -59,9 +59,9 @@ func main() {
 	tracer, closer := initJaeger("api-gateway")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
-	span := tracer.StartSpan("api-gateway")
-	defer span.Finish()
-	ctx = opentracing.ContextWithSpan(ctx, span)
+	//span := tracer.StartSpan("api-gateway")
+	//defer span.Finish()
+	//ctx = opentracing.ContextWithSpan(ctx, span)
 	// HTTP transport
 	logger.Info("", zap.String("http:", httpAddr))
 	//httprouter

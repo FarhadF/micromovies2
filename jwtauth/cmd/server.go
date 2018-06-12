@@ -73,8 +73,9 @@ func main() {
 	tracer, closer := initJaeger("jwtService")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
-	span := tracer.StartSpan("server")
-	defer span.Finish()
+	//span := tracer.StartSpan("server")
+	//defer span.Finish()
+	//ctx = opentracing.ContextWithSpan(ctx, span)
 	//execute grpc server
 	go func() {
 		listener, err := net.Listen("tcp", gRPCAddr)
