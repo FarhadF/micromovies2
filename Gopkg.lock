@@ -30,6 +30,12 @@
   version = "v1.5.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/codahale/hdrhistogram"
+  packages = ["."]
+  revision = "3a0bb77429bd3a61596f5e8a3172445844342120"
+
+[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
   revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
@@ -73,6 +79,17 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = [
+    ".",
+    "tags",
+    "tracing/opentracing",
+    "util/metautils"
+  ]
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/jackc/pgx"
   packages = [
     ".",
@@ -102,6 +119,16 @@
   packages = ["pbutil"]
   revision = "c12348ce28de40eed0136aa2b644d0ee0650e56c"
   version = "v1.0.1"
+
+[[projects]]
+  name = "github.com/opentracing/opentracing-go"
+  packages = [
+    ".",
+    "ext",
+    "log"
+  ]
+  revision = "1949ddbfd147afd4d964a9f00b24eb291e0e7c38"
+  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -157,10 +184,45 @@
   version = "v1.8.0"
 
 [[projects]]
+  name = "github.com/satori/go.uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
   name = "github.com/spf13/pflag"
   packages = ["."]
   revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
   version = "v1.0.1"
+
+[[projects]]
+  name = "github.com/uber/jaeger-client-go"
+  packages = [
+    ".",
+    "config",
+    "internal/baggage",
+    "internal/baggage/remote",
+    "internal/spanlog",
+    "internal/throttler",
+    "internal/throttler/remote",
+    "log",
+    "rpcmetrics",
+    "thrift",
+    "thrift-gen/agent",
+    "thrift-gen/baggage",
+    "thrift-gen/jaeger",
+    "thrift-gen/sampling",
+    "thrift-gen/zipkincore",
+    "utils"
+  ]
+  revision = "b043381d944715b469fd6b37addfd30145ca1758"
+  version = "v2.14.0"
+
+[[projects]]
+  name = "github.com/uber/jaeger-lib"
+  packages = ["metrics"]
+  revision = "ed3a127ec5fef7ae9ea95b01b542c47fbd999ce5"
+  version = "v1.5.0"
 
 [[projects]]
   name = "go.uber.org/atomic"
@@ -271,6 +333,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "790fc43c325c7fc2753a3287728562f9441adcfc4d8ed6e147a70e65596818f7"
+  inputs-digest = "d5d4ee76c166f7c58305534a09dd1b58577fd16137883112b3981a9c84020aeb"
   solver-name = "gps-cdcl"
   solver-version = 1
