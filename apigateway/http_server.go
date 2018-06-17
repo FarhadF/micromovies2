@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+//todo: api documentation
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
 	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa111111"}'
