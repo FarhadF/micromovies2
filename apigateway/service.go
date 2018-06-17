@@ -9,18 +9,22 @@ import (
 	usersClient "micromovies2/users/client"
 )
 
+//business logic of this microservice
 type Service interface {
 	Login(ctx context.Context, email string, password string) (string, error)
 	Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 }
 
+//implementation using empty struct
 type apigatewayService struct{}
 
+//create service func, will be used in server.go of this microservice
 func NewService() Service {
 	return apigatewayService{}
 }
 
+//implementation of each method of service interface
 func (apigatewayService) Login(ctx context.Context, email string, password string) (string, error) {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
@@ -41,8 +45,8 @@ func (apigatewayService) Login(ctx context.Context, email string, password strin
 	return token, nil
 }
 
-//todo pass down ctx to downstream microservice
 //todo make downstream ports flags/envs
+//implementation of each method of service interface
 func (apigatewayService) Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error) {
 	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
 	if err != nil {
@@ -64,6 +68,7 @@ func (apigatewayService) Register(ctx context.Context, email string, password st
 }
 
 //todo make it available to admin and current user only
+//implementation of each method of service interface
 func (apigatewayService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
 	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
 	if err != nil {

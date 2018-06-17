@@ -26,15 +26,11 @@ func (e Endpoints) Register(r *httprouter.Router) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	//span, _ := opentracing.StartSpanFromContext(e.Ctx, "HandleLoginPost")
-	//defer span.Finish()
-	//e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
 	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
 		span := span.Tracer().StartSpan("HandleLoginPost", opentracing.ChildOf(span.Context()))
 		defer span.Finish()
 		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
 	}
-	//fmt.Println(e.Ctx.Value("correlationid"))
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
@@ -79,11 +75,10 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 	respondSuccess(w, resp.(registerResponse))
 }
 
-//each method needs a http handler handlers are changePassworded in the changePassword func
+//each method needs a http handler handlers are registered in the register func
 func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	//fmt.Println(e.Ctx)
 	decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {
@@ -113,6 +108,7 @@ func respondError(w http.ResponseWriter, code int, err error) {
 }
 
 // respondSuccess in some canonical format.
+//todo: check encoding errors
 func respondSuccess(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(data)

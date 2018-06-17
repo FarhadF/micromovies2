@@ -7,28 +7,8 @@ import (
 	"net/http"
 )
 
-/*type uUIDMiddleware struct {
-	ctx  context.Context
-	next *httprouter.Router
-}
-
-func NewUUIDMiddleware(ctx context.Context, next *httprouter.Router) *uUIDMiddleware {
-	return &uUIDMiddleware{ctx, next}
-}*/
-
-/*func (e *uUIDMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("here")
-	// We can modify the request here
-	u2, err := uuid.NewV4()
-	if err != nil {
-		respondError(w, http.StatusInternalServerError, err)
-	}
-	e.Ctx = context.WithValue(e.Ctx, "correlationid",u2)
-	r.WithContext(e.Ctx)
-	e.Next.ServeHTTP(w, r)
-	// We can modify the response here
-}*/
-
+//httprouter middleware to generate and inject correlationId in the context
+//this will be used in register fuc in http_server.go
 func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
 
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -38,7 +18,6 @@ func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
 		}
 		ctx := r.Context()
 		ctx = context.WithValue(ctx, "correlationid", u2)
-		//fmt.Println(ctx)
 		r = r.WithContext(ctx)
 		next(w, r, ps)
 	}
