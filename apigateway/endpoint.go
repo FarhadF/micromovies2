@@ -19,6 +19,8 @@ type loginRequest struct {
 	Password string `json:"password"`
 }
 
+// If successful Token will be in response, If it fails, Check err in the response.
+// swagger:response loginResponse
 type loginResponse struct {
 	Token string `json:"token,omitempty"`
 	Err   string `json:"err,omitempty"`
