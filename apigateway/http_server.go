@@ -22,7 +22,6 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	//  200: loginResponse
 	//  400: loginResponse
 	//  409: loginResponse
-	//  500: -
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."

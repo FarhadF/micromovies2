@@ -1,3 +1,30 @@
+// APIGateway
+//
+// This documentation describes APIGateway APIs
+//
+//     Schemes: http
+//     BasePath: /v1
+//     Version: 1.0.0
+//     License: MIT http://opensource.org/licenses/MIT
+//     Contact: Farhad Farahi<ff@ff.f>
+//     Host: localhost
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+//     Security:
+//     - bearer
+//
+//     SecurityDefinitions:
+//     bearer:
+//          type: JWT
+//          name: Authorization
+//          in: header
+//
+// swagger:meta
 package main
 
 import (
@@ -18,33 +45,7 @@ import (
 	"net/http"
 )
 
-// API Gateway
-//
-// This documentation describes APIGateway APIs
-//
-//     Schemes: http
-//     BasePath: /v1
-//     Version: 1.0.0
-//     License: MIT http://opensource.org/licenses/MIT
-//     Contact: Farhad Farahi
-//     Host: -
-//
-//     Consumes:
-//     - application/json
-//
-//     Produces:
-//     - application/json
-//
-//     Security:
-//     - bearer
-//
-//     SecurityDefinitions:
-//     bearer:
-//          type: apiKey
-//          name: Authorization
-//          in: header
-//
-// swagger:meta
+
 func main() {
 	var (
 		httpAddr string
