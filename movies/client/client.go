@@ -50,7 +50,7 @@ func NewGRPCClient(conn *grpc.ClientConn) movies.Service {
 }
 
 //callService helper
-func GetMovies(ctx context.Context, service movies.Service)([]movies.Movie, error) {
+func GetMovies(ctx context.Context, service movies.Service) ([]movies.Movie, error) {
 	movies, err := service.GetMovies(ctx)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func GetMovies(ctx context.Context, service movies.Service)([]movies.Movie, erro
 	return movies, nil
 }
 
-func GetMovieById(ctx context.Context, id string, service movies.Service)(movies.Movie, error) {
+func GetMovieById(ctx context.Context, service movies.Service, id string) (movies.Movie, error) {
 	movie, err := service.GetMovieById(ctx, id)
 	if err != nil {
 		return movies.Movie{}, err
@@ -66,7 +66,7 @@ func GetMovieById(ctx context.Context, id string, service movies.Service)(movies
 	return movie, nil
 }
 
-func NewMovie(ctx context.Context, title string, director []string, year string, userId string, service movies.Service)(string, error) {
+func NewMovie(ctx context.Context, service movies.Service, title string, director []string, year string, userId string) (string, error) {
 	id, err := service.NewMovie(ctx, title, director, year, userId)
 	if err != nil {
 		return "", err
@@ -74,7 +74,7 @@ func NewMovie(ctx context.Context, title string, director []string, year string,
 	return id, nil
 }
 
-func DeleteMovie(ctx context.Context, id string, service movies.Service)(string, error){
+func DeleteMovie(ctx context.Context, service movies.Service, id string) (string, error) {
 	err := service.DeleteMovie(ctx, id)
 	if err != nil {
 		return "", err
@@ -82,7 +82,7 @@ func DeleteMovie(ctx context.Context, id string, service movies.Service)(string,
 	return id, nil
 }
 
-func UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userId string, service movies.Service)(string, error) {
+func UpdateMovie(ctx context.Context, service movies.Service, id string, title string, director []string, year string, userId string) (string, error) {
 	err := service.UpdateMovie(ctx, id, title, director, year, userId)
 	if err != nil {
 		return "", err

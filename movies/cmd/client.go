@@ -53,7 +53,7 @@ func main() {
 		logger.Info().Interface("movie", movies).Msg("")
 	}
 	if movieId != "" && deleteMovie == false {
-		movie, err := client.GetMovieById(ctx, movieId, moviesService)
+		movie, err := client.GetMovieById(ctx, moviesService, movieId)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("")
 		}
@@ -66,14 +66,14 @@ func main() {
 		for _, d := range dir {
 			dirSlice = append(dirSlice, d)
 		}
-		id, err := client.NewMovie(ctx, title, dirSlice, year, userId, moviesService)
+		id, err := client.NewMovie(ctx, moviesService, title, dirSlice, year, userId)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("")
 		}
 		logger.Info().Str("id", id).Msg("")
 	}
 	if deleteMovie != false && movieId != "" {
-		id, err := client.DeleteMovie(ctx, movieId, moviesService)
+		id, err := client.DeleteMovie(ctx, moviesService, movieId)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("")
 		} else {
@@ -86,7 +86,7 @@ func main() {
 		for _, d := range dir {
 			dirSlice = append(dirSlice, d)
 		}
-		id, err := client.UpdateMovie(ctx, movieId, title, dirSlice, year, userId, moviesService)
+		id, err := client.UpdateMovie(ctx, moviesService, movieId, title, dirSlice, year, userId)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("")
 		}
