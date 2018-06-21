@@ -45,7 +45,6 @@ import (
 	"net/http"
 )
 
-
 func main() {
 	var (
 		httpAddr string
@@ -96,6 +95,7 @@ func main() {
 		LoginEndpoint:          apigateway.MakeLoginEndpoint(svc),
 		RegisterEndpoint:       apigateway.MakeRegisterEndpoint(svc),
 		ChangePasswordEndpoint: apigateway.MakeChangePasswordEndpoint(svc),
+		GetMovieByIdEndpoint:   apigateway.MakeGetMovieByIdEndpoint(svc),
 	}.Register(r)
 	excludeUrls := []string{"/v1/login", "/v1/register"}
 	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)

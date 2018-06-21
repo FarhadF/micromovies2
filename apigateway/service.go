@@ -5,6 +5,8 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
+	"micromovies2/movies"
+	moviesClient "micromovies2/movies/client"
 	"micromovies2/users"
 	usersClient "micromovies2/users/client"
 )
@@ -14,6 +16,7 @@ type Service interface {
 	Login(ctx context.Context, email string, password string) (string, error)
 	Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
+	GetMovieById(ctx context.Context, id string) (movies.Movie, error)
 }
 
 //implementation using empty struct
@@ -81,4 +84,25 @@ func (apigatewayService) ChangePassword(ctx context.Context, email string, curre
 		return false, err
 	}
 	return success, nil
+}
+
+//implementation of each method of service interface
+func (apigatewayService) GetMovieById(ctx context.Context, id string) (movies.Movie, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("GetMovieById", opentracing.ChildOf(span.Context()))
+		span.SetTag("id", id)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+	conn, err := grpc.Dial(":8081", grpc.WithInsecure())
+	if err != nil {
+		return movies.Movie{}, err
+	}
+	defer conn.Close()
+	moviesService := moviesClient.NewGRPCClient(conn)
+	movie, err := moviesClient.GetMovieById(ctx, moviesService, id)
+	if err != nil {
+		return movies.Movie{}, err
+	}
+	return movie, nil
 }

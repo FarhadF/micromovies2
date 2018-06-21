@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-kit/kit/metrics"
 	"time"
+	"micromovies2/movies"
 )
 
 type InstrumentingMiddleware struct {
@@ -44,5 +45,16 @@ func (mw InstrumentingMiddleware) ChangePassword(ctx context.Context, email stri
 		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
 	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
+	return
+}
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) GetMovieById(ctx context.Context, id string) (output movies.Movie, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "GetMovieById", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	output, err = mw.Next.GetMovieById(ctx, id)
 	return
 }

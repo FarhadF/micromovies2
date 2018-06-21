@@ -3,6 +3,7 @@ package apigateway
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"micromovies2/movies"
 )
 
 //Endpoints Wrapper
@@ -11,6 +12,7 @@ type Endpoints struct {
 	LoginEndpoint          endpoint.Endpoint
 	RegisterEndpoint       endpoint.Endpoint
 	ChangePasswordEndpoint endpoint.Endpoint
+	GetMovieByIdEndpoint   endpoint.Endpoint
 }
 
 //model request and response
@@ -85,5 +87,27 @@ func MakeChangePasswordEndpoint(svc Service) endpoint.Endpoint {
 			return changePasswordResponse{success, err.Error()}, nil
 		}
 		return changePasswordResponse{success, ""}, nil
+	}
+}
+
+//model request and response
+type getMovieByIdRequest struct {
+	Id           string `json:"id"`
+}
+
+type getMovieByIdResponse struct {
+	Movie movies.Movie   `json:"movie"`
+	Err     string `json:"err"`
+}
+
+//make the actual endpoint
+func MakeGetMovieByIdEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		id := req.(string)
+		movie, err := svc.GetMovieById(ctx, id)
+		if err != nil {
+			return getMovieByIdResponse{movies.Movie{}, err.Error()}, nil
+		}
+		return getMovieByIdResponse{movie, ""}, nil
 	}
 }

@@ -14,7 +14,7 @@ import (
 //todo: api documentation
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
-	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa111111"}'
+	//l
 	r.Handle("POST", "/v1/login", UUIDMiddleware(e.HandleLoginPost))
 	// swagger:route POST /login login users login
 	// Authenticates user
@@ -25,6 +25,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(e.HandleChangePasswordPost))
+	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(e.HandleGetMovieByIDGet))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -100,6 +101,29 @@ func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	respondSuccess(w, resp.(changePasswordResponse))
+}
+
+//each method needs a http handler handlers are registered in the register func
+func (e Endpoints) HandleGetMovieByIDGet(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
+	e.Ctx = r.Context()
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleGetMovieByIdGet", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
+	//decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
+	id := p.ByName("id")
+	if id == "" {
+		respondError(w, http.StatusBadRequest, errors.New("id cannot be empty"))
+		return
+	}
+	resp, err := e.GetMovieByIdEndpoint(e.Ctx, id)
+	if err != nil {
+		respondError(w, 500, err)
+		return
+	}
+	respondSuccess(w, resp.(getMovieByIdResponse))
 }
 
 // respondError in some canonical format.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.uber.org/zap"
 	"time"
+	"micromovies2/movies"
 )
 
 //struct passing the logger
@@ -42,5 +43,15 @@ func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, cu
 			zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
+	return
+}
+
+//each method will have its own logger for app logs
+func (mw LoggingMiddleware) GetMovieById(ctx context.Context, id string) (output movies.Movie, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info("", zap.String("method", "GetMovieById"), zap.String("id", id), zap.Error(err),
+			zap.Duration("took", time.Since(begin)))
+	}(time.Now())
+	output, err = mw.Next.GetMovieById(ctx, id)
 	return
 }
