@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"micromovies2/movies"
 	"micromovies2/movies/pb"
@@ -51,44 +50,42 @@ func NewGRPCClient(conn *grpc.ClientConn) movies.Service {
 }
 
 //callService helper
-func GetMovies(ctx context.Context, service movies.Service, logger zerolog.Logger) {
-	mesg, err := service.GetMovies(ctx)
+func GetMovies(ctx context.Context, service movies.Service)([]movies.Movie, error) {
+	movies, err := service.GetMovies(ctx)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		return nil, err
 	}
-	//j, err := json.Marshal(mesg)
-	logger.Info().Interface("movie", mesg).Msg("")
+	return movies, nil
 }
 
-func GetMovieById(ctx context.Context, id string, service movies.Service, logger zerolog.Logger) {
-	mesg, err := service.GetMovieById(ctx, id)
+func GetMovieById(ctx context.Context, id string, service movies.Service)(movies.Movie, error) {
+	movie, err := service.GetMovieById(ctx, id)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		return movies.Movie{}, err
 	}
-	logger.Info().Interface("movie", mesg).Msg("")
+	return movie, nil
 }
 
-func NewMovie(ctx context.Context, title string, director []string, year string, userId string, service movies.Service, logger zerolog.Logger) {
-	mesg, err := service.NewMovie(ctx, title, director, year, userId)
+func NewMovie(ctx context.Context, title string, director []string, year string, userId string, service movies.Service)(string, error) {
+	id, err := service.NewMovie(ctx, title, director, year, userId)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		return "", err
 	}
-	logger.Info().Str("id", mesg).Msg("")
+	return id, nil
 }
 
-func DeleteMovie(ctx context.Context, id string, service movies.Service, logger zerolog.Logger) {
+func DeleteMovie(ctx context.Context, id string, service movies.Service)(string, error){
 	err := service.DeleteMovie(ctx, id)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
-	} else {
-		logger.Info().Msg("Delete Successful for id: " + id)
+		return "", err
 	}
+	return id, nil
 }
 
-func UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userId string, service movies.Service, logger zerolog.Logger) {
+func UpdateMovie(ctx context.Context, id string, title string, director []string, year string, userId string, service movies.Service)(string, error) {
 	err := service.UpdateMovie(ctx, id, title, director, year, userId)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		return "", err
 	}
-	logger.Info().Msg("Successfully updated movie with id: " + id)
+	return id, nil
 }

@@ -45,10 +45,19 @@ func main() {
 	defer conn.Close()
 	moviesService := client.NewGRPCClient(conn)
 	if movieId == "" && newMovie == false {
-		client.GetMovies(ctx, moviesService, logger)
+		movies, err := client.GetMovies(ctx, moviesService)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("")
+		}
+		//j, err := json.Marshal(mesg)
+		logger.Info().Interface("movie", movies).Msg("")
 	}
 	if movieId != "" && deleteMovie == false {
-		client.GetMovieById(ctx, movieId, moviesService, logger)
+		movie, err := client.GetMovieById(ctx, movieId, moviesService)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("")
+		}
+		logger.Info().Interface("movie", movie).Msg("")
 
 	}
 	if newMovie != false && title != "" && director != "" && year != "" && userId != "" {
@@ -57,10 +66,19 @@ func main() {
 		for _, d := range dir {
 			dirSlice = append(dirSlice, d)
 		}
-		client.NewMovie(ctx, title, dirSlice, year, userId, moviesService, logger)
+		id, err := client.NewMovie(ctx, title, dirSlice, year, userId, moviesService)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("")
+		}
+		logger.Info().Str("id", id).Msg("")
 	}
 	if deleteMovie != false && movieId != "" {
-		client.DeleteMovie(ctx, movieId, moviesService, logger)
+		id, err := client.DeleteMovie(ctx, movieId, moviesService)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("")
+		} else {
+			logger.Info().Msg("Delete Successful for id: " + id)
+		}
 	}
 	if updateMovie != false && movieId != "" && title != "" && director != "" && year != "" && userId != "" {
 		dir := strings.Split(director, ",")
@@ -68,7 +86,10 @@ func main() {
 		for _, d := range dir {
 			dirSlice = append(dirSlice, d)
 		}
-		client.UpdateMovie(ctx, movieId, title, dirSlice, year, userId, moviesService, logger)
+		id, err := client.UpdateMovie(ctx, movieId, title, dirSlice, year, userId, moviesService)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("")
+		}
+		logger.Info().Msg("Successfully updated movie with id: " + id)
 	}
-
 }
