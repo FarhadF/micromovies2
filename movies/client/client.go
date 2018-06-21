@@ -8,7 +8,7 @@ import (
 	"micromovies2/movies/pb"
 )
 
-//create new client returns GetMovies Service
+//create new client returns Movies Service
 func NewGRPCClient(conn *grpc.ClientConn) movies.Service {
 	var getMoviesEndpoint = grpctransport.NewClient(
 		conn, "pb.Movies", "GetMovies",
