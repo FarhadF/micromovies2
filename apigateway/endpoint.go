@@ -92,12 +92,12 @@ func MakeChangePasswordEndpoint(svc Service) endpoint.Endpoint {
 
 //model request and response
 type getMovieByIdRequest struct {
-	Id           string `json:"id"`
+	Id string `json:"id"`
 }
 
 type getMovieByIdResponse struct {
-	Movie movies.Movie   `json:"movie"`
-	Err     string `json:"err"`
+	Movie movies.Movie `json:"movie"`
+	Err   string       `json:"err"`
 }
 
 //make the actual endpoint

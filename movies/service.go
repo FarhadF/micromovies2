@@ -5,6 +5,7 @@ import (
 
 	"errors"
 	"github.com/jackc/pgx"
+	"github.com/opentracing/opentracing-go"
 	"github.com/rs/zerolog"
 	"reflect"
 	"time"
@@ -34,6 +35,12 @@ func NewService(db *pgx.ConnPool, logger zerolog.Logger) Service {
 
 //implementation
 func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("GetMovies", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	rows, err := m.db.Query("select * from movies")
 	if err != nil {
 		return nil, err
@@ -67,6 +74,13 @@ func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
 
 //implementation
 func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("GetMovieById", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		span.SetTag("id", id)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	var movie Movie
 	rows := m.db.QueryRow("select * from movies where id = $1", id)
 	err := rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.CreatedBy, &movie.CreatedOn, &movie.UpdatedBy, &movie.UpdatedOn)
@@ -89,6 +103,12 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 
 //implementation
 func (m moviesService) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("NewMovie", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	rows, err := m.db.Query("select * from movies where title='" + title + "'")
 	defer rows.Close()
 	if err != nil {
@@ -125,6 +145,13 @@ func (m moviesService) NewMovie(ctx context.Context, title string, director []st
 
 //implementation
 func (m moviesService) DeleteMovie(ctx context.Context, id string) error {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("DeleteMovie", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		span.SetTag("id", id)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	rows, err := m.db.Query("select * from movies where id='" + id + "'")
 	defer rows.Close()
 	if err != nil {
@@ -143,6 +170,13 @@ func (m moviesService) DeleteMovie(ctx context.Context, id string) error {
 
 //implementation
 func (m moviesService) UpdateMovie(ctx context.Context, id string, title string, director []string, year string, updatedBy string) error {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("UpdateMovie", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		span.SetTag("id", id)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	rows, err := m.db.Query("select * from movies where id='" + id + "'")
 	defer rows.Close()
 	if err != nil {

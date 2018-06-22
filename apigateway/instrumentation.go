@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-kit/kit/metrics"
-	"time"
 	"micromovies2/movies"
+	"time"
 )
 
 type InstrumentingMiddleware struct {

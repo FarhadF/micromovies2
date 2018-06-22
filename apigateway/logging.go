@@ -3,8 +3,8 @@ package apigateway
 import (
 	"context"
 	"go.uber.org/zap"
-	"time"
 	"micromovies2/movies"
+	"time"
 )
 
 //struct passing the logger

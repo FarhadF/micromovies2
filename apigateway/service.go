@@ -51,7 +51,7 @@ func (apigatewayService) Login(ctx context.Context, email string, password strin
 //todo make downstream ports flags/envs
 //implementation of each method of service interface
 func (apigatewayService) Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error) {
-	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
+	conn, err := grpc.Dial(":8084", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", err
 	}
@@ -73,7 +73,7 @@ func (apigatewayService) Register(ctx context.Context, email string, password st
 //todo make it available to admin and current user only
 //implementation of each method of service interface
 func (apigatewayService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
-	conn, err := grpc.Dial(":8084", grpc.WithInsecure())
+	conn, err := grpc.Dial(":8084", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return false, err
 	}
@@ -94,7 +94,7 @@ func (apigatewayService) GetMovieById(ctx context.Context, id string) (movies.Mo
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
-	conn, err := grpc.Dial(":8081", grpc.WithInsecure())
+	conn, err := grpc.Dial(":8081", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return movies.Movie{}, err
 	}
