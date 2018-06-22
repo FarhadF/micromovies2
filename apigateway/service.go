@@ -2,13 +2,13 @@ package apigateway
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/movies"
+	moviesClient "github.com/farhadf/micromovies2/movies/client"
+	"github.com/farhadf/micromovies2/users"
+	usersClient "github.com/farhadf/micromovies2/users/client"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/opentracing/opentracing-go"
 	"google.golang.org/grpc"
-	"micromovies2/movies"
-	moviesClient "micromovies2/movies/client"
-	"micromovies2/users"
-	usersClient "micromovies2/users/client"
 )
 
 //business logic of this microservice

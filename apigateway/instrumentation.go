@@ -3,8 +3,8 @@ package apigateway
 import (
 	"context"
 	"fmt"
+	"github.com/farhadf/micromovies2/movies"
 	"github.com/go-kit/kit/metrics"
-	"micromovies2/movies"
 	"time"
 )
 

@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/casbin/casbin"
+	"github.com/farhadf/micromovies2/jwtauth"
+	"github.com/farhadf/micromovies2/jwtauth/client"
 	"github.com/julienschmidt/httprouter"
-	"micromovies2/jwtauth"
-	"micromovies2/jwtauth/client"
 	"net/http"
 	"strings"
 )

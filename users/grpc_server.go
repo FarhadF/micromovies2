@@ -4,7 +4,7 @@ import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc/metadata"
-	"micromovies2/users/pb"
+	"github.com/farhadf/micromovies2/users/pb"
 )
 
 type grpcServer struct {

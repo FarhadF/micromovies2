@@ -4,8 +4,8 @@ import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
-	"micromovies2/movies"
-	"micromovies2/movies/pb"
+	"github.com/farhadf/micromovies2/movies"
+	"github.com/farhadf/micromovies2/movies/pb"
 )
 
 //create new client returns Movies Service

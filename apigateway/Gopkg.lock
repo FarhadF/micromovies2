@@ -36,15 +36,48 @@
   revision = "3a0bb77429bd3a61596f5e8a3172445844342120"
 
 [[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/farhadf/micromovies2"
+  packages = [
+    "jwtauth",
+    "jwtauth/client",
+    "movies",
+    "movies/client",
+    "users",
+    "users/client"
+  ]
+  revision = "33aff1581d61a85ff5b1c110a740a653f57ab76d"
+
+[[projects]]
   name = "github.com/go-kit/kit"
   packages = [
     "endpoint",
+    "log",
     "metrics",
     "metrics/internal/lv",
-    "metrics/prometheus"
+    "metrics/prometheus",
+    "transport/grpc"
   ]
   revision = "ca4112baa34cb55091301bdc13b1420a122b1b9e"
   version = "v0.7.0"
+
+[[projects]]
+  name = "github.com/go-logfmt/logfmt"
+  packages = ["."]
+  revision = "390ab7935ee28ec6b286364bba9b4dd6410cb3d5"
+  version = "v0.3.0"
+
+[[projects]]
+  name = "github.com/go-stack/stack"
+  packages = ["."]
+  revision = "259ab82a6cad3992b4e21ff5cac294ccb06474bc"
+  version = "v1.7.0"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -70,10 +103,29 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/jackc/pgx"
+  packages = [
+    ".",
+    "chunkreader",
+    "internal/sanitize",
+    "pgio",
+    "pgproto3",
+    "pgtype"
+  ]
+  revision = "da3231b0b66e2e74cdb779f1d46c5e958ba8be27"
+  version = "v3.1.0"
+
+[[projects]]
   name = "github.com/julienschmidt/httprouter"
   packages = ["."]
   revision = "8c199fb6259ffc1af525cc3ad52ee60ba8359669"
   version = "v1.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/kr/logfmt"
+  packages = ["."]
+  revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
 
 [[projects]]
   name = "github.com/matttproud/golang_protobuf_extensions"
@@ -132,6 +184,16 @@
     "xfs"
   ]
   revision = "7d6f385de8bea29190f15ba9931442a0eaef9af7"
+
+[[projects]]
+  name = "github.com/rs/zerolog"
+  packages = [
+    ".",
+    "internal/cbor",
+    "internal/json"
+  ]
+  revision = "77db4b4f350e31be66a57c332acb7721cf9ff9bb"
+  version = "v1.8.0"
 
 [[projects]]
   name = "github.com/satori/go.uuid"
@@ -275,6 +337,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c6bd39b47cf86bb2bcda41369976d280727d1cd9f712b1fa7e0523f8aebd9821"
+  inputs-digest = "4a94ac468e2baeed87c2b0d111897cc93d7574d85dbf57570a69d41f14c5d6ec"
   solver-name = "gps-cdcl"
   solver-version = 1

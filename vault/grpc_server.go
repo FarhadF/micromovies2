@@ -3,7 +3,7 @@ package vault
 import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"micromovies2/vault/pb"
+	"github.com/farhadf/micromovies2/vault/pb"
 )
 
 type grpcServer struct {

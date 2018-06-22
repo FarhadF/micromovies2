@@ -2,8 +2,8 @@ package apigateway
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/movies"
 	"go.uber.org/zap"
-	"micromovies2/movies"
 	"time"
 )
 

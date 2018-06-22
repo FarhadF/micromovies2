@@ -4,8 +4,8 @@ import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
-	"micromovies2/vault"
-	"micromovies2/vault/pb"
+	"github.com/farhadf/micromovies2/vault"
+	"github.com/farhadf/micromovies2/vault/pb"
 )
 
 func New(conn *grpc.ClientConn) vault.Service {

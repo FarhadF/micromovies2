@@ -2,7 +2,7 @@ package jwtauth
 
 import (
 	"context"
-	"micromovies2/jwtauth/pb"
+	"github.com/farhadf/micromovies2/jwtauth/pb"
 )
 
 //encode GenerateTokenRequest

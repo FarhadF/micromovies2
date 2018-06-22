@@ -5,8 +5,8 @@ import (
 	"github.com/rs/zerolog"
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
-	"micromovies2/users"
-	"micromovies2/users/client"
+	"github.com/farhadf/micromovies2/users"
+	"github.com/farhadf/micromovies2/users/client"
 	"os"
 )
 

@@ -7,9 +7,9 @@ import (
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
 	"log"
-	"micromovies2/vault"
-	"micromovies2/vault/client"
-	"micromovies2/vault/pb"
+	"github.com/farhadf/micromovies2/vault"
+	"github.com/farhadf/micromovies2/vault/client"
+	"github.com/farhadf/micromovies2/vault/pb"
 	"os"
 	"time"
 )

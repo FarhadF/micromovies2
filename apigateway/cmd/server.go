@@ -31,6 +31,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/casbin/casbin"
+	"github.com/farhadf/micromovies2/apigateway"
+	"github.com/farhadf/micromovies2/jwtauth"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
@@ -40,8 +42,6 @@ import (
 	"github.com/uber/jaeger-client-go/config"
 	"go.uber.org/zap"
 	"io"
-	"micromovies2/apigateway"
-	"micromovies2/jwtauth"
 	"net/http"
 )
 
@@ -75,7 +75,7 @@ func main() {
 	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	// setup casbin auth rules
-	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/micromovies2/apigateway/cmd/policy.csv", false)
+	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/github.com/farhadf/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/github.com/farhadf/micromovies2/apigateway/cmd/policy.csv", false)
 	//disable casbin log
 	e.EnableLog(false)
 	if err != nil {

@@ -2,8 +2,8 @@ package apigateway
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/movies"
 	"github.com/go-kit/kit/endpoint"
-	"micromovies2/movies"
 )
 
 //Endpoints Wrapper

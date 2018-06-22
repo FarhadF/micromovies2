@@ -2,7 +2,7 @@ package vault
 
 import (
 	"context"
-	"micromovies2/vault/pb"
+	"github.com/farhadf/micromovies2/vault/pb"
 )
 
 func EncodeGRPCHashRequest(ctx context.Context, r interface{}) (interface{}, error) {

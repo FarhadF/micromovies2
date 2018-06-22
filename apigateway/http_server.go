@@ -25,6 +25,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(e.HandleChangePasswordPost))
+	//curl localhost:8089/v1/getmovie/
 	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(e.HandleGetMovieByIDGet))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }

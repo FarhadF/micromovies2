@@ -2,7 +2,7 @@ package users
 
 import (
 	"context"
-	"micromovies2/users/pb"
+	"github.com/farhadf/micromovies2/users/pb"
 )
 
 //encode NewUserRequest

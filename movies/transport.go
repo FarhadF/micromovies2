@@ -3,7 +3,7 @@ package movies
 import (
 	"context"
 	"github.com/golang/protobuf/ptypes"
-	"micromovies2/movies/pb"
+	"github.com/farhadf/micromovies2/movies/pb"
 )
 
 //Encode and Decode GetMovies Request and response

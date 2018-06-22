@@ -4,8 +4,8 @@ import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
-	"micromovies2/jwtauth"
-	"micromovies2/jwtauth/pb"
+	"github.com/farhadf/micromovies2/jwtauth"
+	"github.com/farhadf/micromovies2/jwtauth/pb"
 )
 
 func NewGRPCClient(conn *grpc.ClientConn) jwtauth.Service {
