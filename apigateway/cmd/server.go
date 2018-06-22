@@ -43,6 +43,7 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"net/http"
+	"path/filepath"
 )
 
 func main() {
@@ -75,7 +76,9 @@ func main() {
 	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	// setup casbin auth rules
-	e, err := casbin.NewEnforcerSafe("/home/balrog/go/src/github.com/farhadf/micromovies2/apigateway/cmd/model.conf", "/home/balrog/go/src/github.com/farhadf/micromovies2/apigateway/cmd/policy.csv", false)
+	modelPath, _ := filepath.Abs("./model.conf")
+	policyPath, _ := filepath.Abs("./policy.csv")
+	e, err := casbin.NewEnforcerSafe(modelPath, policyPath, false)
 	//disable casbin log
 	e.EnableLog(false)
 	if err != nil {
