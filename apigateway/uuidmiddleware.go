@@ -10,7 +10,6 @@ import (
 //httprouter middleware to generate and inject correlationId in the context
 //this will be used in register fuc in http_server.go
 func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
-
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		u2 := uuid.NewV4()
 		//if err != nil {

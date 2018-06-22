@@ -1,6 +1,6 @@
 # Gopkg.toml example
 #
-# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
+# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
 # for detailed Gopkg.toml documentation.
 #
 # required = ["github.com/user/thing/cmd/thing"]
@@ -28,6 +28,10 @@
 [[constraint]]
   name = "github.com/casbin/casbin"
   version = "1.5.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/farhadf/micromovies2"
 
 [[constraint]]
   name = "github.com/go-kit/kit"
