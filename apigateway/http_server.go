@@ -14,7 +14,7 @@ import (
 //todo: api documentation
 //using http router, register func will do the routing path registration
 func (e Endpoints) Register(r *httprouter.Router) {
-	//l
+	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa123"}'
 	r.Handle("POST", "/v1/login", UUIDMiddleware(e.HandleLoginPost))
 	// swagger:route POST /login login users login
 	// Authenticates user
@@ -25,7 +25,7 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(e.HandleChangePasswordPost))
-	//curl localhost:8089/v1/getmovie/
+	//curl localhost:8089/v1/getmovie/ --header "Authorization: Bearer ..."
 	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(e.HandleGetMovieByIDGet))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
