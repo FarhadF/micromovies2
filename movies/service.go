@@ -9,6 +9,7 @@ import (
 	"github.com/rs/zerolog"
 	"reflect"
 	"time"
+	"fmt"
 )
 
 type Service interface {
@@ -74,6 +75,7 @@ func (m moviesService) GetMovies(ctx context.Context) ([]Movie, error) {
 
 //implementation
 func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, error) {
+	fmt.Println(ctx.Value("correlationid"))
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("GetMovieById", opentracing.ChildOf(span.Context()))
 		span.SetTag("email", ctx.Value("email"))

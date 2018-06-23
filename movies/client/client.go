@@ -6,6 +6,8 @@ import (
 	"google.golang.org/grpc"
 	"github.com/farhadf/micromovies2/movies"
 	"github.com/farhadf/micromovies2/movies/pb"
+	"google.golang.org/grpc/metadata"
+	"github.com/satori/go.uuid"
 )
 
 //create new client returns Movies Service
@@ -15,30 +17,41 @@ func NewGRPCClient(conn *grpc.ClientConn) movies.Service {
 		movies.EncodeGRPCGetMoviesRequest,
 		movies.DecodeGRPCGetMoviesResponse,
 		pb.GetMoviesResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var getMovieByIdEndpoint = grpctransport.NewClient(
 		conn, "pb.Movies", "GetMovieById",
 		movies.EncodeGRPCGetMovieByIdRequest,
 		movies.DecodeGRPCGetMovieByIdResponse,
 		pb.GetMovieByIdResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var newMovieEndpoint = grpctransport.NewClient(
 		conn, "pb.Movies", "NewMovie",
 		movies.EncodeGRPCNewMovieRequest,
 		movies.DecodeGRPCNewMovieResponse,
 		pb.NewMovieResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var deleteMovieEndpoint = grpctransport.NewClient(
 		conn, "pb.Movies", "DeleteMovie",
 		movies.EncodeGRPCDeleteMovieRequest,
 		movies.DecodeGRPCDeleteMovieResponse,
 		pb.DeleteMovieResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
+
 	var updateMovieEndpoint = grpctransport.NewClient(
 		conn, "pb.Movies", "UpdateMovie",
 		movies.EncodeGRPCUpdateMovieRequest,
 		movies.DecodeGRPCUpdateMovieResponse,
 		pb.UpdateMovieResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	return movies.Endpoints{
 		GetMoviesEndpoint:    getMoviesEndpoint,
@@ -88,4 +101,18 @@ func UpdateMovie(ctx context.Context, service movies.Service, id string, title s
 		return "", err
 	}
 	return id, nil
+}
+
+//client before function to inject context into grpc metadata to pass to downstream service
+func injectContext(ctx context.Context, md *metadata.MD) context.Context {
+	if email, ok := ctx.Value("email").(string); ok {
+		(*md)["email"] = append((*md)["email"], email)
+	}
+	if role, ok := ctx.Value("role").(string); ok {
+		(*md)["role"] = append((*md)["role"], role)
+	}
+	if correlationid, ok := ctx.Value("correlationid").(uuid.UUID); ok {
+		(*md)["correlationid"] = append((*md)["correlationid"], correlationid.String())
+	}
+	return ctx
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/farhadf/micromovies2/movies/pb"
+	"google.golang.org/grpc/metadata"
 )
 
 //grpcServer Wrapper
@@ -67,26 +68,54 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.MoviesServer {
 			endpoint.GetMoviesEndpoint,
 			DecodeGRPCGetMoviesRequest,
 			EncodeGRPCGetMoviesResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		getMovieById: grpctransport.NewServer(
 			endpoint.GetMovieByIdEndpoint,
 			DecodeGRPCGetMovieByIdRequest,
 			EncodeGRPCGetMovieByIdResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		newMovie: grpctransport.NewServer(
 			endpoint.NewMovieEndpoint,
 			DecodeGRPCNewMovieRequest,
 			EncodeGRPCNewMovieResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		deleteMovie: grpctransport.NewServer(
 			endpoint.DeleteMovieEndpoint,
 			DecodeGRPCDeleteMovieRequest,
 			EncodeGRPCDeleteMovieResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		updateMovie: grpctransport.NewServer(
 			endpoint.UpdateMovieEndpoint,
 			DecodeGRPCUpdateMovieRequest,
 			EncodeGRPCUpdateMovieResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 	}
+}
+
+//server before: this will retreive email and role from grpc metadata from upstream server and put it in the ctx
+func getGRPCContext(ctx context.Context, md metadata.MD) context.Context {
+	if email, ok := md["email"]; ok {
+		email := email[len(email)-1]
+		ctx = context.WithValue(ctx, "email", email)
+	}
+	if role, ok := md["role"]; ok {
+		role := role[len(role)-1]
+		ctx = context.WithValue(ctx, "role", role)
+	}
+
+	if correlationid, ok := md["correlationid"]; ok {
+		correlationid := correlationid[len(correlationid)-1]
+		ctx = context.WithValue(ctx, "correlationid", correlationid)
+	}
+	return ctx
 }
