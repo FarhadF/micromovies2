@@ -95,6 +95,7 @@ func (a *Authorizer) getToken(r *http.Request) string {
 	return token
 }
 
+//todo: fix grpc call to jwt service
 // GetClaims gets the  role from jwt claims.
 func (a *Authorizer) getClaims(ctx context.Context, jwtAuthService jwtauth.Service, token string) (jwtauth.Claims, error) {
 	claims, err := client.ParseToken(ctx, jwtAuthService, token)
