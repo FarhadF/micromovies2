@@ -111,6 +111,7 @@ func (a apigatewayService) GetMovieById(ctx context.Context, id string) (movies.
 	return movie, nil
 }
 
+//required Configuration to pass down to the service from the flags in cmd/server.go
 type Config struct {
 	MoviesAddr  string
 	UsersAddr   string
