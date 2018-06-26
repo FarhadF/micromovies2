@@ -2,13 +2,13 @@ package client
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/users/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
-	"github.com/farhadf/micromovies2/users/pb"
 
+	"github.com/farhadf/micromovies2/users"
 	"github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
-	"github.com/farhadf/micromovies2/users"
 )
 
 func NewGRPCClient(conn *grpc.ClientConn) users.Service {

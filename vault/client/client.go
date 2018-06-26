@@ -2,10 +2,10 @@ package client
 
 import (
 	"context"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"google.golang.org/grpc"
 	"github.com/farhadf/micromovies2/vault"
 	"github.com/farhadf/micromovies2/vault/pb"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc"
 )
 
 func New(conn *grpc.ClientConn) vault.Service {

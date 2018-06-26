@@ -2,9 +2,9 @@ package users
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/users/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc/metadata"
-	"github.com/farhadf/micromovies2/users/pb"
 )
 
 type grpcServer struct {

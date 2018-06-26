@@ -2,8 +2,8 @@ package movies
 
 import (
 	"context"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/farhadf/micromovies2/movies/pb"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc/metadata"
 )
 

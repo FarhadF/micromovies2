@@ -2,12 +2,12 @@ package client
 
 import (
 	"context"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"google.golang.org/grpc"
 	"github.com/farhadf/micromovies2/movies"
 	"github.com/farhadf/micromovies2/movies/pb"
-	"google.golang.org/grpc/metadata"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/satori/go.uuid"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 //create new client returns Movies Service

@@ -2,14 +2,14 @@ package users
 
 import (
 	"context"
+	jwtClient "github.com/farhadf/micromovies2/jwtauth/client"
+	vaultClient "github.com/farhadf/micromovies2/vault/client"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/jackc/pgx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	jwtClient "github.com/farhadf/micromovies2/jwtauth/client"
-	vaultClient "github.com/farhadf/micromovies2/vault/client"
 	"time"
 )
 

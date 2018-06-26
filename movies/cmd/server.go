@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/farhadf/micromovies2/movies"
+	"github.com/farhadf/micromovies2/movies/pb"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/jackc/pgx"
@@ -17,8 +19,6 @@ import (
 	"github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
 	"io"
-	"github.com/farhadf/micromovies2/movies"
-	"github.com/farhadf/micromovies2/movies/pb"
 	"net"
 	"net/http"
 	"os"

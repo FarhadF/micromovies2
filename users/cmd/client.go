@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/users"
+	"github.com/farhadf/micromovies2/users/client"
 	"github.com/rs/zerolog"
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
-	"github.com/farhadf/micromovies2/users"
-	"github.com/farhadf/micromovies2/users/client"
 	"os"
 )
 

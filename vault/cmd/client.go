@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
+	"github.com/farhadf/micromovies2/vault"
+	"github.com/farhadf/micromovies2/vault/client"
+	"github.com/farhadf/micromovies2/vault/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/rs/zerolog"
 	flag "github.com/spf13/pflag"
 	"google.golang.org/grpc"
 	"log"
-	"github.com/farhadf/micromovies2/vault"
-	"github.com/farhadf/micromovies2/vault/client"
-	"github.com/farhadf/micromovies2/vault/pb"
 	"os"
 	"time"
 )
