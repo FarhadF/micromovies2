@@ -32,7 +32,6 @@ import (
 	"fmt"
 	"github.com/casbin/casbin"
 	"github.com/farhadf/micromovies2/apigateway"
-	"github.com/farhadf/micromovies2/jwtauth"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
@@ -95,7 +94,6 @@ func main() {
 	if err != nil {
 		logger.Fatal("", zap.Error(err))
 	}
-	jwtAuthService := jwtauth.NewService()
 	//tracing
 	tracer, closer := initJaeger("api-gateway")
 	defer closer.Close()
@@ -112,7 +110,7 @@ func main() {
 		GetMovieByIdEndpoint:   apigateway.MakeGetMovieByIdEndpoint(svc),
 	}.Register(r)
 	excludeUrls := []string{"/v1/login", "/v1/register"}
-	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, jwtAuthService, excludeUrls)
+	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, excludeUrls, jwtAuthAddr)
 	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
 }
 
@@ -130,6 +128,7 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
 	}
 	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
 	if err != nil {
+		//todo: use structured logging
 		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
 	}
 	return tracer, closer

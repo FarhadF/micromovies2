@@ -6,7 +6,9 @@ import (
 	"github.com/casbin/casbin"
 	"github.com/farhadf/micromovies2/jwtauth"
 	"github.com/farhadf/micromovies2/jwtauth/client"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/julienschmidt/httprouter"
+	"google.golang.org/grpc"
 	"net/http"
 	"strings"
 )
@@ -33,9 +35,9 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	auth := &Authorizer{enforcer: a.enforcer}
+	//auth := &Authorizer{enforcer: a.enforcer}
 	//extract token
-	authHeader := auth.getToken(r)
+	authHeader := a.getToken(r)
 	var role string
 	if authHeader == "" {
 		role = "public"
@@ -46,7 +48,7 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//parse and validate token
-		claims, err := auth.getClaims(a.ctx, a.jwtAuthService, token[1])
+		claims, err := a.getClaims(a.ctx, token[1])
 		if err != nil {
 			respondError(w, http.StatusForbidden, err)
 			return
@@ -75,18 +77,18 @@ func (a *Authorizer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // Authorizer is a middleware for authorization
 // Authorizer stores the casbin handler plus everything we need to feed to ServeHTTP
 type Authorizer struct {
-	ctx            context.Context
-	next           *httprouter.Router
-	enforcer       *casbin.Enforcer
-	jwtAuthService jwtauth.Service
-	excludeUrl     []string
-	excludePrefix  []string
+	ctx           context.Context
+	next          *httprouter.Router
+	enforcer      *casbin.Enforcer
+	excludeUrl    []string
+	excludePrefix []string
+	jwtAuthAddr   string
 }
 
 // Make a constructor for our middleware type since its fields are not exported
 func NewAuthMiddleware(ctx context.Context, next *httprouter.Router, e *casbin.Enforcer,
-	jwtAuthService jwtauth.Service, excludeUrls []string) *Authorizer {
-	return &Authorizer{ctx: ctx, next: next, enforcer: e, jwtAuthService: jwtAuthService, excludeUrl: excludeUrls}
+	excludeUrls []string, jwtAuthAddr string) *Authorizer {
+	return &Authorizer{ctx: ctx, next: next, enforcer: e, excludeUrl: excludeUrls, jwtAuthAddr: jwtAuthAddr}
 }
 
 // GetToken gets the jwt token from the request.
@@ -97,7 +99,13 @@ func (a *Authorizer) getToken(r *http.Request) string {
 
 //todo: fix grpc call to jwt service
 // GetClaims gets the  role from jwt claims.
-func (a *Authorizer) getClaims(ctx context.Context, jwtAuthService jwtauth.Service, token string) (jwtauth.Claims, error) {
+func (a *Authorizer) getClaims(ctx context.Context, token string) (jwtauth.Claims, error) {
+	conn, err := grpc.Dial(a.jwtAuthAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
+	if err != nil {
+		return jwtauth.Claims{}, err
+	}
+	defer conn.Close()
+	jwtAuthService := client.NewGRPCClient(conn)
 	claims, err := client.ParseToken(ctx, jwtAuthService, token)
 	return claims, err
 }
