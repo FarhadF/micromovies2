@@ -48,12 +48,23 @@ import (
 
 func main() {
 	var (
-		httpAddr string
-		console  bool
+		httpAddr    string
+		moviesAddr  string
+		usersAddr   string
+		jwtAuthAddr string
+		console     bool
 	)
-	flag.StringVarP(&httpAddr, "http", "H", ":8089", "http listen address")
+	flag.StringVarP(&httpAddr, "http", "H", ":8089", "http listen address, example: localhost:8089")
+	flag.StringVarP(&moviesAddr, "movies", "m", ":8081", "movies service listen address, example: localhost:8081")
+	flag.StringVarP(&usersAddr, "users", "u", ":8084", "users service listen address, example: localhost:8084")
+	flag.StringVarP(&jwtAuthAddr, "jwtauth", "j", ":8087", "jwtAuth service listen address, example: localhost:8087")
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
+	config := apigateway.Config{
+		MoviesAddr:  moviesAddr,
+		UsersAddr:   usersAddr,
+		JwtAuthAddr: jwtAuthAddr,
+	}
 	ctx := context.Background()
 	//zap
 	logger, _ := zap.NewProduction()
@@ -72,7 +83,7 @@ func main() {
 		Help:      "Total duration of requests in microseconds.",
 	}, fieldKeys)
 
-	svc := apigateway.NewService()
+	svc := apigateway.NewService(config)
 	svc = apigateway.LoggingMiddleware{*logger, svc}
 	svc = apigateway.InstrumentingMiddleware{requestCount, requestLatency, svc}
 	// setup casbin auth rules
