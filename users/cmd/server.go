@@ -35,9 +35,17 @@ func main() {
 		console  bool
 		httpAddr string
 		gRPCAddr string
+		dbHost   string
+		dbPort   uint16
+		dbName   string
+		dbUser   string
 	)
 	flag.StringVarP(&httpAddr, "http", "H", ":8083", "http listen address")
 	flag.StringVarP(&gRPCAddr, "grpc", "g", ":8084", "GRPC Address")
+	flag.StringVarP(&dbHost, "dbhost", "d", "127.0.0.1", "Database Hostname/IP Address")
+	flag.Uint16VarP(&dbPort, "dbport", "p", 26257, "Database port number")
+	flag.StringVarP(&dbName, "dbname", "n", "app_database", "Database name")
+	flag.StringVarP(&dbUser, "dbuser", "u", "app_user", "Database user")
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
 	logger.Info("starting grpc server at" + gRPCAddr)
@@ -45,10 +53,10 @@ func main() {
 	//database
 	connPoolConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
-			Host:     "127.0.0.1",
-			Port:     26257,
-			User:     "app_user",
-			Database: "app_database",
+			Host:     dbHost,
+			Port:     dbPort,
+			User:     dbUser,
+			Database: dbName,
 			//Logger: logger, todo: fix logger
 		},
 		MaxConnections: 5,

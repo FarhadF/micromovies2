@@ -1,0 +1,47 @@
+version: '3.6'
+services:
+  apigateway:
+    build:
+      context: ./apigateway
+    ports:
+      - 8089:8089
+
+  jwtauth:
+    build:
+      context: ./jwtauth
+    ports:
+      - 8087:8087
+      - 8088:8088
+
+  movies:
+    build:
+      context: ./movies
+    ports:
+      - 8081:8081
+      - 8082:8082
+    command: ["/server", "-dbHost", "cockroach"]
+    depends_on:
+      - cockroach
+
+  users:
+    build:
+      context: ./users
+    ports:
+      - 8083:8083
+      - 8084:8084
+    command: ["/server", "-dbHost", "cockroach"]
+    depends_on:
+      - cockroach
+
+  vault:
+    build:
+      context: ./vault
+    ports:
+      - 8085:8085
+      - 8086:8086
+
+  cockroach:
+    image: cockroachdb/cockroach:v2.0.3
+    ports:
+      - 8080:8080
+      - 26257:26257
