@@ -27,6 +27,7 @@ func (e Endpoints) Register(r *httprouter.Router, a Authorizer) {
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleChangePasswordPost)))
 	//curl localhost:8089/v1/getmovie/ --header "Authorization: Bearer ..."
 	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleGetMovieByIDGet)))
+	//curl -XPOST localhost:8089/v1/newmovie --header "Authorization: Bearer ..." -d '{"title":"Inglorious Bastards", "director":["Quentin Tarantino"], "year":"2009","createdby":"farhad@farahi.f"}'
 	r.Handle("POST", "/v1/newmovie", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleNewMoviePost)))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
