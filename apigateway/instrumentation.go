@@ -58,3 +58,14 @@ func (mw InstrumentingMiddleware) GetMovieById(ctx context.Context, id string) (
 	output, err = mw.Next.GetMovieById(ctx, id)
 	return
 }
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) NewMovie(ctx context.Context, title string, director []string, year string, userId string) (output string, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "NewMovie", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	output, err = mw.Next.NewMovie(ctx, title, director, year, userId)
+	return
+}

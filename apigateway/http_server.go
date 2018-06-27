@@ -27,6 +27,7 @@ func (e Endpoints) Register(r *httprouter.Router, a Authorizer) {
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleChangePasswordPost)))
 	//curl localhost:8089/v1/getmovie/ --header "Authorization: Bearer ..."
 	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleGetMovieByIDGet)))
+	r.Handle("POST", "/v1/newmovie", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleNewMoviePost)))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -136,6 +137,32 @@ func (e Endpoints) HandleGetMovieByIDGet(w http.ResponseWriter, r *http.Request,
 		return
 	}
 	respondSuccess(w, resp.(getMovieByIdResponse))
+}
+
+//each method needs a http handler handlers are registered in the register func
+func (e Endpoints) HandleNewMoviePost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
+	e.Ctx = r.Context()
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleNewMoviePost", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
+	decodedNewMovieReq, err := decodeNewMovieRequest(e.Ctx, r)
+	if err != nil {
+		if err == io.EOF {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		respondError(w, 500, err)
+		return
+	}
+	resp, err := e.NewMovieEndpoint(e.Ctx, decodedNewMovieReq.(newMovieRequest))
+	if err != nil {
+		respondError(w, 500, err)
+		return
+	}
+	respondSuccess(w, resp.(newMovieResponse))
 }
 
 // respondError in some canonical format.

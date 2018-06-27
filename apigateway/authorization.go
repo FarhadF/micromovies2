@@ -15,7 +15,7 @@ import (
 )
 
 // Authorizer is a middleware for authorization
-// Authorizer stores the casbin handler plus everything we need to feed to ServeHTTP
+// Authorizer stores the casbin handler plus everything we need to feed to Authorization Middleware
 type Authorizer struct {
 	ctx         context.Context
 	enforcer    *casbin.Enforcer

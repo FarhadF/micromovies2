@@ -55,3 +55,13 @@ func (mw LoggingMiddleware) GetMovieById(ctx context.Context, id string) (output
 	output, err = mw.Next.GetMovieById(ctx, id)
 	return
 }
+
+//each method will have its own logger for app logs
+func (mw LoggingMiddleware) NewMovie(ctx context.Context, title string, director []string, year string, userId string) (output string, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info("", zap.String("method", "NewMovie"), zap.String("title", title),
+			zap.String("userId", userId), zap.Error(err), zap.Duration("took", time.Since(begin)))
+	}(time.Now())
+	output, err = mw.Next.NewMovie(ctx, title, director, year, userId)
+	return
+}

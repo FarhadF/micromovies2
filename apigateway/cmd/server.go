@@ -111,6 +111,7 @@ func main() {
 		RegisterEndpoint:       apigateway.MakeRegisterEndpoint(svc),
 		ChangePasswordEndpoint: apigateway.MakeChangePasswordEndpoint(svc),
 		GetMovieByIdEndpoint:   apigateway.MakeGetMovieByIdEndpoint(svc),
+		NewMovieEndpoint:       apigateway.MakeNewMovieEndpoint(svc),
 	}.Register(r, *authMiddleware)
 
 	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, r)))

@@ -13,6 +13,7 @@ type Endpoints struct {
 	RegisterEndpoint       endpoint.Endpoint
 	ChangePasswordEndpoint endpoint.Endpoint
 	GetMovieByIdEndpoint   endpoint.Endpoint
+	NewMovieEndpoint       endpoint.Endpoint
 }
 
 //model request and response
@@ -109,5 +110,30 @@ func MakeGetMovieByIdEndpoint(svc Service) endpoint.Endpoint {
 			return getMovieByIdResponse{movies.Movie{}, err.Error()}, nil
 		}
 		return getMovieByIdResponse{movie, ""}, nil
+	}
+}
+
+//model request and response
+type newMovieRequest struct {
+	Title     string   `json:"title"`
+	Director  []string `json:"director"`
+	Year      string   `json:"year"`
+	Createdby string   `json:"createdby"`
+}
+
+type newMovieResponse struct {
+	Id  string `json:"id"`
+	Err string `json:"err"`
+}
+
+//make the actual endpoint
+func MakeNewMovieEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		r := req.(newMovieRequest)
+		id, err := svc.NewMovie(ctx, r.Title, r.Director, r.Year, r.Createdby)
+		if err != nil {
+			return newMovieResponse{"", err.Error()}, nil
+		}
+		return newMovieResponse{id, ""}, nil
 	}
 }

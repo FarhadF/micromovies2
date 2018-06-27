@@ -17,6 +17,7 @@ type Service interface {
 	Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 	GetMovieById(ctx context.Context, id string) (movies.Movie, error)
+	NewMovie(ctx context.Context, title string, director []string, year string, userId string) (string, error)
 }
 
 //implementation, with config
@@ -109,6 +110,28 @@ func (a apigatewayService) GetMovieById(ctx context.Context, id string) (movies.
 		return movies.Movie{}, err
 	}
 	return movie, nil
+}
+
+//implementation of each method of service interface
+func (a apigatewayService) NewMovie(ctx context.Context, title string, director []string, year string, email string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("NewMovie", opentracing.ChildOf(span.Context()))
+		span.SetTag("title", title)
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+	conn, err := grpc.Dial(a.config.MoviesAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	moviesService := moviesClient.NewGRPCClient(conn)
+	id, err := moviesClient.NewMovie(ctx, moviesService, title, director, year, email)
+	if err != nil {
+		return "", err
+	}
+	return id, nil
 }
 
 //required Configuration to pass down to the service from the flags in cmd/server.go
