@@ -34,14 +34,8 @@ func (e Endpoints) Register(r *httprouter.Router, a Authorizer) {
 func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	//get the global tracer
-	/*tracer := opentracing.GlobalTracer()
-	//this is where we start our span for this operation, this will be the parent for this method
-	span := tracer.StartSpan("HandleGetMovieByIDGet")
-	defer span.Finish()
-	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)*/
 	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
-		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
+		span := span.Tracer().StartSpan("HandleLoginPost", opentracing.ChildOf(span.Context()))
 		defer span.Finish()
 		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
 	}
@@ -72,12 +66,11 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	//get the global tracer
-	tracer := opentracing.GlobalTracer()
-	//this is where we start our span for this operation, this will be the parent for this method
-	span := tracer.StartSpan("HandleGetMovieByIDGet")
-	defer span.Finish()
-	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleRegisterPost", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
 	decodedRegisterReq, err := decodeRegisterRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {
@@ -99,12 +92,11 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
-	//get the global tracer
-	tracer := opentracing.GlobalTracer()
-	//this is where we start our span for this operation, this will be the parent for this method
-	span := tracer.StartSpan("HandleGetMovieByIDGet")
-	defer span.Finish()
-	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleChangePasswordPost", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
 	decodedChangePasswordReq, err := decodeChangePasswordRequest(e.Ctx, r)
 	if err != nil {
 		if err == io.EOF {
@@ -134,12 +126,6 @@ func (e Endpoints) HandleGetMovieByIDGet(w http.ResponseWriter, r *http.Request,
 		defer span.Finish()
 		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
 	}
-	/*	tracer := opentracing.GlobalTracer()
-		//this is where we start our span for this operation, this will be the parent for this method
-		span := tracer.StartSpan("HandleGetMovieByIDGet")
-		span.SetTag("id", id)
-		defer span.Finish()
-		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)*/
 	if id == "" {
 		respondError(w, http.StatusBadRequest, errors.New("id cannot be empty"))
 		return
