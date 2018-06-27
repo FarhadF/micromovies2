@@ -1,5 +1,6 @@
 version: '3.6'
 services:
+
   apigateway:
     build:
       context: ./apigateway
@@ -19,7 +20,8 @@ services:
     ports:
       - 8081:8081
       - 8082:8082
-    command: ["/server", "-dbHost", "cockroach"]
+    command: ["/server", "--dbhost", "cockroach"]
+    restart: always
     depends_on:
       - cockroach
 
@@ -29,7 +31,8 @@ services:
     ports:
       - 8083:8083
       - 8084:8084
-    command: ["/server", "-dbHost", "cockroach"]
+    command: ["/server", "--dbhost", "cockroach"]
+    restart: always
     depends_on:
       - cockroach
 
@@ -43,5 +46,14 @@ services:
   cockroach:
     image: cockroachdb/cockroach:v2.0.3
     ports:
-      - 8080:8080
+      - 9080:8080
       - 26257:26257
+    command: ["start", "--insecure"]
+
+  cockroach-init:
+    image: cockroachdb/cockroach:v2.0.3
+    entrypoint: ["bash", "/cockroach/init.sh"]
+    volumes:
+      - ./database_init.sh:/cockroach/init.sh
+    depends_on:
+      - cockroach
