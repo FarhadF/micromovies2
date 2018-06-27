@@ -13,7 +13,7 @@ import (
 
 //todo: complete api documentation
 //using http router, register func will do the routing path registration
-func (e Endpoints) Register(r *httprouter.Router) {
+func (e Endpoints) Register(r *httprouter.Router, a Authorizer) {
 	//curl -XPOST localhost:8089/v1/login -d '{"email":"ff@ff.ff","password":"Aa123"}'
 	r.Handle("POST", "/v1/login", UUIDMiddleware(e.HandleLoginPost))
 	// swagger:route POST /login login users login
@@ -24,9 +24,9 @@ func (e Endpoints) Register(r *httprouter.Router) {
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
 	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."
-	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(e.HandleChangePasswordPost))
+	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleChangePasswordPost)))
 	//curl localhost:8089/v1/getmovie/ --header "Authorization: Bearer ..."
-	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(e.HandleGetMovieByIDGet))
+	r.Handle("GET", "/v1/getmovie/:id", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleGetMovieByIDGet)))
 	r.Handler("GET", "/metrics", promhttp.Handler())
 }
 
@@ -35,11 +35,16 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 	//take out http request context that we put in at auth middleware and put it in go-kit endpoint context
 	e.Ctx = r.Context()
 	//get the global tracer
-	tracer := opentracing.GlobalTracer()
+	/*tracer := opentracing.GlobalTracer()
 	//this is where we start our span for this operation, this will be the parent for this method
 	span := tracer.StartSpan("HandleGetMovieByIDGet")
 	defer span.Finish()
-	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)*/
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
 	decodedLoginReq, err := decodeLoginRequest(e.Ctx, r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
@@ -123,12 +128,18 @@ func (e Endpoints) HandleGetMovieByIDGet(w http.ResponseWriter, r *http.Request,
 	e.Ctx = r.Context()
 	id := p.ByName("id")
 	//get the global tracer
-	tracer := opentracing.GlobalTracer()
-	//this is where we start our span for this operation, this will be the parent for this method
-	span := tracer.StartSpan("HandleGetMovieByIDGet")
-	span.SetTag("id", id)
-	defer span.Finish()
-	e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	if span := opentracing.SpanFromContext(e.Ctx); span != nil {
+		span := span.Tracer().StartSpan("HandleGetMovieByIDGet", opentracing.ChildOf(span.Context()))
+		span.SetTag("id", id)
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)
+	}
+	/*	tracer := opentracing.GlobalTracer()
+		//this is where we start our span for this operation, this will be the parent for this method
+		span := tracer.StartSpan("HandleGetMovieByIDGet")
+		span.SetTag("id", id)
+		defer span.Finish()
+		e.Ctx = opentracing.ContextWithSpan(e.Ctx, span)*/
 	if id == "" {
 		respondError(w, http.StatusBadRequest, errors.New("id cannot be empty"))
 		return

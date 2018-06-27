@@ -102,16 +102,18 @@ func main() {
 	logger.Info("", zap.String("http:", httpAddr))
 	//httprouter
 	r := httprouter.New()
+	//authorizer
+	//excludeUrls := []string{"/v1/login", "/v1/register"}
+	authMiddleware := apigateway.NewAuthMiddleware(ctx, e, jwtAuthAddr)
 	apigateway.Endpoints{
 		Ctx:                    ctx,
 		LoginEndpoint:          apigateway.MakeLoginEndpoint(svc),
 		RegisterEndpoint:       apigateway.MakeRegisterEndpoint(svc),
 		ChangePasswordEndpoint: apigateway.MakeChangePasswordEndpoint(svc),
 		GetMovieByIdEndpoint:   apigateway.MakeGetMovieByIdEndpoint(svc),
-	}.Register(r)
-	excludeUrls := []string{"/v1/login", "/v1/register"}
-	authMiddleware := apigateway.NewAuthMiddleware(ctx, r, e, excludeUrls, jwtAuthAddr)
-	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, authMiddleware)))
+	}.Register(r, *authMiddleware)
+
+	logger.Fatal("", zap.Error(http.ListenAndServe(httpAddr, r)))
 }
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
