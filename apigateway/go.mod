@@ -1,6 +1,6 @@
 module github.com/farhadf/micromovies2/apigateway
 
-//replace github.com/farhadf/micromovies2 v0.0.0-20180624135217-c2cf4e27412a => ../../micromovies2
+replace github.com/farhadf/micromovies2 v0.0.0-20180624135217-c2cf4e27412a => ../
 
 require (
 	cloud.google.com/go v0.24.0
