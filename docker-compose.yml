@@ -32,7 +32,7 @@ services:
     ports:
       - 8083:8083
       - 8084:8084
-    command: ["/server", "--dbhost", "cockroach"]
+    command: ["/server", "--dbhost", "cockroach", "-v", "vault:8085", "-j", "jwtauth:8087"]
     restart: always
     depends_on:
       - cockroach
