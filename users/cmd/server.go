@@ -32,13 +32,15 @@ func main() {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	var (
-		console  bool
-		httpAddr string
-		gRPCAddr string
-		dbHost   string
-		dbPort   uint16
-		dbName   string
-		dbUser   string
+		console     bool
+		httpAddr    string
+		gRPCAddr    string
+		dbHost      string
+		dbPort      uint16
+		dbName      string
+		dbUser      string
+		vaultAddr   string
+		jwtAuthAddr string
 	)
 	flag.StringVarP(&httpAddr, "http", "H", ":8083", "http listen address")
 	flag.StringVarP(&gRPCAddr, "grpc", "g", ":8084", "GRPC Address")
@@ -46,6 +48,8 @@ func main() {
 	flag.Uint16VarP(&dbPort, "dbport", "p", 26257, "Database port number")
 	flag.StringVarP(&dbName, "dbname", "n", "app_database", "Database name")
 	flag.StringVarP(&dbUser, "dbuser", "u", "app_user", "Database user")
+	flag.StringVarP(&vaultAddr, "vault", "v", ":8085", "vault service listen address, example: localhost:8085")
+	flag.StringVarP(&jwtAuthAddr, "jwtauth", "j", ":8087", "jwtAuth service listen address, example: localhost:8087")
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
 	logger.Info("starting grpc server at" + gRPCAddr)
@@ -64,6 +68,10 @@ func main() {
 	pool, err := pgx.NewConnPool(connPoolConfig)
 	if err != nil {
 		logger.Fatal("Unable to create connection pool", zap.Error(err))
+	}
+	config := users.Config{
+		VaultAddr:   vaultAddr,
+		JwtAuthAddr: jwtAuthAddr,
 	}
 	/*db, err := sql.Open("postgres", "postgresql://app_user@localhost:26257/app_database?sslmode=disable")
 	if err != nil {
@@ -87,7 +95,7 @@ func main() {
 
 	// init users service
 	var svc users.Service
-	svc = users.NewService(pool, *logger)
+	svc = users.NewService(pool, *logger, config)
 	//wire logging
 	svc = users.LoggingMiddleware{*logger, svc}
 	//wire instrumentation

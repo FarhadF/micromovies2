@@ -26,13 +26,15 @@ type Service interface {
 type usersService struct {
 	db     *pgx.ConnPool
 	logger zap.Logger
+	config Config
 }
 
 //constructor - we can later add initialization if needed
-func NewService(db *pgx.ConnPool, logger zap.Logger) Service {
+func NewService(db *pgx.ConnPool, logger zap.Logger, config Config) Service {
 	return usersService{
-		db,
-		logger,
+		db:     db,
+		logger: logger,
+		config: config,
 	}
 }
 
@@ -44,7 +46,7 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 		return "", errors.WithStack(err)
 	}
 	if !rows.Next() {
-		conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+		conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 		if err != nil {
 			return "", errors.WithStack(err)
 		}
@@ -88,7 +90,7 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 	if err != nil {
 		return false, errors.WithStack(err)
 	}
-	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+	conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
 	if err != nil {
 		return false, errors.WithStack(err)
 	}
@@ -125,7 +127,7 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 		return "", errors.WithStack(err)
 	}
 	//call vault service + grpc_opentracing interceptor for client
-	conn, err := grpc.Dial(":8085", grpc.WithInsecure(), grpc.WithTimeout(1*time.Second), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
+	conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
@@ -136,7 +138,7 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 		return "", errors.WithStack(errors.New("email or password incorrect"))
 	}
 	//call jwt client + grpc_opentracing interceptor for client
-	conn1, err := grpc.Dial(":8087", grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
+	conn1, err := grpc.Dial(s.config.JwtAuthAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
@@ -147,4 +149,10 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 		return "", errors.WithStack(err)
 	}
 	return token, nil
+}
+
+//required Configuration to pass down to the service from the flags in cmd/server.go
+type Config struct {
+	VaultAddr   string
+	JwtAuthAddr string
 }
