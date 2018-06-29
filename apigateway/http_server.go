@@ -22,7 +22,7 @@ func (e Endpoints) Register(r *httprouter.Router, a Authorizer) {
 	//  200: loginResponse
 	//  400: loginResponse
 	//curl -XPOST localhost:8089/v1/register -d '{"email":"ff@ff.ffnew","password":"Aa111111", "firstname":"Farhad","lastname":"Farahi"}'
-	r.Handle("POST", "/v1/register", e.HandleRegisterPost)
+	r.Handle("POST", "/v1/register", UUIDMiddleware(e.HandleRegisterPost))
 	//curl -XPOST localhost:8089/v1/changepassword -d '{"email":"ff@ff.ff","currentpassword":"Aa111111","newpassword":"Aa123"}' --header "Authorization: Bearer ..."
 	r.Handle("POST", "/v1/changepassword", UUIDMiddleware(a.AuthorizationMiddleware(e.HandleChangePasswordPost)))
 	//curl localhost:8089/v1/getmovie/ --header "Authorization: Bearer ..."
