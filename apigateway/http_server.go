@@ -6,10 +6,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/satori/go.uuid"
 	"io"
 	"net/http"
 	"strings"
-	"github.com/satori/go.uuid"
 )
 
 //todo: complete api documentation
@@ -51,7 +51,7 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 	res := resp.(loginResponse)
 
 	if err != nil {
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	if res.Err != "" {
@@ -59,7 +59,7 @@ func (e Endpoints) HandleLoginPost(w http.ResponseWriter, r *http.Request, _ htt
 			respondError(w, http.StatusBadRequest, errors.New("incorrect email or password"))
 			return
 		}
-		respondError(w, 500, errors.New(res.Err))
+		respondError(w, http.StatusInternalServerError, errors.New(res.Err))
 		return
 	}
 	respondSuccess(w, res)
@@ -80,12 +80,12 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 			respondError(w, http.StatusBadRequest, err)
 			return
 		}
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	resp, err := e.RegisterEndpoint(e.Ctx, decodedRegisterReq.(registerRequest))
 	if err != nil {
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	decodedResp := resp.(registerResponse)
@@ -95,10 +95,10 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 			return
 		}
 		if strings.Contains(decodedResp.Err, "rpc error") {
-			respondError(w, http.StatusInternalServerError, errors.New("oops, something failed on our end your request code was: " + e.Ctx.Value("correlationid").(uuid.UUID).String() + "."))
+			respondError(w, http.StatusInternalServerError, errors.New("oops, something failed on our end your request code was: "+e.Ctx.Value("correlationid").(uuid.UUID).String()+"."))
 			return
 		}
-		respondError(w, 500, errors.New(decodedResp.Err))
+		respondError(w, http.StatusInternalServerError, errors.New(decodedResp.Err))
 		return
 	}
 	respondSuccess(w, resp.(registerResponse))
@@ -119,12 +119,12 @@ func (e Endpoints) HandleChangePasswordPost(w http.ResponseWriter, r *http.Reque
 			respondError(w, http.StatusBadRequest, err)
 			return
 		}
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	resp, err := e.ChangePasswordEndpoint(e.Ctx, decodedChangePasswordReq.(changePasswordRequest))
 	if err != nil {
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	respondSuccess(w, resp.(changePasswordResponse))
@@ -148,7 +148,7 @@ func (e Endpoints) HandleGetMovieByIDGet(w http.ResponseWriter, r *http.Request,
 	}
 	resp, err := e.GetMovieByIdEndpoint(e.Ctx, id)
 	if err != nil {
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	respondSuccess(w, resp.(getMovieByIdResponse))
@@ -169,12 +169,12 @@ func (e Endpoints) HandleNewMoviePost(w http.ResponseWriter, r *http.Request, _ 
 			respondError(w, http.StatusBadRequest, err)
 			return
 		}
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	resp, err := e.NewMovieEndpoint(e.Ctx, decodedNewMovieReq.(newMovieRequest))
 	if err != nil {
-		respondError(w, 500, err)
+		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
 	respondSuccess(w, resp.(newMovieResponse))
