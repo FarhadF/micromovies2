@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"github.com/satori/go.uuid"
 )
 
 //todo: complete api documentation
@@ -85,6 +86,19 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 	resp, err := e.RegisterEndpoint(e.Ctx, decodedRegisterReq.(registerRequest))
 	if err != nil {
 		respondError(w, 500, err)
+		return
+	}
+	decodedResp := resp.(registerResponse)
+	if decodedResp.Err != "" {
+		if strings.EqualFold(decodedResp.Err, "user already exists") {
+			respondError(w, http.StatusBadRequest, errors.New("user already exists"))
+			return
+		}
+		if strings.Contains(decodedResp.Err, "rpc error") {
+			respondError(w, http.StatusInternalServerError, errors.New("oops, something failed on our end your request code was: " + e.Ctx.Value("correlationid").(uuid.UUID).String() + "."))
+			return
+		}
+		respondError(w, 500, errors.New(decodedResp.Err))
 		return
 	}
 	respondSuccess(w, resp.(registerResponse))
