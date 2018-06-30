@@ -3,6 +3,7 @@ package apigateway
 import (
 	"context"
 	"github.com/farhadf/micromovies2/movies"
+	"github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"time"
 )
@@ -16,7 +17,8 @@ type LoggingMiddleware struct {
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) Login(ctx context.Context, email string, password string) (output string, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "Login"), zap.Error(err),
+		mw.Logger.Info("", zap.String("method", "Login"),
+			zap.String("correlationid", ctx.Value("correlationid").(uuid.UUID).String()), zap.Error(err),
 			zap.Duration("took", time.Since(begin)), zap.String("email", email),
 			zap.String("password", password))
 	}(time.Now())
@@ -27,7 +29,8 @@ func (mw LoggingMiddleware) Login(ctx context.Context, email string, password st
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) Register(ctx context.Context, email string, password string, firstname string, lastname string) (output string, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "Register"), zap.Error(err),
+		mw.Logger.Info("", zap.String("method", "Register"),
+			zap.String("correlationid", ctx.Value("correlationid").(uuid.UUID).String()), zap.Error(err),
 			zap.Duration("took", time.Since(begin)), zap.String("email", email),
 			zap.String("password", password), zap.String("firstname", firstname),
 			zap.String("lastname", lastname))
@@ -39,8 +42,9 @@ func (mw LoggingMiddleware) Register(ctx context.Context, email string, password
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (output bool, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "ChangePassword"), zap.String("email", email), zap.Error(err),
-			zap.Duration("took", time.Since(begin)))
+		mw.Logger.Info("", zap.String("method", "ChangePassword"),
+			zap.String("correlationid", ctx.Value("correlationid").(uuid.UUID).String()),
+			zap.String("email", email), zap.Error(err), zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.ChangePassword(ctx, email, currentPassword, newPassword)
 	return
@@ -49,7 +53,9 @@ func (mw LoggingMiddleware) ChangePassword(ctx context.Context, email string, cu
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) GetMovieById(ctx context.Context, id string) (output movies.Movie, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "GetMovieById"), zap.String("id", id), zap.Error(err),
+		mw.Logger.Info("", zap.String("method", "GetMovieById"),
+			zap.String("correlationid", ctx.Value("correlationid").(uuid.UUID).String()),
+			zap.String("id", id), zap.Error(err),
 			zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.GetMovieById(ctx, id)
@@ -59,7 +65,9 @@ func (mw LoggingMiddleware) GetMovieById(ctx context.Context, id string) (output
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) NewMovie(ctx context.Context, title string, director []string, year string, userId string) (output string, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info("", zap.String("method", "NewMovie"), zap.String("title", title),
+		mw.Logger.Info("", zap.String("method", "NewMovie"),
+			zap.String("correlationid", ctx.Value("correlationid").(uuid.UUID).String()),
+			zap.String("title", title),
 			zap.String("userId", userId), zap.Error(err), zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.NewMovie(ctx, title, director, year, userId)
