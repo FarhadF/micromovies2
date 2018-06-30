@@ -3,8 +3,8 @@ package jwtauth
 import (
 	"context"
 	"github.com/rs/zerolog"
-	"time"
 	"github.com/satori/go.uuid"
+	"time"
 )
 
 //struct passing the logger
