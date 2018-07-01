@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/farhadf/micromovies2/vault/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 type grpcServer struct {
@@ -33,11 +34,33 @@ func NewGRPCServer(ctx context.Context, endpoints Endpoints) pb.VaultServer {
 			endpoints.HashEndpoint,
 			DecodeGRPCHashRequest,
 			EncodeGRPCHashResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		validate: grpctransport.NewServer(
 			endpoints.ValidateEndpoint,
 			DecodeGRPCValidateRequest,
 			EncodeGRPCValidateResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 	}
+}
+
+//server before: this will retreive email and role from grpc metadata from upstream server and put it in the ctx
+func getGRPCContext(ctx context.Context, md metadata.MD) context.Context {
+	if email, ok := md["email"]; ok {
+		email := email[len(email)-1]
+		ctx = context.WithValue(ctx, "email", email)
+	}
+	if role, ok := md["role"]; ok {
+		role := role[len(role)-1]
+		ctx = context.WithValue(ctx, "role", role)
+	}
+
+	if correlationid, ok := md["correlationid"]; ok {
+		correlationid := correlationid[len(correlationid)-1]
+		ctx = context.WithValue(ctx, "correlationid", correlationid)
+	}
+	return ctx
 }
