@@ -5,7 +5,6 @@ import (
 	"github.com/farhadf/micromovies2/movies"
 	"github.com/farhadf/micromovies2/movies/pb"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"github.com/satori/go.uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -111,8 +110,8 @@ func injectContext(ctx context.Context, md *metadata.MD) context.Context {
 	if role, ok := ctx.Value("role").(string); ok {
 		(*md)["role"] = append((*md)["role"], role)
 	}
-	if correlationid, ok := ctx.Value("correlationid").(uuid.UUID); ok {
-		(*md)["correlationid"] = append((*md)["correlationid"], correlationid.String())
+	if correlationid, ok := ctx.Value("correlationid").(string); ok {
+		(*md)["correlationid"] = append((*md)["correlationid"], correlationid)
 	}
 	return ctx
 }

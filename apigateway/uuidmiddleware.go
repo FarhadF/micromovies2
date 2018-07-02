@@ -25,7 +25,7 @@ func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
 			respondError(w, http.StatusInternalServerError, err)
 		}*/
 
-		ctx = context.WithValue(ctx, "correlationid", u2)
+		ctx = context.WithValue(ctx, "correlationid", u2.String())
 		r = r.WithContext(ctx)
 		next(w, r, ps)
 	}
