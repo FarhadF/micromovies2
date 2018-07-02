@@ -29,7 +29,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/casbin/casbin"
 	"github.com/farhadf/micromovies2/apigateway"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
@@ -37,8 +36,8 @@ import (
 	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	flag "github.com/spf13/pflag"
-	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
+	jaegerZap "github.com/uber/jaeger-client-go/log/zap"
 	"go.uber.org/zap"
 	"io"
 	"net/http"
@@ -95,7 +94,7 @@ func main() {
 		logger.Fatal("", zap.Error(err))
 	}
 	//tracing
-	tracer, closer := initJaeger("api-gateway")
+	tracer, closer := initJaeger("api-gateway", logger)
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 	// HTTP transport
@@ -118,7 +117,7 @@ func main() {
 }
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
-func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+func initJaeger(service string, logger *zap.Logger) (opentracing.Tracer, io.Closer) {
 	cfg := &config.Configuration{
 		Sampler: &config.SamplerConfig{
 			Type:  "const",
@@ -129,10 +128,10 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
 		},
 		ServiceName: service,
 	}
-	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	//Type Logger is an adapter from zap Logger to jaeger-lib Logger. New logger will actually do this for us.
+	tracer, closer, err := cfg.NewTracer(config.Logger(jaegerZap.NewLogger(logger)))
 	if err != nil {
-		//todo: use structured logging
-		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+		logger.Panic("ERROR: cannot init Jaeger:", zap.Error(err))
 	}
 	return tracer, closer
 }
