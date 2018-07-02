@@ -2,22 +2,22 @@ package jwtauth
 
 import (
 	"context"
-	"github.com/rs/zerolog"
+	"go.uber.org/zap"
 	"time"
 )
 
 //struct passing the logger
 type LoggingMiddleware struct {
-	Logger zerolog.Logger
+	Logger *zap.Logger
 	Next   Service
 }
 
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) GenerateToken(ctx context.Context, email string, role string) (output string, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info().Str("method", "GenerateToken").Str("correlationid",
-			ctx.Value("correlationid").(string)).Err(err).Dur("took", time.Since(begin)).
-			Str("email", email).Str("role", role).Msg("")
+		mw.Logger.Info("", zap.String("method", "GenerateToken"), zap.String("correlationid",
+			ctx.Value("correlationid").(string)), zap.Error(err), zap.Duration("took", time.Since(begin)),
+			zap.String("email", email), zap.String("role", role))
 	}(time.Now())
 	output, err = mw.Next.GenerateToken(ctx, email, role)
 	return
@@ -26,9 +26,9 @@ func (mw LoggingMiddleware) GenerateToken(ctx context.Context, email string, rol
 //each method will have its own logger for app logs
 func (mw LoggingMiddleware) ParseToken(ctx context.Context, token string) (output Claims, err error) {
 	defer func(begin time.Time) {
-		mw.Logger.Info().Str("method", "ParseToken").Str("correlationid",
-			ctx.Value("correlationid").(string)).Err(err).Dur("took", time.Since(begin)).
-			Str("token", token).Msg("")
+		mw.Logger.Info("", zap.String("method", "ParseToken"), zap.String("correlationid",
+			ctx.Value("correlationid").(string)), zap.Error(err), zap.Duration("took", time.Since(begin)),
+			zap.String("token", token))
 	}(time.Now())
 	output, err = mw.Next.ParseToken(ctx, token)
 	return
