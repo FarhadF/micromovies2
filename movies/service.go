@@ -6,7 +6,7 @@ import (
 	"errors"
 	"github.com/jackc/pgx"
 	"github.com/opentracing/opentracing-go"
-	"github.com/rs/zerolog"
+	"go.uber.org/zap"
 	"reflect"
 	"time"
 )
@@ -22,11 +22,11 @@ type Service interface {
 //implementation with database and logger
 type moviesService struct {
 	db     *pgx.ConnPool
-	logger zerolog.Logger
+	logger *zap.Logger
 }
 
 //constructor - we can later add initialization if needed
-func NewService(db *pgx.ConnPool, logger zerolog.Logger) Service {
+func NewService(db *pgx.ConnPool, logger *zap.Logger) Service {
 	return moviesService{
 		db,
 		logger,
