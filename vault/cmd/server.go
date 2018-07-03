@@ -11,10 +11,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	flag "github.com/spf13/pflag"
-	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
 	"io"
@@ -23,6 +20,9 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	jaegerZap "github.com/uber/jaeger-client-go/log/zap"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -36,12 +36,10 @@ func main() {
 	flag.BoolVarP(&console, "console", "c", false, "turns on pretty console logging")
 	flag.Parse()
 	ctx := context.Background()
-	//zerolog
-	logger := zerolog.New(os.Stderr).With().Timestamp().Caller().Logger()
-	//console pretty printing
-	if console {
-		logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-	}
+	//zap
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
 	fieldKeys := []string{"method", "error"}
 	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 		Namespace: "my_group",
@@ -79,7 +77,7 @@ func main() {
 		ValidateEndpoint: validateEndpoint,
 	}
 	//tracing
-	tracer, closer := initJaeger("vaultService")
+	tracer, closer := initJaeger("vaultService", logger)
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 	span := tracer.StartSpan("server")
@@ -99,7 +97,7 @@ func main() {
 			errChan <- err
 			return
 		}
-		logger.Info().Str("grpc:", gRPCAddr).Msg("")
+		logger.Info("", zap.String("grpc:", gRPCAddr))
 		handler := vault.NewGRPCServer(ctx, endpoints)
 		//add grpc_opentracing interceptor for server
 		gRPCServer := grpc.NewServer(grpc.UnaryInterceptor(grpc_opentracing.UnaryServerInterceptor()))
@@ -107,12 +105,12 @@ func main() {
 		errChan <- gRPCServer.Serve(listener)
 	}()
 
-	logger.Info().Msg(gRPCAddr)
-	logger.Fatal().Err(<-errChan).Msg("")
+	logger.Info(gRPCAddr)
+	logger.Fatal("", zap.Error(<-errChan))
 }
 
 // initJaeger returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
-func initJaeger(service string) (opentracing.Tracer, io.Closer) {
+func initJaeger(service string, logger *zap.Logger) (opentracing.Tracer, io.Closer) {
 	cfg := &config.Configuration{
 		Sampler: &config.SamplerConfig{
 			Type:  "const",
@@ -123,9 +121,9 @@ func initJaeger(service string) (opentracing.Tracer, io.Closer) {
 		},
 		ServiceName: service,
 	}
-	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	tracer, closer, err := cfg.NewTracer(config.Logger(jaegerZap.NewLogger(logger)))
 	if err != nil {
-		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
+		logger.Panic("ERROR: cannot init Jaeger", zap.Error(err))
 	}
 	return tracer, closer
 }
