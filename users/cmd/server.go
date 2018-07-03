@@ -60,7 +60,7 @@ func main() {
 			Port:     dbPort,
 			User:     dbUser,
 			Database: dbName,
-			Logger:   zapadapter.NewLogger(logger), //todo: fix logger
+			Logger:   zapadapter.NewLogger(logger),
 		},
 		MaxConnections: 5,
 	}
