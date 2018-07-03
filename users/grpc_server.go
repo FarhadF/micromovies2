@@ -57,11 +57,15 @@ func NewGRPCServer(ctx context.Context, endpoint Endpoints) pb.UsersServer {
 			endpoint.NewUserEndpoint,
 			DecodeGRPCNewUserRequest,
 			EncodeGRPCNewUserResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		getUserByEmail: grpctransport.NewServer(
 			endpoint.GetUserByEmailEndpoint,
 			DecodeGRPCGetUserByEmailRequest,
 			EncodeGRPCGetUserByEmailResponse,
+			//take out the context set in the upstream service
+			grpctransport.ServerBefore(getGRPCContext),
 		),
 		changePassword: grpctransport.NewServer(
 			endpoint.ChangePasswordEndpoint,

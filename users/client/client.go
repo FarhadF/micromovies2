@@ -16,12 +16,16 @@ func NewGRPCClient(conn *grpc.ClientConn) users.Service {
 		users.EncodeGRPCNewUserRequest,
 		users.DecodeGRPCNewUserResponse,
 		pb.NewUserResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var getUserByEmailEndpoint = grpctransport.NewClient(
 		conn, "pb.Users", "GetUserByEmail",
 		users.EncodeGRPCGetUserByEmailRequest,
 		users.DecodeGRPCGetUserByEmailResponse,
 		pb.GetUserByEmailResponse{},
+		//this will inject context fields specified in injectContext func in the metadata to be passed to downstream service
+		grpctransport.ClientBefore(injectContext),
 	).Endpoint()
 	var changePasswordEndpoint = grpctransport.NewClient(
 		conn, "pb.Users", "ChangePassword",

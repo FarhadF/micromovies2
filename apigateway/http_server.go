@@ -6,7 +6,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/satori/go.uuid"
 	"io"
 	"net/http"
 	"strings"
@@ -95,7 +94,8 @@ func (e Endpoints) HandleRegisterPost(w http.ResponseWriter, r *http.Request, _ 
 			return
 		}
 		if strings.Contains(decodedResp.Err, "rpc error") {
-			respondError(w, http.StatusInternalServerError, errors.New("oops, something failed on our end your request code was: "+e.Ctx.Value("correlationid").(uuid.UUID).String()+"."))
+			respondError(w, http.StatusInternalServerError, errors.New("oops, something failed on our end your request code was: "+
+				e.Ctx.Value("correlationid").(string)+"."))
 			return
 		}
 		respondError(w, http.StatusInternalServerError, errors.New(decodedResp.Err))
