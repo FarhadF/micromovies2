@@ -23,9 +23,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"github.com/jackc/pgx/log/zapadapter"
 )
-
-var pool *pgx.ConnPool
 
 func main() {
 	//zap
@@ -57,7 +56,8 @@ func main() {
 			Port:     dbPort,
 			User:     dbUser,
 			Database: dbName,
-			//Logger: logger, todo: fix logger
+			Logger: zapadapter.NewLogger(logger),
+			LogLevel: pgx.LogLevelWarn,
 		},
 		MaxConnections: 5,
 	}
