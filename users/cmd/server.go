@@ -61,6 +61,7 @@ func main() {
 			User:     dbUser,
 			Database: dbName,
 			Logger:   zapadapter.NewLogger(logger),
+			LogLevel: pgx.LogLevelWarn,
 		},
 		MaxConnections: 5,
 	}

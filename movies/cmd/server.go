@@ -8,6 +8,7 @@ import (
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/log/zapadapter"
 	"github.com/julienschmidt/httprouter"
 	"github.com/opentracing/opentracing-go"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
@@ -23,7 +24,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"github.com/jackc/pgx/log/zapadapter"
 )
 
 func main() {
@@ -56,7 +56,7 @@ func main() {
 			Port:     dbPort,
 			User:     dbUser,
 			Database: dbName,
-			Logger: zapadapter.NewLogger(logger),
+			Logger:   zapadapter.NewLogger(logger),
 			LogLevel: pgx.LogLevelWarn,
 		},
 		MaxConnections: 5,
