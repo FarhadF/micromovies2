@@ -53,7 +53,6 @@ func (a apigatewayService) Login(ctx context.Context, email string, password str
 	return token, nil
 }
 
-//todo make downstream ports flags/envs
 //implementation of each method of service interface
 func (a apigatewayService) Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error) {
 	conn, err := grpc.Dial(a.config.UsersAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
