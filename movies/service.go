@@ -102,6 +102,7 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 }
 
 //implementation
+//todo: check if the role is user and if so discard createdBy if available and extract email from ctx
 func (m moviesService) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("NewMovie", opentracing.ChildOf(span.Context()))
