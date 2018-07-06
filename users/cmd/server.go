@@ -63,7 +63,7 @@ func main() {
 			Logger:   zapadapter.NewLogger(logger),
 			LogLevel: pgx.LogLevelWarn,
 		},
-		MaxConnections: 5,
+		MaxConnections: 50,
 	}
 	pool, err := pgx.NewConnPool(connPoolConfig)
 	if err != nil {
