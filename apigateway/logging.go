@@ -14,14 +14,14 @@ type LoggingMiddleware struct {
 }
 
 //each method will have its own logger for app logs
-func (mw LoggingMiddleware) Login(ctx context.Context, email string, password string) (output string, err error) {
+func (mw LoggingMiddleware) Login(ctx context.Context, email string, password string) (token string, refreshToken string, err error) {
 	defer func(begin time.Time) {
 		mw.Logger.Info("", zap.String("method", "Login"),
 			zap.String("correlationid", ctx.Value("correlationid").(string)), zap.Error(err),
 			zap.Duration("took", time.Since(begin)), zap.String("email", email),
 			zap.String("password", password))
 	}(time.Now())
-	output, err = mw.Next.Login(ctx, email, password)
+	token, refreshToken, err = mw.Next.Login(ctx, email, password)
 	return
 }
 

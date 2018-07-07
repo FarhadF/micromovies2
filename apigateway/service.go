@@ -13,7 +13,7 @@ import (
 
 //business logic of this microservice
 type Service interface {
-	Login(ctx context.Context, email string, password string) (string, error)
+	Login(ctx context.Context, email string, password string) (string, string, error)
 	Register(ctx context.Context, email string, password string, firstname string, lastname string) (string, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 	GetMovieById(ctx context.Context, id string) (movies.Movie, error)
@@ -33,7 +33,7 @@ func NewService(config Config) Service {
 }
 
 //implementation of each method of service interface
-func (a apigatewayService) Login(ctx context.Context, email string, password string) (string, error) {
+func (a apigatewayService) Login(ctx context.Context, email string, password string) (string, string, error) {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
 		span.SetTag("email", email)
@@ -42,15 +42,15 @@ func (a apigatewayService) Login(ctx context.Context, email string, password str
 	}
 	conn, err := grpc.Dial(a.config.UsersAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	defer conn.Close()
 	usersService := usersClient.NewGRPCClient(conn)
-	token, err := usersClient.Login(ctx, usersService, email, password)
+	token, refreshToken, err := usersClient.Login(ctx, usersService, email, password)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return token, nil
+	return token, refreshToken, nil
 }
 
 //implementation of each method of service interface

@@ -16,13 +16,13 @@ type InstrumentingMiddleware struct {
 }
 
 //instrumentation per method
-func (mw InstrumentingMiddleware) Login(ctx context.Context, email string, password string) (output string, err error) {
+func (mw InstrumentingMiddleware) Login(ctx context.Context, email string, password string) (token string, refreshToken string, err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "Login", "error", fmt.Sprint(err != nil)}
 		mw.RequestCount.With(lvs...).Add(1)
 		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
 	}(time.Now())
-	output, err = mw.Next.Login(ctx, email, password)
+	token, refreshToken, err = mw.Next.Login(ctx, email, password)
 	return
 }
 

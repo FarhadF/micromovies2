@@ -25,19 +25,20 @@ type loginRequest struct {
 // If successful Token will be in response, If it fails, Check err in the response.
 // swagger:response loginResponse
 type loginResponse struct {
-	Token string `json:"token,omitempty"`
-	Err   string `json:"err,omitempty"`
+	Token        string `json:"token,omitempty"`
+	RefreshToken string `json:"refreshtoken,omitempty"`
+	Err          string `json:"err,omitempty"`
 }
 
 //make the actual endpoint
 func MakeLoginEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		r := req.(loginRequest)
-		token, err := svc.Login(ctx, r.Email, r.Password)
+		token, refreshToken, err := svc.Login(ctx, r.Email, r.Password)
 		if err != nil {
-			return loginResponse{token, err.Error()}, nil
+			return loginResponse{"", "", err.Error()}, nil
 		}
-		return loginResponse{token, ""}, nil
+		return loginResponse{token, refreshToken, ""}, nil
 	}
 }
 
