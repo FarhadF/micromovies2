@@ -62,5 +62,6 @@ message LoginRequest {
 
 message LoginResponse {
     string Token = 1;
-    string Err = 2;
+    string RefreshToken = 2;
+    string Err = 3;
 }

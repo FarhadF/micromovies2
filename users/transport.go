@@ -152,15 +152,17 @@ func DecodeGRPCLoginRequest(_ context.Context, r interface{}) (interface{}, erro
 func EncodeGRPCLoginResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(loginResponse)
 	return &pb.LoginResponse{
-		Token: resp.Token,
-		Err:   resp.Err,
+		Token:        resp.Token,
+		RefreshToken: resp.RefreshToken,
+		Err:          resp.Err,
 	}, nil
 }
 
 func DecodeGRPCLoginResponse(_ context.Context, r interface{}) (interface{}, error) {
 	resp := r.(*pb.LoginResponse)
 	return loginResponse{
-		Token: resp.Token,
-		Err:   resp.Err,
+		Token:        resp.Token,
+		RefreshToken: resp.RefreshToken,
+		Err:          resp.Err,
 	}, nil
 }

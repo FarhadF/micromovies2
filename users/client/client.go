@@ -75,12 +75,12 @@ func ChangePassword(ctx context.Context, service users.Service, email string, cu
 	return success, nil
 }
 
-func Login(ctx context.Context, service users.Service, email string, Password string) (string, error) {
-	token, err := service.Login(ctx, email, Password)
+func Login(ctx context.Context, service users.Service, email string, Password string) (string, string, error) {
+	token, refreshToken, err := service.Login(ctx, email, Password)
 	if err != nil {
-		return token, err
+		return "", "", err
 	}
-	return token, nil
+	return token, refreshToken, nil
 }
 
 //client before function to inject context into grpc metadata to pass to downstream service

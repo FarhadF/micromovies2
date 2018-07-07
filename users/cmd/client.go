@@ -72,11 +72,11 @@ func main() {
 		}
 	}
 	if login != false && email != "" && password != "" {
-		token, err := client.Login(ctx, usersService, email, password)
+		token, refreshToken, err := client.Login(ctx, usersService, email, password)
 		if err != nil {
 			logger.Error().Err(err).Msg("")
 		} else {
-			logger.Info().Str("token", token).Msg("")
+			logger.Info().Str("token", token).Str("refreshtoken", refreshToken).Msg("")
 		}
 	}
 }

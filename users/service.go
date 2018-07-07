@@ -8,6 +8,7 @@ import (
 	"github.com/jackc/pgx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	uuid2 "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"time"
@@ -18,7 +19,7 @@ type Service interface {
 	NewUser(ctx context.Context, user User) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
-	Login(ctx context.Context, email string, password string) (string, error)
+	Login(ctx context.Context, email string, password string) (string, string, error)
 	//todo: edit user
 }
 
@@ -76,7 +77,7 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, error) {
 	var user User
 	err := s.db.QueryRow("select * from users where email='"+email+"'").Scan(&user.Id, &user.Name, &user.LastName,
-		&user.Email, &user.Password, &user.Role, &user.CreatedOn, &user.UpdatedOn, &user.LastLogin)
+		&user.Email, &user.Password, &user.Role, &user.RefreshToken, &user.RefreshTokenExpiration, &user.CreatedOn, &user.UpdatedOn, &user.LastLogin)
 	if err != nil {
 		return user, errors.WithStack(err)
 	}
@@ -115,7 +116,7 @@ func (s usersService) ChangePassword(ctx context.Context, email string, currentP
 }
 
 //method implementation
-func (s usersService) Login(ctx context.Context, email string, password string) (string, error) {
+func (s usersService) Login(ctx context.Context, email string, password string) (string, string, error) {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("Login", opentracing.ChildOf(span.Context()))
 		span.SetTag("email", email)
@@ -124,31 +125,38 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	}
 	user, err := s.GetUserByEmail(ctx, email)
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", "", errors.WithStack(err)
 	}
 	//call vault service + grpc_opentracing interceptor for client
 	conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", "", errors.WithStack(err)
 	}
 	defer conn.Close()
 	vaultService := vaultClient.New(conn)
 	valid, err := vaultClient.Validate(ctx, vaultService, password, user.Password)
 	if valid != true {
-		return "", errors.WithStack(errors.New("email or password incorrect"))
+		return "", "", errors.WithStack(errors.New("email or password incorrect"))
 	}
 	//call jwt client + grpc_opentracing interceptor for client
 	conn1, err := grpc.Dial(s.config.JwtAuthAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", "", errors.WithStack(err)
 	}
 	defer conn1.Close()
 	jwtService := jwtClient.NewGRPCClient(conn1)
 	token, err := jwtClient.GenerateToken(ctx, jwtService, email, user.Role)
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", "", errors.WithStack(err)
 	}
-	return token, nil
+	//refresh token as uuid
+	uuid := uuid2.NewV4()
+	//hash it to make it secure in the db
+	refreshToken, err := vaultClient.Hash(ctx, vaultService, uuid.String())
+	//refresh token with 8 hours validity and store it in the database
+	_, err = s.db.Exec("update users set refreshtoken=$1, refreshtokenexpiration=$2 where email=$3", refreshToken,
+		time.Now().UTC().Add(time.Hour*8).Format("2006-01-02 15:04:05.999999"), email)
+	return token, refreshToken, nil
 }
 
 //required Configuration to pass down to the service from the flags in cmd/server.go
