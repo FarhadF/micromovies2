@@ -82,8 +82,8 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
 	var movie Movie
-	rows := m.db.QueryRow("select * from movies where id = $1", id)
-	err := rows.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.CreatedBy, &movie.CreatedOn, &movie.UpdatedBy, &movie.UpdatedOn)
+	row := m.db.QueryRow("select * from movies where id = $1", id)
+	err := row.Scan(&movie.Id, &movie.Title, &movie.Year, &movie.CreatedBy, &movie.CreatedOn, &movie.UpdatedBy, &movie.UpdatedOn)
 	if err != nil {
 		return movie, err
 	}
