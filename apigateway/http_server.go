@@ -177,7 +177,12 @@ func (e Endpoints) HandleNewMoviePost(w http.ResponseWriter, r *http.Request, _ 
 		respondError(w, http.StatusInternalServerError, err)
 		return
 	}
-	respondSuccess(w, resp.(newMovieResponse))
+	decodedResp := resp.(newMovieResponse)
+	if decodedResp.Err != "" {
+		respondError(w, http.StatusInternalServerError, errors.New(decodedResp.Err))
+		return
+	}
+	respondSuccess(w, decodedResp)
 }
 
 // respondError in some canonical format.
