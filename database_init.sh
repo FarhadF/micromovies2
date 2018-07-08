@@ -10,6 +10,8 @@
                                         email STRING NOT NULL,
                                         password STRING NOT NULL,
                                         userrole string NOT NULL,
+                                        refreshtoken STRING NOT NULL Default '-',
+                                        refreshtokenExpiration TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT '1970-01-01',
                                         createdon TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
                                         updatedon TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT '1970-01-01',
                                         lastlogin TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT '1970-01-01',
@@ -27,4 +29,5 @@
                                         movie_id UUID NOT NULL,
                                         director STRING NOT NULL,
                                         createdby STRING NOT NULL,
-                                        createdon TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now());"
+                                        createdon TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now());
+                                        create index on users (email);"
