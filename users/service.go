@@ -53,7 +53,8 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 		return "", errors.WithStack(err)
 	}
 	if !rows.Next() {
-		conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second))
+		conn, err := grpc.Dial(s.config.VaultAddr, grpc.WithInsecure(), grpc.WithTimeout(1*time.Second),
+			grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 		if err != nil {
 			return "", errors.WithStack(err)
 		}
