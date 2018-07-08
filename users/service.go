@@ -40,6 +40,7 @@ func NewService(db *pgx.ConnPool, logger zap.Logger, config Config) Service {
 }
 
 //method implementation
+//todo: add tracing
 func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 	rows, err := s.db.Query("select * from users where email='" + user.Email + "'")
 	defer rows.Close()
@@ -74,6 +75,7 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 }
 
 //method implementation
+//todo add tracing
 func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, error) {
 	var user User
 	err := s.db.QueryRow("select * from users where email='"+email+"'").Scan(&user.Id, &user.Name, &user.LastName,
@@ -85,6 +87,7 @@ func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, e
 }
 
 //method implementation
+//todo: add tracing
 func (s usersService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
 	var currentPasswordHash string
 	err := s.db.QueryRow("select password from users where email='" + email + "'").Scan(&currentPasswordHash)
