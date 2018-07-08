@@ -40,8 +40,13 @@ func NewService(db *pgx.ConnPool, logger zap.Logger, config Config) Service {
 }
 
 //method implementation
-//todo: add tracing
 func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("NewUser", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", ctx.Value("email"))
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	rows, err := s.db.Query("select * from users where email='" + user.Email + "'")
 	defer rows.Close()
 	if err != nil {
@@ -75,8 +80,13 @@ func (s usersService) NewUser(ctx context.Context, user User) (string, error) {
 }
 
 //method implementation
-//todo add tracing
 func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("GetUserByEmail", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	var user User
 	err := s.db.QueryRow("select * from users where email='"+email+"'").Scan(&user.Id, &user.Name, &user.LastName,
 		&user.Email, &user.Password, &user.Role, &user.RefreshToken, &user.RefreshTokenExpiration, &user.CreatedOn, &user.UpdatedOn, &user.LastLogin)
@@ -87,8 +97,13 @@ func (s usersService) GetUserByEmail(ctx context.Context, email string) (User, e
 }
 
 //method implementation
-//todo: add tracing
 func (s usersService) ChangePassword(ctx context.Context, email string, currentPassword string, newPassword string) (bool, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("ChangePassword", opentracing.ChildOf(span.Context()))
+		span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
 	var currentPasswordHash string
 	err := s.db.QueryRow("select password from users where email='" + email + "'").Scan(&currentPasswordHash)
 	if err != nil {
