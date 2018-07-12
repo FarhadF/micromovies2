@@ -50,6 +50,7 @@ func main() {
 	logger.Info("starting grpc server at" + string(gRPCAddr))
 	ctx := context.Background()
 	//database
+	//todo: figure out timeouts
 	connPoolConfig := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
 			Host:     dbHost,
