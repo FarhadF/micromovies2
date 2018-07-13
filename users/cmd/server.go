@@ -24,6 +24,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func main() {
@@ -64,6 +65,7 @@ func main() {
 			LogLevel: pgx.LogLevelWarn,
 		},
 		MaxConnections: 50,
+		AcquireTimeout: time.Second * 5,
 	}
 	pool, err := pgx.NewConnPool(connPoolConfig)
 	if err != nil {
