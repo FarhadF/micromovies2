@@ -21,6 +21,8 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/http/pprof"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
@@ -135,6 +137,15 @@ func main() {
 		router := httprouter.New()
 		//handler will be used for net/http handle compatibility
 		router.Handler("GET", "/metrics", promhttp.Handler())
+		// Register pprof handlers
+		/*
+			router.HandlerFunc("GET","/debug/pprof/", pprof.Index)
+			router.HandlerFunc("GET","/debug/pprof/cmdline", pprof.Cmdline)
+			router.HandlerFunc("GET","/debug/pprof/profile", pprof.Profile)
+			router.HandlerFunc("GET","/debug/pprof/symbol", pprof.Symbol)
+			router.HandlerFunc("GET","/debug/pprof/trace", pprof.Trace)
+			router.Handler(http.MethodGet, "/debug/pprof/heap", pprof.Handler("heap"))
+		*/
 		errChan <- http.ListenAndServe(httpAddr, router)
 	}()
 	//Handle os signals
