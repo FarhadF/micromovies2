@@ -43,13 +43,13 @@ func main() {
 	//instrumentation
 	fieldKeys := []string{"method", "error"}
 	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-		Namespace: "my_group",
+		Namespace: "micromovies2",
 		Subsystem: "jwt_service",
 		Name:      "request_count",
 		Help:      "Number of requests received.",
 	}, fieldKeys)
 	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-		Namespace: "my_group",
+		Namespace: "micromovies2",
 		Subsystem: "jwt_service",
 		Name:      "request_latency_microseconds",
 		Help:      "Total duration of requests in microseconds.",

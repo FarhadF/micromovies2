@@ -10,7 +10,6 @@ import (
 type InstrumentingMiddleware struct {
 	RequestCount   metrics.Counter
 	RequestLatency metrics.Histogram
-	CountResult    metrics.Histogram
 	Next           Service
 }
 
