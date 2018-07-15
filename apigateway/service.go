@@ -18,6 +18,7 @@ type Service interface {
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 	GetMovieById(ctx context.Context, id string) (movies.Movie, error)
 	NewMovie(ctx context.Context, title string, director []string, year string, userId string) (string, error)
+	//todo add refresh token work at token expired
 }
 
 //implementation, with config
