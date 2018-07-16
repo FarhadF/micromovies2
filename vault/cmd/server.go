@@ -50,8 +50,8 @@ func main() {
 	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
 		Namespace: "micromovies2",
 		Subsystem: "vault_service",
-		Name:      "request_latency_microseconds",
-		Help:      "Total duration of requests in microseconds.",
+		Name:      "request_latency_seconds",
+		Help:      "Total duration of requests in seconds.",
 	}, fieldKeys)
 
 	svc := vault.NewService()

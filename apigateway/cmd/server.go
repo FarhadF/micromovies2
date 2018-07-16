@@ -64,7 +64,7 @@ func main() {
 		JwtAuthAddr: jwtAuthAddr,
 	}
 	ctx := context.Background()
-	//zap
+	//zap - duration fields are seconds in the logs
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 	fieldKeys := []string{"method", "error"}
@@ -77,8 +77,8 @@ func main() {
 	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
 		Namespace: "micromovies2",
 		Subsystem: "apigateway_service",
-		Name:      "request_latency_microseconds",
-		Help:      "Total duration of requests in microseconds.",
+		Name:      "request_latency_seconds",
+		Help:      "Total duration of requests in seconds.",
 	}, fieldKeys)
 
 	svc := apigateway.NewService(config)
