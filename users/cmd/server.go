@@ -21,7 +21,6 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"net/http/pprof"
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
