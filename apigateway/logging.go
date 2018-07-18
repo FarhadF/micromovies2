@@ -18,8 +18,8 @@ func (mw LoggingMiddleware) Login(ctx context.Context, email string, password st
 	defer func(begin time.Time) {
 		mw.Logger.Info("", zap.String("method", "Login"),
 			zap.String("correlationid", ctx.Value("correlationid").(string)), zap.Error(err),
-			zap.Duration("took", time.Since(begin)), zap.String("email", email),
-			zap.String("password", password))
+			zap.String("email", email), zap.String("password", password), zap.Duration("took",
+				time.Since(begin)))
 	}(time.Now())
 	token, refreshToken, err = mw.Next.Login(ctx, email, password)
 	return
@@ -30,9 +30,8 @@ func (mw LoggingMiddleware) Register(ctx context.Context, email string, password
 	defer func(begin time.Time) {
 		mw.Logger.Info("", zap.String("method", "Register"),
 			zap.String("correlationid", ctx.Value("correlationid").(string)), zap.Error(err),
-			zap.Duration("took", time.Since(begin)), zap.String("email", email),
-			zap.String("password", password), zap.String("firstname", firstname),
-			zap.String("lastname", lastname))
+			zap.String("email", email), zap.String("password", password), zap.String("firstname", firstname),
+			zap.String("lastname", lastname), zap.Duration("took", time.Since(begin)))
 	}(time.Now())
 	output, err = mw.Next.Register(ctx, email, password, firstname, lastname)
 	return
