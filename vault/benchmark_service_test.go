@@ -1,9 +1,9 @@
 package vault
 
 import (
-	"testing"
 	"context"
 	"math/rand"
+	"testing"
 	"time"
 )
 
@@ -12,7 +12,7 @@ func BenchmarkHash(b *testing.B) {
 	ctx := context.Background()
 
 	var p []string
-	for i := 0; i< 200000; i++ {
+	for i := 0; i < 200000; i++ {
 		password := RandStringBytesMaskImprSrc(8)
 		p = append(p, password)
 
@@ -32,7 +32,7 @@ func BenchmarkValidate(b *testing.B) {
 	ctx := context.Background()
 
 	var p []string
-	for i := 0; i< 200000; i++ {
+	for i := 0; i < 200000; i++ {
 		password := RandStringBytesMaskImprSrc(8)
 		p = append(p, password)
 
@@ -41,22 +41,23 @@ func BenchmarkValidate(b *testing.B) {
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := svc.Validate(ctx, p[rand.Intn(len(p))], "$2a$10$3U0jF7G.7BbFHoP.t2cI2uvoPzQtfOIZ7AXwTFo/Kh44VlV1ALWaS")
-		if err != nil{
-		if err.Error() != "crypto/bcrypt: hashedPassword is not the hash of the given password" {
-			b.Errorf("Hash: %s", err)
-		}
+		if err != nil {
+			if err.Error() != "crypto/bcrypt: hashedPassword is not the hash of the given password" {
+				b.Errorf("Hash: %s", err)
+			}
 		}
 	}
 }
 
-
 var src = rand.NewSource(time.Now().UnixNano())
+
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const (
 	letterIdxBits = 6                    // 6 bits to represent a letter index
 	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
+
 func RandStringBytesMaskImprSrc(n int) string {
 	b := make([]byte, n)
 	// A src.Int63() generates 63 random bits, enough for letterIdxMax characters!
