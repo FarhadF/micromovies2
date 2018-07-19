@@ -1,7 +1,7 @@
 Micromovies2
 =======================================================================
 
-Micromovies2 is a sample application using [Go-Kit](https://github.com/go-kit/kit) and various dependencies, focusing on microservices architecture as well as deployment, monitoring, tracing, logging and stress testing. [CockroachDB](www.cockroachlabs.com/‎) is used as RDBMS. It's all Go! ecosystem aside from [jmeter](http://jmeter.apache.org/) for stress testing.
+Micromovies2 is a sample application using [Go-Kit](https://github.com/go-kit/kit) and various dependencies, focusing on microservices architecture as well as deployment, monitoring, tracing, logging and stress testing. [CockroachDB](https://www.cockroachlabs.com) is used as RDBMS. It's all Go! ecosystem aside from [jmeter](http://jmeter.apache.org/) for stress testing.
 
 - [Microservices](#Microservices)
 - [Notable Packages and Systems](#notable-packages-and-systems)
