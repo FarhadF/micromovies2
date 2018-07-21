@@ -25,6 +25,7 @@ Micromovies2 is divided into 5 microservices, each having it's purpose. Microser
 - opentracing/opentracing-go
 - swagger
 - casbin
+- pgx
 - pflags
 - grpc
 - cockroachdb
