@@ -102,7 +102,6 @@ func (m moviesService) GetMovieById(ctx context.Context, id string) (Movie, erro
 }
 
 //implementation
-//todo: check if the role is user and if so discard createdBy if available and extract email from ctx
 func (m moviesService) NewMovie(ctx context.Context, title string, director []string, year string, createdBy string) (string, error) {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := span.Tracer().StartSpan("NewMovie", opentracing.ChildOf(span.Context()))
@@ -117,6 +116,10 @@ func (m moviesService) NewMovie(ctx context.Context, title string, director []st
 		return "", err
 	}
 	if !rows.Next() {
+		//check if the role is user and if so discard createdBy if available and extract email from ctx
+		if ctx.Value("role").(string) == "user" {
+			createdBy = ctx.Value("email").(string)
+		}
 		var id string
 		err := m.db.QueryRow("insert into movies (title, year, createdBy) values($1,$2,$3) returning id", title, year, createdBy).Scan(&id)
 		//res, err := stmt.Exec(movie.Title,movie.Director, movie.Year, movie.Userid)
