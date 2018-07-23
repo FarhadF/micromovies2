@@ -112,7 +112,6 @@ func (m moviesService) NewMovie(ctx context.Context, title string, director []st
 	rows, err := m.db.Query("select * from movies where title=$1", title)
 	defer rows.Close()
 	if err != nil {
-		//todo: add logging
 		return "", err
 	}
 	if !rows.Next() {
