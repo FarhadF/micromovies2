@@ -59,7 +59,7 @@ services:
     depends_on:
       - cockroach
 
-  jaegger:
+  jaeger:
     image: jaegertracing/all-in-one:1.5.0
     ports:
       - 5775:5775/udp
