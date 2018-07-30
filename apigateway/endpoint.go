@@ -53,7 +53,7 @@ type registerRequest struct {
 //model response
 type registerResponse struct {
 	Id  string `json:"id"`
-	Err string `json"err"`
+	Err string `json:"err"`
 }
 
 //make the actual endpoint
