@@ -45,8 +45,3 @@ func decodeNewMovieRequest(ctx context.Context, r *http.Request) (interface{}, e
 	}
 	return req, nil
 }
-
-/*//single encode func for all
-func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
-}*/
