@@ -122,8 +122,6 @@ func (m moviesService) NewMovie(ctx context.Context, title string, director []st
 		}
 		var id string
 		err := m.db.QueryRow("insert into movies (title, year, createdBy) values($1,$2,$3) returning id", title, year, createdBy).Scan(&id)
-		//res, err := stmt.Exec(movie.Title,movie.Director, movie.Year, movie.Userid)
-		//id, err := res.LastInsertId()
 		if err != nil {
 			return "", err
 		}
