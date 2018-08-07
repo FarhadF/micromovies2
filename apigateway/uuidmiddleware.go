@@ -21,10 +21,6 @@ func UUIDMiddleware(next httprouter.Handle) httprouter.Handle {
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 		u2 := uuid.NewV4()
-		/*if err != nil {
-			respondError(w, http.StatusInternalServerError, err)
-		}*/
-
 		ctx = context.WithValue(ctx, "correlationid", u2.String())
 		r = r.WithContext(ctx)
 		next(w, r, ps)

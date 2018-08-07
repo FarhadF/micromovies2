@@ -121,6 +121,7 @@ func (a apigatewayService) NewMovie(ctx context.Context, title string, director 
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
+	//todo: short lived connections, can we fix this?
 	conn, err := grpc.Dial(a.config.MoviesAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
 	if err != nil {
 		return "", err
