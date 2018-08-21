@@ -20,6 +20,7 @@ type Service interface {
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ChangePassword(ctx context.Context, email string, oldPassword string, newPassword string) (bool, error)
 	Login(ctx context.Context, email string, password string) (string, string, error)
+	Refresh(ctx context.Context, token string, refreshToken string) (string, error)
 	//todo: edit user
 }
 
@@ -176,6 +177,37 @@ func (s usersService) Login(ctx context.Context, email string, password string) 
 	_, err = s.db.Exec("update users set refreshtoken=$1, refreshtokenexpiration=$2 where email=$3", refreshToken,
 		time.Now().UTC().Add(time.Hour*8).Format("2006-01-02 15:04:05.999999"), email)
 	return token, refreshToken, nil
+}
+
+//method implementation
+func (s usersService) Refresh(ctx context.Context, token string, refreshToken string) (string, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := span.Tracer().StartSpan("Refresh", opentracing.ChildOf(span.Context()))
+		//span.SetTag("email", email)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+	conn, err := grpc.Dial(s.config.JwtAuthAddr, grpc.WithInsecure(), grpc.WithUnaryInterceptor(grpc_opentracing.UnaryClientInterceptor()))
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	defer conn.Close()
+	jwtService := jwtClient.NewGRPCClient(conn)
+	claims, err := jwtService.ParseToken(ctx, token)
+	if err != nil {
+		return "", err
+	}
+	var dbRefreshToken string
+	err = s.db.QueryRow("select refreshtoken from users where email='" + claims.Email + "'").Scan(&dbRefreshToken)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	newToken, err := jwtClient.GenerateToken(ctx, jwtService, claims.Email, claims.Role)
+	if err != nil {
+		return "", errors.WithStack(err)
+	}
+	return newToken, nil
+
 }
 
 //required Configuration to pass down to the service from the flags in cmd/server.go
