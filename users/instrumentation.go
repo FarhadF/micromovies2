@@ -57,3 +57,14 @@ func (mw InstrumentingMiddleware) Login(ctx context.Context, email string, Passw
 	token, refreshToken, err = mw.Next.Login(ctx, email, Password)
 	return
 }
+
+//instrumentation per method
+func (mw InstrumentingMiddleware) Refresh(ctx context.Context, token string, refreshToken string) (newToken string, err error) {
+	defer func(begin time.Time) {
+		lvs := []string{"method", "Refresh", "error", fmt.Sprint(err != nil)}
+		mw.RequestCount.With(lvs...).Add(1)
+		mw.RequestLatency.With(lvs...).Observe(time.Since(begin).Seconds())
+	}(time.Now())
+	token, err = mw.Next.Refresh(ctx, token, refreshToken)
+	return
+}
