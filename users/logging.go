@@ -56,3 +56,14 @@ func (mw LoggingMiddleware) Login(ctx context.Context, email string, Password st
 	token, refreshToken, err = mw.Next.Login(ctx, email, Password)
 	return
 }
+
+func (mw LoggingMiddleware) Refresh(ctx context.Context, token string, refreshToken string) (newToken string, err error) {
+	defer func(begin time.Time) {
+		mw.Logger.Info("", zap.String("method", "Login"),
+			zap.String("correlationid", ctx.Value("correlationid").(string)),
+			zap.String("token", token), zap.String("refreshtoken", refreshToken), zap.Error(err),
+			zap.Duration("took", time.Since(begin)))
+	}(time.Now())
+	newToken, err = mw.Next.Refresh(ctx, token, refreshToken)
+	return
+}
